@@ -43,18 +43,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Main_Title_Text" />
 
-    <TextView
-        android:id="@+id/textView"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:text="EMAIL"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="#333333"
-        android:textSize="16dp"
-        android:textStyle="bold" />
+        android:layout_marginTop="10dp">
 
+        <TextView
+            android:id="@+id/EMAIL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="EMAIL"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="#333333"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/error1"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/error1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:text="Please enter your email."
+            android:textAllCaps="true"
+            android:textColor="#FF4141"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/EMAIL"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/error2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="1dp"
+            android:fontFamily="sans-serif"
+            android:text="Invalid email address."
+            android:textAllCaps="true"
+            android:textColor="#FF4141"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@+id/EMAIL"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+
+    </android.support.constraint.ConstraintLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -100,10 +140,10 @@
             android:text="or login via" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/facebookButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:background="#00000000"
             app:srcCompat="@drawable/ic_facebook" />
 
@@ -112,12 +152,12 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="76dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="-5dp"
+            android:layout_marginStart="-5dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:text="Facebook"
             android:textAllCaps="false"
-            android:textColor="#333333" />
+            android:textColor="#4267B2" />
 
     </LinearLayout>
 
@@ -136,8 +176,8 @@
             android:scrollbarAlwaysDrawHorizontalTrack="false"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
-            android:translationY="2dp"
-            android:translationZ="4dp"
+            android:translationY="1dp"
+            android:translationZ="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_next" />
