@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">vCanteen</string>
-    <string name="title_activity_email_enter_page">email_enter_page</string>
+    <string name="title_activity_email_enter_page">emailActivity</string>
+    <string name="title_activity_home">homeActivity</string>
+    <string name="title_activity_homepage">homepageActivity</string>
+    <string name="title_activity_vendor_list">vendorListActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_profile">PROFILE</string>
+    <string name="title_orders">ORDERS</string>
+    <string name="title_settings">SETTINGS</string>
 </resources>

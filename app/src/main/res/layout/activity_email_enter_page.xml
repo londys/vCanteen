@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/Theme.AppCompat"
-    tools:context=".email_enter_page">
+    tools:context=".emailActivity">
 
 
     <TextView
