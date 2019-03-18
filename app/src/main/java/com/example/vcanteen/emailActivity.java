@@ -36,8 +36,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +59,9 @@ public class emailActivity extends AppCompatActivity {
     private String last_name;
     private String account_type;
     private String profile_pic;
+    private String password;
+
+    private final String dbAddress = "https://en33remma22tb.x.pipedream.net/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,7 @@ public class emailActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 email = object.optString("email");
-                                first_name = object.optString("id");
+                                first_name = object.optString("first_name");
                                 last_name = object.optString("last_name");
 
                                 String profilePicUrl = null;
@@ -118,12 +123,32 @@ public class emailActivity extends AppCompatActivity {
 //                                System.out.println(object.toString());
 
                                 account_type = "FACEBOOK";
+                                password = null;
+
+                                JSONObject postData = new JSONObject();
+                                try {
+                                    postData.put("account_type", account_type);
+                                    postData.put("firstname", first_name);
+                                    postData.put("lastname", last_name);
+                                    postData.put("customer_image", profile_pic == null ? JSONObject.NULL : profile_pic);
+                                    postData.put("email", email);
+                                    postData.put("passwd", password == null ? JSONObject.NULL : password);
+                                    System.out.println(postData.toString());
+                                    (new SendDeviceDetails()).execute(dbAddress, postData.toString());
+                                } catch (Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
+                                    System.out.println("==========sdfassfdasdfasdfsfsfsadfsd===========");
+                                }
+
+//                                Intent intent = new Intent(emailActivity.this, MainActivity.class);
+//                                startActivity(intent);
                             }
                         });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,first_name, last_name, email,link, picture.type(large)");
                 request.setParameters(parameters);
                 request.executeAsync();
+
             }
 
             @Override
@@ -134,6 +159,7 @@ public class emailActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
+                System.out.println("ERROR OCCURRED");
             }
         });
 
@@ -193,7 +219,7 @@ public class emailActivity extends AppCompatActivity {
         }
     }
 
-    private class myTask extends AsyncTask<String,Void,Bitmap>{
+    private class myTask extends AsyncTask<String, Void, Bitmap> {
 
 
         protected Bitmap doInBackground(String... src) {
@@ -204,7 +230,7 @@ public class emailActivity extends AppCompatActivity {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return  myBitmap;
+                return myBitmap;
                 //do stuff
             } catch (IOException e) {
                 e.printStackTrace();
@@ -216,6 +242,53 @@ public class emailActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap result) {
             //do stuff
 
+        }
+    }
+
+    private class SendDeviceDetails extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String data = "";
+
+            HttpURLConnection httpURLConnection = null;
+            try {
+
+                httpURLConnection = (HttpURLConnection) new URL(params[0]).openConnection();
+                httpURLConnection.setRequestMethod("POST");
+
+                httpURLConnection.setDoOutput(true);
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes("PostData=" + params[1]);
+                wr.flush();
+                wr.close();
+
+                InputStream in = httpURLConnection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(in);
+
+                int inputStreamData = inputStreamReader.read();
+                while (inputStreamData != -1) {
+                    char current = (char) inputStreamData;
+                    inputStreamData = inputStreamReader.read();
+                    data += current;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (httpURLConnection != null) {
+                    httpURLConnection.disconnect();
+                }
+            }
+
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         }
     }
 
