@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class setting extends AppCompatActivity {
+public class settingActivity extends AppCompatActivity {
     LinearLayout tappable_password, tappable_payment;
 
     @Override
@@ -33,7 +33,7 @@ public class setting extends AppCompatActivity {
     }
 
     public void openChangePassword(){
-        Intent intent = new Intent(this, ChangePassword.class);
+        Intent intent = new Intent(this, changePasswordActivity.class);
         startActivity(intent);
     }
 }
