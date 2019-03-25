@@ -19,8 +19,11 @@ import org.json.JSONObject;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class password_login_page extends AppCompatActivity {
 
@@ -39,6 +42,9 @@ public class password_login_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_login_page);
 
+
+
+
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
@@ -49,8 +55,6 @@ public class password_login_page extends AppCompatActivity {
         } else {
             email = (String) savedInstanceState.getSerializable("cachedemail");
         }
-
-        System.out.println(email);
 
         passwdField = findViewById(R.id.passwordBox);
         showBtn = findViewById(R.id.show_pw_btn);
@@ -75,12 +79,13 @@ public class password_login_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(password_login_page.this, homev1Activity.class);
-                passwd = passwdField.getText().toString();
+                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
+                System.out.println(passwd);
                 JSONObject postData = new JSONObject();
                 try {
                     postData.put("account_type", account_type);
                     postData.put("email", email);
-                    postData.put("passwd", passwd == null ? JSONObject.NULL : passwd);
+                    postData.put("passwd", passwd == null ? JSONObject.NULL : (Object)passwd);
                     System.out.println(postData.toString());
                     (new SendDeviceDetails()).execute(dbAddress, postData.toString());
                     startActivity(intent);
@@ -137,6 +142,23 @@ public class password_login_page extends AppCompatActivity {
             Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         }
     }
+
+    private byte[] hash256(String text) {
+        byte[] hash = null;
+        MessageDigest digest = null;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+            hash = digest.digest(text.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return hash;
+    }
+
+
     /*@Override
     public void finish() {
          super.finish();
