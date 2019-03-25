@@ -1,7 +1,10 @@
 package com.example.vcanteen;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -68,9 +71,9 @@ public class emailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_enter_page);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
-        LoginManager.getInstance().logInWithReadPermissions(emailActivity.this, Arrays.asList("public_profile", "email"));
+//        FacebookSdk.sdkInitialize(getApplicationContext());
+//        AppEventsLogger.activateApp(this);
+//        LoginManager.getInstance().logInWithReadPermissions(emailActivity.this, Arrays.asList("public_profile", "email"));
 
         next_button = (ImageButton) findViewById(R.id.next_button /*xml next_button */);
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -100,6 +103,7 @@ public class emailActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
+                                Intent intent = new Intent(emailActivity.this, homev1Activity.class);
                                 email = object.optString("email");
                                 first_name = object.optString("first_name");
                                 last_name = object.optString("last_name");
@@ -137,11 +141,10 @@ public class emailActivity extends AppCompatActivity {
                                     (new SendDeviceDetails()).execute(dbAddress, postData.toString());
                                 } catch (Exception e) {
                                     Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
-                                    System.out.println("==========sdfassfdasdfasdfsfsfsadfsd===========");
                                 }
 
-//                                Intent intent = new Intent(emailActivity.this, MainActivity.class);
-//                                startActivity(intent);
+
+                                startActivity(intent);
                             }
                         });
                 Bundle parameters = new Bundle();
@@ -159,7 +162,8 @@ public class emailActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException exception) {
                 // App code
-                System.out.println("ERROR OCCURRED");
+                exception.printStackTrace();
+
             }
         });
 
@@ -202,21 +206,6 @@ public class emailActivity extends AppCompatActivity {
 
         Log.e("LOOK", imageEncoded);
         return imageEncoded;
-    }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
     }
 
     private class myTask extends AsyncTask<String, Void, Bitmap> {
@@ -292,5 +281,10 @@ public class emailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }
 
