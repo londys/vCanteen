@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".changePasswordActivity"></activity>
+        <activity android:name=".VendorMenuActivity"></activity>
+        <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
         <activity android:name=".setting" />
         <activity android:name=".password_login_page" />
