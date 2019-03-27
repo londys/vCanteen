@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -22,6 +23,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,6 +40,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +71,7 @@ public class emailActivity extends AppCompatActivity {
     private String password;
 
     private final String dbAddress = "https://en33remma22tb.x.pipedream.net/";
+    private boolean exit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +150,17 @@ public class emailActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
                                 }
 
+                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, dbAddress, null, new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        JSONObject jsonObject = response.getJSONObject();
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        error.printStackTrace();
+                                    }
+                                });
 
                                 startActivity(intent);
                             }
@@ -283,8 +301,7 @@ public class emailActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        moveTaskToBack(true);
     }
 }
 

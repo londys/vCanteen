@@ -47,5 +47,9 @@ public class homev1Activity extends AppCompatActivity {
         ListView vendorList = findViewById(R.id.vendorlist);
         vendorList.setAdapter(testAdapter);
     }
-    
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.vcanteen;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -44,7 +45,9 @@ public class password_login_page extends AppCompatActivity {
     private Button ok2btn;
     private Button cancelbtn;
 
-    private final String dbAddress = "vcanteen.herokuapp.com/v1/user-authentication/customer/check/token";
+    // vcanteen.herokuapp.com/v1/user-authentication/customer/check/token
+    private final String dbAddress = "https://en33remma22tb.x.pipedream.net/";
+    private boolean exit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +229,6 @@ public class password_login_page extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         startActivity(new Intent(password_login_page.this, emailActivity.class));
     }
 
