@@ -15,7 +15,7 @@ public class settingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         tappable_password = (LinearLayout)findViewById(R.id.tappable_password);
-        // tappable_payment = (LinearLayout)findViewById(R.id.tappable_payment);
+        //tappable_payment = (LinearLayout)findViewById(R.id.tappable_payment);
 
         tappable_password.setOnClickListener(new View.OnClickListener(){
             @Override
