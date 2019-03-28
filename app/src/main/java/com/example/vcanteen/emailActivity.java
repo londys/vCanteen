@@ -1,60 +1,48 @@
 package com.example.vcanteen;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+
+import com.example.vcanteen.Data.Customers;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.Login;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class emailActivity extends AppCompatActivity {
@@ -63,15 +51,12 @@ public class emailActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
 
-    private String email;
-    private String first_name;
-    private String last_name;
-    private String account_type;
-    private String profile_pic;
-    private String password;
 
-    private final String dbAddress = "https://en33remma22tb.x.pipedream.net/";
+
+//    private final String url = "https://vcanteen.herokuapp.com/";
+    private final String url = "https://en04r5not39z8i.x.pipedream.net/";
     private boolean exit = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +80,13 @@ public class emailActivity extends AppCompatActivity {
         final EditText emailbox = (EditText) findViewById(R.id.editEmail);
 
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+
         cleartxtbtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 emailbox.getText().clear();
@@ -111,9 +103,9 @@ public class emailActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 Intent intent = new Intent(emailActivity.this, homev1Activity.class);
-                                email = object.optString("email");
-                                first_name = object.optString("first_name");
-                                last_name = object.optString("last_name");
+                                String email = object.optString("email");
+                                String first_name = object.optString("first_name");
+                                String last_name = object.optString("last_name");
 
                                 String profilePicUrl = null;
                                 try {
@@ -121,34 +113,26 @@ public class emailActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                Bitmap profilePic = null;
-                                try {
-                                    profilePic = new myTask().execute(profilePicUrl).get();
-                                } catch (ExecutionException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                profile_pic = encodeTobase64(profilePic);
-//                                System.out.println(profile_pic.length());
-//                                System.out.println(object.toString());
 
-                                account_type = "FACEBOOK";
-                                password = null;
+                                String account_type = "FACEBOOK";
+                                String password = null;
 
-                                JSONObject postData = new JSONObject();
-                                try {
-                                    postData.put("account_type", account_type);
-                                    postData.put("firstname", first_name);
-                                    postData.put("lastname", last_name);
-                                    postData.put("customer_image", profile_pic == null ? JSONObject.NULL : profile_pic);
-                                    postData.put("email", email);
-                                    postData.put("passwd", password == null ? JSONObject.NULL : password);
-                                    System.out.println(postData.toString());
-                                    (new SendDeviceDetails()).execute(dbAddress, postData.toString());
-                                } catch (Exception e) {
-                                    Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
-                                }
+                                Customers postCustomer = new Customers(email, account_type, password);
+                                Call<JSONObject> call = jsonPlaceHolderApi.createCustomer(postCustomer);
+
+                                // HTTP POST
+                                call.enqueue(new Callback<JSONObject>() {
+                                    @Override
+                                    public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                                        System.out.println(response.toString());
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<JSONObject> call, Throwable t) {
+
+                                    }
+                                });
+
 
 
 
@@ -242,56 +226,5 @@ public class emailActivity extends AppCompatActivity {
         }
     }
 
-    private class SendDeviceDetails extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String data = "";
-
-            HttpURLConnection httpURLConnection = null;
-            try {
-
-                httpURLConnection = (HttpURLConnection) new URL(params[0]).openConnection();
-                httpURLConnection.setRequestMethod("POST");
-
-                httpURLConnection.setDoOutput(true);
-
-                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-                wr.writeBytes("PostData=" + params[1]);
-                wr.flush();
-                wr.close();
-
-                InputStream in = httpURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-
-                int inputStreamData = inputStreamReader.read();
-                while (inputStreamData != -1) {
-                    char current = (char) inputStreamData;
-                    inputStreamData = inputStreamReader.read();
-                    data += current;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-            }
-
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        moveTaskToBack(true);
-    }
 }
 
