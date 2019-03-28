@@ -150,17 +150,7 @@ public class emailActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
                                 }
 
-                                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, dbAddress, null, new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        JSONObject jsonObject = response.getJSONObject();
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        error.printStackTrace();
-                                    }
-                                });
+
 
                                 startActivity(intent);
                             }
