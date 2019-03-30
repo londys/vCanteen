@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".customizeOrderActivity"></activity>
+        <activity android:name=".vendorMenuActivity"></activity>
+        <activity android:name=".customizeOrderActivity" />
         <activity android:name=".homev1Activity" />
         <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
@@ -46,7 +47,7 @@
             android:name="com.google.android.actions"
             android:resource="@xml/dimension" />
 
-        <activity android:name=".vendorMenuActivity">
+        <activity android:name=".normalOrderActivity">
 
             <!-- for start main ตอนแรก .emailActivity -->
             <intent-filter>

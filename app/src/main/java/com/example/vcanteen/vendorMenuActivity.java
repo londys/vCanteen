@@ -16,6 +16,7 @@ public class vendorMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
 
+        // to open cutomize order activity
         android.support.constraint.ConstraintLayout tappable_customize = (android.support.constraint.ConstraintLayout)findViewById(R.id.tappable_customize);
         tappable_customize.setOnClickListener(new View.OnClickListener() {
             @Override
