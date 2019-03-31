@@ -22,7 +22,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="44dp"
         android:text="Quantity"
         android:textColor="#BDBDBD"
@@ -46,11 +46,24 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="6dp"
-        android:text="30 THB"
+        android:text="30"
         android:textColor="#333333"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/foodName" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="6dp"
+        android:text="THB"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/foodPrice"
         app:layout_constraintTop_toBottomOf="@+id/foodName" />
 
     <View
@@ -91,7 +104,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/addToCartImg"
         android:layout_width="297dp"
         android:layout_height="56dp"
         android:layout_marginStart="57dp"
@@ -113,21 +126,35 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/imageView5" />
+        app:layout_constraintStart_toStartOf="@+id/addToCartImg" />
 
     <TextView
         android:id="@+id/orderPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="46dp"
-        android:text="30 THB"
+        android:text="30"
         android:textAlignment="textEnd"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/imageView5" />
+        app:layout_constraintEnd_toStartOf="@+id/orderPrice2" />
+
+    <TextView
+        android:id="@+id/orderPrice2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="46dp"
+        android:text="THB"
+        android:textAlignment="textEnd"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/addToCartImg" />
 
     <TextView
         android:id="@+id/subtractSign"
@@ -156,7 +183,7 @@
     <ListView
         android:id="@+id/extraList"
         android:layout_width="395dp"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
