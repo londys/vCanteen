@@ -36,6 +36,10 @@
             android:resource="@xml/dimension" />
 
         <activity android:name=".emailActivity">
+
+        </activity>
+
+        <activity android:name=".OrderListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,5 +6,8 @@
     <color name="colorPrimary">#FF9C9C</color>
     <color name="colorPrimaryDark">#FF9C9C</color>
     <color name="colorAccent">#FF9C9C</color>
-
+    <color name="colorPrimaryLight">#FFCCCC</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorStatusRed">#FF0606</color>
+    <color name="grey_text">#C4C4C4</color>
 </resources>
