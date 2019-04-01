@@ -1,12 +1,17 @@
 package com.example.vcanteen;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class cartActivity extends AppCompatActivity {
@@ -20,6 +25,12 @@ public class cartActivity extends AppCompatActivity {
     int [] orderPrice = {30,45,55};
 
     int total=0;
+
+    //dealing with popup
+    Dialog showpopup;
+    ImageView confirmImgButton;
+    TextView cancelButton;
+    Button confirmButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +55,46 @@ public class cartActivity extends AppCompatActivity {
 
         orderTotalItems.setText("Total "+ orderPrice.length+" item(s)");
         orderTotalPrice.setText("" + total +"");
+
+        //dealing with popup
+        showpopup = new Dialog(this);
+        confirmImgButton = (ImageView)findViewById(R.id.confirmImgButton);
+        confirmImgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopUp();
+            }
+        });
+
+    }
+
+    public void showPopUp(){
+        showpopup.setContentView(R.layout.cart_reset_popup);
+        confirmButton = (Button)showpopup.findViewById(R.id.confirmButton);
+        cancelButton = (TextView)showpopup.findViewById(R.id.cancelButton);
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProcessingPayment();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showpopup.dismiss();
+            }
+        });
+
+        showpopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        showpopup.show();
+    }
+
+    public void openProcessingPayment() {
+        Intent intent = new Intent(this, processingPaymentActivity.class);
+        startActivity(intent);
+
     }
 
     public void onRadioButtonClicked(View view) {
