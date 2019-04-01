@@ -9,21 +9,55 @@ import android.widget.TextView;
 
 public class foodListAdapter extends ArrayAdapter {
 
-    foodListAdapter(Context context, String[] a){
+    //declarations
+    int[]b={};
+    String[]a={};
+    Context c;
+    LayoutInflater inflater;
 
-        super(context, R.layout.food_listview , a);
+    foodListAdapter(Context context, String[] a, int[] b){
+        super(context, R.layout.menu_listview , a);
+        this.c=context;
+        this.a=a;
+        this.b=b;
+    }
+
+    public class ViewHolder{
+        TextView addFoodName;
+        TextView addFoodPrice;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-        LayoutInflater foodListInflater = LayoutInflater.from(getContext());
-        View customView = foodListInflater.inflate(R.layout.food_listview, parent, false);
+        if(convertView==null){
+            inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.food_listview,parent,false);
+        }
 
-        String singleItem = (String) getItem(position);
-        TextView extraFood = (TextView) customView.findViewById(R.id.extraFood);
+        //view holder object
+        final ViewHolder holder = new ViewHolder();
 
-        extraFood.setText(singleItem);
-        return customView;
+        //initalize our view
+        holder.addFoodName=(TextView) convertView.findViewById(R.id.addFoodName);
+        holder.addFoodPrice=(TextView) convertView.findViewById(R.id.addFoodPrice);
+
+        //assign data
+        holder.addFoodName.setText(a[position]);
+        holder.addFoodPrice.setText("+ "+b[position]+" THB");
+
+        return convertView;
     }
+
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent){
+//        LayoutInflater foodListInflater = LayoutInflater.from(getContext());
+//        View customView = foodListInflater.inflate(R.layout.food_listview, parent, false);
+//
+//        String singleItem = (String) getItem(position);
+//        TextView extraFood = (TextView) customView.findViewById(R.id.extraFood);
+//
+//        extraFood.setText(singleItem);
+//        return customView;
+//    }
 
 }

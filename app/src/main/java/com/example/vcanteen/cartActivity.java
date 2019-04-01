@@ -3,12 +3,23 @@ package com.example.vcanteen;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.view.View;
+import android.widget.TextView;
 
 public class cartActivity extends AppCompatActivity {
 
     RadioButton scbEasy, kplus, trueMoney,cunex;
+
+    TextView orderTotalPrice, orderTotalItems;
+
+    String[] order = {"order 1", "order 2", "order 3"};
+    String[] orderInfo = {"","Extra Rice, More food, More food, More food, More food, Alibaba","put more love <3"};
+    int [] orderPrice = {30,45,55};
+
+    int total=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +31,19 @@ public class cartActivity extends AppCompatActivity {
         trueMoney = (RadioButton) findViewById(R.id.trueMoney);
         cunex = (RadioButton)findViewById(R.id.cunex);
 
+        ListAdapter testAdapter2 = new orderListAdapter(this,order,orderPrice,orderInfo);
+        final ListView orderList = findViewById(R.id.orderList);
+        orderList.setAdapter(testAdapter2);
 
+        orderTotalItems = (TextView) findViewById(R.id.orderTotalItems);
+        orderTotalPrice = (TextView) findViewById(R.id.orderTotalPrice);
 
+        for(int i = 0; i<orderPrice.length; i++){
+            total += orderPrice[i];
+        }
+
+        orderTotalItems.setText("Total "+ orderPrice.length+" item(s)");
+        orderTotalPrice.setText("" + total +"");
     }
 
     public void onRadioButtonClicked(View view) {

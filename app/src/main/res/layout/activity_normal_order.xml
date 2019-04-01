@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/foodName"
+        android:id="@+id/addFoodName"
         android:layout_width="270dp"
         android:layout_height="20dp"
         android:layout_marginStart="25dp"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
-        android:id="@+id/foodPrice"
+        android:id="@+id/addFoodPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -51,7 +51,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foodName" />
+        app:layout_constraintTop_toBottomOf="@+id/addFoodName" />
 
     <TextView
         android:id="@+id/textView12"
@@ -63,8 +63,8 @@
         android:textColor="#333333"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/foodPrice"
-        app:layout_constraintTop_toBottomOf="@+id/foodName" />
+        app:layout_constraintStart_toEndOf="@+id/addFoodPrice"
+        app:layout_constraintTop_toBottomOf="@+id/addFoodName" />
 
     <View
         android:id="@+id/divider4"
@@ -76,7 +76,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/foodPrice" />
+        app:layout_constraintTop_toBottomOf="@+id/addFoodPrice" />
 
     <TextView
         android:id="@+id/textView13"
