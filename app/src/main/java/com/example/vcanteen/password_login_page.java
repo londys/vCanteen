@@ -152,6 +152,7 @@ public class password_login_page extends AppCompatActivity {
                             } else if (response.body().getStatus().equals("success")) {
                                 sharedPref.edit().putString("token", response.body().getToken()).commit();
                                 sharedPref.edit().putString("email", email).commit();
+                                sharedPref.edit().putString("account_type", account_type).commit();
                                 progressDialog.dismiss();
                                 startActivity(intent);
                             }

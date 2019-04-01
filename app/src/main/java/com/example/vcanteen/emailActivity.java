@@ -132,7 +132,7 @@ public class emailActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                String account_type = "FACEBOOK";
+                                final String account_type = "FACEBOOK";
 
                                 Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "alsfkjsadf");
                                 System.out.println(postCustomer.toString());
@@ -156,6 +156,7 @@ public class emailActivity extends AppCompatActivity {
                                         else if(response.body().getStatus().equals("success")) {
                                             sharedPref.edit().putString("token", response.body().getToken()).commit();
                                             sharedPref.edit().putString("email", email).commit();
+                                            sharedPref.edit().putString("account_type", account_type).commit();
                                             progressDialog.dismiss();
                                             startActivity(intent);
                                         }
