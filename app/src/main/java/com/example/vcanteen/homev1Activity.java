@@ -1,5 +1,6 @@
 package com.example.vcanteen;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +28,7 @@ public class homev1Activity extends AppCompatActivity {
                     // emergency logout lol
                     LoginManager.getInstance().logOut();
                     sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
+                    startActivity(new Intent(homev1Activity.this, emailActivity.class));
                     return true;
                 case R.id.navigation_orders:
                     mTextMessage.setText("ORDERS");

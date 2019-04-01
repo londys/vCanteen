@@ -1,5 +1,7 @@
 package com.example.vcanteen;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +60,7 @@ public class emailActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
     private SharedPreferences sharedPref;
-
+    private ProgressDialog progressDialog;
 
     private final String url = "https://vcanteen.herokuapp.com/";
     private boolean exit = false;
@@ -103,15 +105,21 @@ public class emailActivity extends AppCompatActivity {
             }
         });
 
+        final Context context = this;
+
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
+                progressDialog = new ProgressDialog(context);
+                progressDialog = ProgressDialog.show(context, "",
+                        "Loading. Please wait...", true);
                 GraphRequest request = GraphRequest.newMeRequest(
                         AccessToken.getCurrentAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
+
                                 final Intent intent = new Intent(emailActivity.this, homev1Activity.class);
                                 final String email = object.optString("email");
                                 String first_name = object.optString("first_name");
@@ -131,6 +139,9 @@ public class emailActivity extends AppCompatActivity {
                                 postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, null);
                                 Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
+
+
+
                                 // HTTP POST
                                 call.enqueue(new Callback<TokenResponse>() {
                                     @Override
@@ -145,7 +156,7 @@ public class emailActivity extends AppCompatActivity {
                                         else if(response.body().getStatus().equals("success")) {
                                             sharedPref.edit().putString("token", response.body().getToken()).commit();
                                             sharedPref.edit().putString("email", email).commit();
-
+                                            progressDialog.dismiss();
                                             startActivity(intent);
                                         }
                                     }
@@ -223,31 +234,6 @@ public class emailActivity extends AppCompatActivity {
         return imageEncoded;
     }
 
-    private class myTask extends AsyncTask<String, Void, Bitmap> {
-
-
-        protected Bitmap doInBackground(String... src) {
-            try {
-                URL url = new URL(src[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
-                //do stuff
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            //do stuff
-
-        }
-    }
 
 }
 

@@ -1,6 +1,8 @@
 package com.example.vcanteen;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -19,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.vcanteen.Data.Customers;
+import com.example.vcanteen.Data.RecoverPass;
 import com.example.vcanteen.Data.TokenResponse;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -60,6 +63,7 @@ public class password_login_page extends AppCompatActivity {
     private Button cancelbtn;
 
     private SharedPreferences sharedPref;
+    private ProgressDialog progressDialog;
 
     // vcanteen.herokuapp.com/
     private final String url = "http://vcanteen.herokuapp.com/";
@@ -109,9 +113,14 @@ public class password_login_page extends AppCompatActivity {
             }
         });
 
+
+        final Context context = this;
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = new ProgressDialog(context);
+                progressDialog = ProgressDialog.show(context, "",
+                        "Loading. Please wait...", true);
                 final Intent intent = new Intent(password_login_page.this, homev1Activity.class);
                 passwd = passwdField.getText().toString();
 //                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
@@ -134,15 +143,16 @@ public class password_login_page extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                            TokenResponse tokenResponse = response.body();
 //                            System.out.println(tokenResponse.isStatusCode());
-                            System.out.println(response.code());
+//                            System.out.println(response.body().toString());
 
                             if (response.code() == 404) {
-                                Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                Toast.makeText(password_login_page.this, "Either email or email is incorrect.", Toast.LENGTH_SHORT).show();
                                 System.out.println("ERROR EDOK");
                             } else if (response.body().getStatus().equals("success")) {
                                 sharedPref.edit().putString("token", response.body().getToken()).commit();
                                 sharedPref.edit().putString("email", email).commit();
-
+                                progressDialog.dismiss();
                                 startActivity(intent);
                             }
 
@@ -170,69 +180,15 @@ public class password_login_page extends AppCompatActivity {
         });
     }
 
-    private class SendDeviceDetails extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String data = "";
-
-            HttpURLConnection httpURLConnection = null;
-            try {
-
-                httpURLConnection = (HttpURLConnection) new URL(params[0]).openConnection();
-                httpURLConnection.setRequestMethod("POST");
-
-                httpURLConnection.setDoOutput(true);
-
-                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-                wr.writeBytes("PostData=" + params[1]);
-                wr.flush();
-                wr.close();
-
-                InputStream in = httpURLConnection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(in);
-
-                int inputStreamData = inputStreamReader.read();
-                while (inputStreamData != -1) {
-                    char current = (char) inputStreamData;
-                    inputStreamData = inputStreamReader.read();
-                    data += current;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-            }
-
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
-        }
-    }
-
-    private byte[] hash256(String text) {
-        byte[] hash = null;
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-            hash = digest.digest(text.getBytes("UTF-8"));
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return hash;
-    }
 
     private void openRecoverPopup() {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
         recoverWarningDialog = new Dialog(password_login_page.this);
         recoverWarningDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         recoverWarningDialog.setContentView(R.layout.recoverwarningdialog);
@@ -243,13 +199,51 @@ public class password_login_page extends AppCompatActivity {
         ok1btn.setEnabled(true);
         cancelbtn.setEnabled(true);
 
+        final Context context = this;
         ok1btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = new ProgressDialog(context);
+                progressDialog = ProgressDialog.show(context, "",
+                        "Loading. Please wait...", true);
+                confirmDialog = new Dialog(password_login_page.this);
+                confirmDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                confirmDialog.setContentView(R.layout.confirmdialog);
+
+                ok2btn = (Button) confirmDialog.findViewById(R.id.ok2_btn);
+
+                ok2btn.setEnabled(true);
+
+                ok2btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        confirmDialog.cancel();
+                    }
+                });
+
                 //code for send request to back-end here
-                Toast.makeText(getApplicationContext(), "Email sent to " + email, Toast.LENGTH_SHORT).show();
+                Call<Void> call = jsonPlaceHolderApi.recoverPass(new RecoverPass(email));
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+
+                        if(response.code() != 200)
+                            Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
+                        else {
+                            confirmDialog.show();
+                            progressDialog.dismiss();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+
+                    }
+                });
+
                 recoverWarningDialog.cancel();
-                openConfirmDialog();
             }
         });
 
@@ -263,24 +257,6 @@ public class password_login_page extends AppCompatActivity {
         recoverWarningDialog.show();
     }
 
-    private void openConfirmDialog() {
-        confirmDialog = new Dialog(password_login_page.this);
-        confirmDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        confirmDialog.setContentView(R.layout.confirmdialog);
-
-        ok2btn = (Button) confirmDialog.findViewById(R.id.ok2_btn);
-
-        ok2btn.setEnabled(true);
-
-        ok2btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmDialog.cancel();
-            }
-        });
-        confirmDialog.show();
-
-    }
 
     @Override
     public void onBackPressed() {
