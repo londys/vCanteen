@@ -26,6 +26,7 @@ public class homev1Activity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     // emergency logout lol
                     LoginManager.getInstance().logOut();
+                    sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
                     return true;
                 case R.id.navigation_orders:
                     mTextMessage.setText("ORDERS");

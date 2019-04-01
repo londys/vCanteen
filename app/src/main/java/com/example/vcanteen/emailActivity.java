@@ -117,16 +117,18 @@ public class emailActivity extends AppCompatActivity {
                                 String first_name = object.optString("first_name");
                                 String last_name = object.optString("last_name");
 
-                                String profilePicUrl = null;
+                                String profile_url = null;
                                 try {
-                                    profilePicUrl = (String) object.getJSONObject("picture").getJSONObject("data").get("url");
+                                    profile_url = (String) object.getJSONObject("picture").getJSONObject("data").get("url");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
 
                                 String account_type = "FACEBOOK";
 
-                                Customers postCustomer = new Customers(email, account_type, null);
+                                Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "alsfkjsadf");
+                                System.out.println(postCustomer.toString());
+                                postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, null);
                                 Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
                                 // HTTP POST
@@ -137,15 +139,14 @@ public class emailActivity extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                                        TokenResponse tokenResponse = response.body();
 //                                        System.out.println(tokenResponse.statusCode);
-                                        System.out.println(response.body().toString());
-
-                                        if(response.body().getStatus().equals("success")) {
+//                                        System.out.println(response.body().toString());
+                                        if(response.code() != 200)
+                                            Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
+                                        else if(response.body().getStatus().equals("success")) {
                                             sharedPref.edit().putString("token", response.body().getToken()).commit();
                                             sharedPref.edit().putString("email", email).commit();
 
                                             startActivity(intent);
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Either password or email is incorrect.", Toast.LENGTH_LONG);
                                         }
                                     }
 

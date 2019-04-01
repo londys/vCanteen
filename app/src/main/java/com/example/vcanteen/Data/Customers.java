@@ -7,19 +7,22 @@ import org.json.JSONObject;
 public class Customers {
 
     private String email;
-//    private String first_name;
-//    private String last_name;
+    @Nullable
+    private String first_name;
+    @Nullable
+    private String last_name;
     private String account_type;
-//    private String profile_pic;
+    @Nullable
+    private String profile_url;
     @Nullable
     private String password;
 
-    public Customers(String email, String account_type, String password) {
+    public Customers(String email, @Nullable String first_name, @Nullable String last_name, String account_type, @Nullable String profile_url, @Nullable String password) {
         this.email = email;
-//        this.first_name = first_name;
-//        this.last_name = last_name;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.account_type = account_type;
-//        this.profile_pic = profile_pic;
+        this.profile_url = profile_url;
         this.password = password;
     }
 
@@ -31,20 +34,35 @@ public class Customers {
         return email;
     }
 
-//    public String getFirst_name() {
-//        return first_name;
-//    }
-//
-//    public String getLast_name() {
-//        return last_name;
-//    }
-//
+    @Nullable
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    @Nullable
+    public String getLast_name() {
+        return last_name;
+    }
+
     @Nullable
     public String getPassword() {
         return password;
     }
-//
-//    public String getProfile_pic() {
-//        return profile_pic;
-//    }
+
+    @Nullable
+    public String getProfile_pic() {
+        return profile_url;
+    }
+
+    @Override
+    public String toString() {
+        return "Customers{" +
+                "email='" + email + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", account_type='" + account_type + '\'' +
+                ", profile_url='" + profile_url + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

@@ -123,7 +123,7 @@ public class password_login_page extends AppCompatActivity {
                     postData.put("password", passwd == null ? JSONObject.NULL : (Object) passwd);
                     System.out.println(postData.toString());
 
-                    Customers postCustomer = new Customers(email, account_type, passwd);
+                    Customers postCustomer = new Customers(email, null, null, account_type, null, passwd);
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
                     // HTTP POST
@@ -134,10 +134,10 @@ public class password_login_page extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                            TokenResponse tokenResponse = response.body();
 //                            System.out.println(tokenResponse.isStatusCode());
-//                            System.out.println(response.body().toString());
+                            System.out.println(response.code());
 
                             if (response.code() == 404) {
-                                Toast.makeText(password_login_page.this, "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
                                 System.out.println("ERROR EDOK");
                             } else if (response.body().getStatus().equals("success")) {
                                 sharedPref.edit().putString("token", response.body().getToken()).commit();

@@ -34,31 +34,43 @@ public class Splash extends AppCompatActivity {
         System.out.println(sharedPref.getString("token", "empty token"));
         System.out.println(sharedPref.getString("email", "empty email"));
 
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(url)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//        final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-//
-//        Token token = new Token(sharedPref.getString("email", "empty email"), sharedPref.getString("token", "empty token"));
-//        Call<TokenVerification> call = jsonPlaceHolderApi.verifyToken(token);
-//
-//        // POST DATA FOR TOKEN VERIFICATION
-//        call.enqueue(new Callback<TokenVerification>() {
-//            @Override
-//            public void onResponse(Call<TokenVerification> call, Response<TokenVerification> response) {
-//                if(!response.isSuccessful())
-//                    Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
-//                System.out.println(response.body().toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TokenVerification> call, Throwable t) {
-//
-//            }
-//        });
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        updateWithToken(AccessToken.getCurrentAccessToken());
+        Token token = new Token(sharedPref.getString("email", "empty email"), sharedPref.getString("token", "empty token"));
+        Call<TokenVerification> call = jsonPlaceHolderApi.verifyToken(token);
+
+        // POST DATA FOR TOKEN VERIFICATION
+        call.enqueue(new Callback<TokenVerification>() {
+            @Override
+            public void onResponse(Call<TokenVerification> call, final Response<TokenVerification> response) {
+                if(!response.isSuccessful())
+                    Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
+                System.out.println(response.body().isExpired());
+                final boolean expired = response.body().isExpired();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        // yourMethod();
+                        if(expired)
+                            startActivity(new Intent(Splash.this, emailActivity.class));
+                        else
+                            startActivity(new Intent(Splash.this, homev1Activity.class));
+                    }
+                }, 1000);
+
+            }
+
+            @Override
+            public void onFailure(Call<TokenVerification> call, Throwable t) {
+
+            }
+        });
+
+//        updateWithToken(AccessToken.getCurrentAccessToken());
     }
 
     // need to be changed to check access token from backendte
