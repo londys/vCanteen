@@ -23,6 +23,14 @@
         </activity>
         <activity android:name=".password_login_page" />
         <activity android:name=".homev1Activity" />
+        <activity android:name=".orderConfirmationActivity"></activity>
+        <activity android:name=".processingPaymentActivity" />
+        <activity android:name=".cartActivity" />
+        <activity android:name=".normalOrderActivity" />
+        <activity android:name=".customizeOrderActivity" />
+        <activity android:name=".changePasswordActivity" />
+        <activity android:name=".settingActivity" />
+        <activity android:name=".emailActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -49,9 +57,8 @@
             android:name="com.google.android.actions"
             android:resource="@xml/dimension" />
 
-        <activity android:name=".emailActivity">
 
-        </activity>
+        <activity android:name=".vendorMenuActivity"></activity>
     </application>
 
 </manifest>
