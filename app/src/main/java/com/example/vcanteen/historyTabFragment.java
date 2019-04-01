@@ -30,8 +30,8 @@ public class historyTabFragment extends Fragment {
         View view = inflater.inflate(R.layout.history_tab_fragment,container,false);
         recyclerView = (RecyclerView) view.findViewById(R.id.history_recycler);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.json-generator.com/api/json/get/")
-//                .baseUrl("http://vcanteen.herokuapp.com/")
+//                .baseUrl("http://www.json-generator.com/api/json/get/")
+                .baseUrl("https://vcanteen.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);

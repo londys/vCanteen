@@ -21,19 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class progressTabFragment extends Fragment  {
     private static final String TAG = "ProgressTabFragment";
-//    String text = "";
     List<orderListData> data = new ArrayList<>();
-//    private String orderId = "0";
-//    private String orderName = "Test";
-//    private String orderNameExtra = "TestExtra";
-//    private String foodImage = "";
-//    private String orderPrice = "20";
-//    private String restaurantName = "Stall";
-//    private String restaurantNumber = ""; //number or id
-//    private String orderStatus = "DONE";
-//    private String createdAt = "1/1/18";
 
-    private boolean pass = false;
 
     RecyclerView recyclerView;
 
@@ -45,14 +34,13 @@ public class progressTabFragment extends Fragment  {
 
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.json-generator.com/api/json/get/")
-//                .baseUrl("http://vcanteen.herokuapp.com/")
+//                .baseUrl("http://www.json-generator.com/api/json/get/")
+                .baseUrl("https://vcanteen.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
         Call<List<orderProgress>> call =  jsonPlaceHolderApi.getProgress();
-//        Call<JSONResponse> call = jsonPlaceHolderApi.getJSON();
 
         call.enqueue(new Callback<List<orderProgress>>() {
             @Override
@@ -64,6 +52,7 @@ public class progressTabFragment extends Fragment  {
                 }
 
                 List<orderProgress> posts = response.body();
+                System.out.println(posts.toString());
                 showData(response.body());
                 for (orderProgress post : posts) {
                     data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus()));

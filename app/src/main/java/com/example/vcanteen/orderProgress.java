@@ -6,28 +6,28 @@ public class orderProgress {
     @SerializedName("order_id")
     private int orderId;
 
-    @SerializedName("order_name")
+    @SerializedName("orderName")
     private String orderName;
 
-    @SerializedName("order_name_extra")
+    @SerializedName("orderNameExtra")
     private String orderNameExtra;
 
-    @SerializedName("food_image")
+    @SerializedName("foodImage")
     private String foodImage;
 
-    @SerializedName("order_price")
+    @SerializedName("orderPrice")
     private int orderPrice;
 
-    @SerializedName("restaurant_name")
+    @SerializedName("restaurantName")
     private String restaurantName;
 
-    @SerializedName("restaurant_number")
+    @SerializedName("restaurantNumber")
     private int restaurantNumber; //number or id
 
-    @SerializedName("order_status")
+    @SerializedName("orderStatus")
     private String orderStatus;
 
-    @SerializedName("created_at")
+    @SerializedName("createdAt")
     private String createdAt;
 
 

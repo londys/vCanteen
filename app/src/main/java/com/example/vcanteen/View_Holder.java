@@ -3,6 +3,7 @@ package com.example.vcanteen;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class View_Holder extends RecyclerView.ViewHolder {
     TextView vendorName;
     TextView orderDate;
     TextView orderStatus;
+    Button dismissBtn;
 
     View_Holder(View itemView) {
         super(itemView);
@@ -31,5 +33,6 @@ public class View_Holder extends RecyclerView.ViewHolder {
         vendorName = (TextView) itemView.findViewById(R.id.vendorName);
         orderDate = (TextView) itemView.findViewById(R.id.orderDate);
         orderStatus = (TextView) itemView.findViewById(R.id.orderStatus);
+        dismissBtn = (Button) itemView.findViewById(R.id.dismiss_btn);
     }
 }
