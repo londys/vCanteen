@@ -2,6 +2,7 @@ package com.example.vcanteen;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.vcanteen.Data.Customers;
+import com.example.vcanteen.Data.TokenResponse;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -27,6 +34,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLOutput;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class password_login_page extends AppCompatActivity {
 
@@ -45,16 +59,26 @@ public class password_login_page extends AppCompatActivity {
     private Button ok2btn;
     private Button cancelbtn;
 
-    // vcanteen.herokuapp.com/v1/user-authentication/customer/check/token
-    private final String dbAddress = "https://en33remma22tb.x.pipedream.net/";
-    private boolean exit = false;
+    private SharedPreferences sharedPref;
+
+    // vcanteen.herokuapp.com/
+    private final String url = "http://vcanteen.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_login_page);
 
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        System.out.println(sharedPref.getString("token", "empty token"));
+        System.out.println(sharedPref.getString("email", "empty email"));
 
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
 
         if (savedInstanceState == null) {
@@ -72,8 +96,6 @@ public class password_login_page extends AppCompatActivity {
         showBtn = findViewById(R.id.show_pw_btn);
         next = findViewById(R.id.next_button);
 
-        System.out.println(passwdField.getText().toString());
-
         showBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,17 +112,49 @@ public class password_login_page extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(password_login_page.this, homev1Activity.class);
-                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
+                final Intent intent = new Intent(password_login_page.this, homev1Activity.class);
+                passwd = passwdField.getText().toString();
+//                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
                 System.out.println(passwd);
                 JSONObject postData = new JSONObject();
                 try {
                     postData.put("account_type", account_type);
                     postData.put("email", email);
-                    postData.put("passwd", passwd == null ? JSONObject.NULL : (Object)passwd);
+                    postData.put("password", passwd == null ? JSONObject.NULL : (Object) passwd);
                     System.out.println(postData.toString());
-                    (new SendDeviceDetails()).execute(dbAddress, postData.toString());
-                    startActivity(intent);
+
+                    Customers postCustomer = new Customers(email, account_type, passwd);
+                    Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
+
+                    // HTTP POST
+                    call.enqueue(new Callback<TokenResponse>() {
+                        @Override
+                        public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                            if (!response.isSuccessful())
+                                Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
+//                            TokenResponse tokenResponse = response.body();
+//                            System.out.println(tokenResponse.isStatusCode());
+//                            System.out.println(response.body().toString());
+
+                            if (response.code() == 404) {
+                                Toast.makeText(password_login_page.this, "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
+                                System.out.println("ERROR EDOK");
+                            } else if (response.body().getStatus().equals("success")) {
+                                sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                sharedPref.edit().putString("email", email).commit();
+
+                                startActivity(intent);
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<TokenResponse> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
                 }
@@ -183,8 +237,8 @@ public class password_login_page extends AppCompatActivity {
         recoverWarningDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         recoverWarningDialog.setContentView(R.layout.recoverwarningdialog);
 
-        ok1btn = (Button)recoverWarningDialog.findViewById(R.id.ok1_btn);
-        cancelbtn = (Button)recoverWarningDialog.findViewById(R.id.cancel_btn);
+        ok1btn = (Button) recoverWarningDialog.findViewById(R.id.ok1_btn);
+        cancelbtn = (Button) recoverWarningDialog.findViewById(R.id.cancel_btn);
 
         ok1btn.setEnabled(true);
         cancelbtn.setEnabled(true);
@@ -193,7 +247,7 @@ public class password_login_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //code for send request to back-end here
-                Toast.makeText(getApplicationContext(),"Email sent to "+email,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Email sent to " + email, Toast.LENGTH_SHORT).show();
                 recoverWarningDialog.cancel();
                 openConfirmDialog();
             }
@@ -208,12 +262,13 @@ public class password_login_page extends AppCompatActivity {
 
         recoverWarningDialog.show();
     }
-    private void openConfirmDialog(){
+
+    private void openConfirmDialog() {
         confirmDialog = new Dialog(password_login_page.this);
         confirmDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         confirmDialog.setContentView(R.layout.confirmdialog);
 
-        ok2btn = (Button)confirmDialog.findViewById(R.id.ok2_btn);
+        ok2btn = (Button) confirmDialog.findViewById(R.id.ok2_btn);
 
         ok2btn.setEnabled(true);
 

@@ -1,5 +1,6 @@
 package com.example.vcanteen;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,9 +10,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
+
 public class homev1Activity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    private SharedPreferences sharedPref;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -20,7 +24,8 @@ public class homev1Activity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_profile:
-                    mTextMessage.setText("PROFILE");
+                    // emergency logout lol
+                    LoginManager.getInstance().logOut();
                     return true;
                 case R.id.navigation_orders:
                     mTextMessage.setText("ORDERS");
@@ -41,6 +46,10 @@ public class homev1Activity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        System.out.println(sharedPref.getString("token", "empty token"));
+        System.out.println(sharedPref.getString("email", "empty email"));
 
         String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
         ListAdapter testAdapter = new vendorListAdapter(this, test);

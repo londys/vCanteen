@@ -1,5 +1,9 @@
 package com.example.vcanteen.Data;
 
+import android.support.annotation.Nullable;
+
+import org.json.JSONObject;
+
 public class Customers {
 
     private String email;
@@ -7,6 +11,7 @@ public class Customers {
 //    private String last_name;
     private String account_type;
 //    private String profile_pic;
+    @Nullable
     private String password;
 
     public Customers(String email, String account_type, String password) {
@@ -15,7 +20,7 @@ public class Customers {
 //        this.last_name = last_name;
         this.account_type = account_type;
 //        this.profile_pic = profile_pic;
-//        this.password = password;
+        this.password = password;
     }
 
     public String getAccount_type() {
@@ -34,6 +39,7 @@ public class Customers {
 //        return last_name;
 //    }
 //
+    @Nullable
     public String getPassword() {
         return password;
     }

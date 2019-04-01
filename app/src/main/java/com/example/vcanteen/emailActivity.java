@@ -1,5 +1,6 @@
 package com.example.vcanteen;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -16,9 +17,11 @@ import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.vcanteen.Data.Customers;
+import com.example.vcanteen.Data.TokenResponse;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -27,6 +30,9 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,15 +52,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class emailActivity extends AppCompatActivity {
+
     private ImageButton next_button;
     private static final String EMAIL = "email";
     private LoginButton loginButton;
     private CallbackManager callbackManager = CallbackManager.Factory.create();
+    private SharedPreferences sharedPref;
 
 
-
-//    private final String url = "https://vcanteen.herokuapp.com/";
-    private final String url = "https://en04r5not39z8i.x.pipedream.net/";
+    private final String url = "https://vcanteen.herokuapp.com/";
     private boolean exit = false;
 
 
@@ -79,10 +85,14 @@ public class emailActivity extends AppCompatActivity {
         final Button cleartxtbtn = (Button) findViewById(R.id.clear_text_btn);
         final EditText emailbox = (EditText) findViewById(R.id.editEmail);
 
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        System.out.println(sharedPref.getString("token", "empty token"));
+        System.out.println(sharedPref.getString("email", "empty email"));
 
+        Gson gson = new GsonBuilder().serializeNulls().create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
@@ -102,8 +112,8 @@ public class emailActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                Intent intent = new Intent(emailActivity.this, homev1Activity.class);
-                                String email = object.optString("email");
+                                final Intent intent = new Intent(emailActivity.this, homev1Activity.class);
+                                final String email = object.optString("email");
                                 String first_name = object.optString("first_name");
                                 String last_name = object.optString("last_name");
 
@@ -115,28 +125,40 @@ public class emailActivity extends AppCompatActivity {
                                 }
 
                                 String account_type = "FACEBOOK";
-                                String password = null;
 
-                                Customers postCustomer = new Customers(email, account_type, password);
-                                Call<JSONObject> call = jsonPlaceHolderApi.createCustomer(postCustomer);
+                                Customers postCustomer = new Customers(email, account_type, null);
+                                Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
                                 // HTTP POST
-                                call.enqueue(new Callback<JSONObject>() {
+                                call.enqueue(new Callback<TokenResponse>() {
                                     @Override
-                                    public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                                        System.out.println(response.toString());
+                                    public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                                        if(!response.isSuccessful())
+                                            Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
+//                                        TokenResponse tokenResponse = response.body();
+//                                        System.out.println(tokenResponse.statusCode);
+                                        System.out.println(response.body().toString());
+
+                                        if(response.body().getStatus().equals("success")) {
+                                            sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                            sharedPref.edit().putString("email", email).commit();
+
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "Either password or email is incorrect.", Toast.LENGTH_LONG);
+                                        }
                                     }
 
                                     @Override
-                                    public void onFailure(Call<JSONObject> call, Throwable t) {
-
+                                    public void onFailure(Call<TokenResponse> call, Throwable t) {
+                                        System.out.println("ERROR ESUS");
                                     }
                                 });
 
 
 
 
-                                startActivity(intent);
+
                             }
                         });
                 Bundle parameters = new Bundle();
