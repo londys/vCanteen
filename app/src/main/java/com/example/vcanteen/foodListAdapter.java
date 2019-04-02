@@ -16,7 +16,7 @@ public class foodListAdapter extends ArrayAdapter {
     LayoutInflater inflater;
 
     foodListAdapter(Context context, String[] a, int[] b){
-        super(context, R.layout.menu_listview , a);
+        super(context, R.layout.food_listview , a);
         this.c=context;
         this.a=a;
         this.b=b;
@@ -47,17 +47,5 @@ public class foodListAdapter extends ArrayAdapter {
 
         return convertView;
     }
-
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent){
-//        LayoutInflater foodListInflater = LayoutInflater.from(getContext());
-//        View customView = foodListInflater.inflate(R.layout.food_listview, parent, false);
-//
-//        String singleItem = (String) getItem(position);
-//        TextView extraFood = (TextView) customView.findViewById(R.id.extraFood);
-//
-//        extraFood.setText(singleItem);
-//        return customView;
-//    }
 
 }

@@ -6,20 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.graphics.Color;
+import java.util.ArrayList;
 
 public class menuListAdapter extends ArrayAdapter {
 
-    //declarations
+    int s;
+    ArrayList<food> foodList;
     int[]b={};
     String[]a={};
     Context c;
     LayoutInflater inflater;
 
-    menuListAdapter(Context context, String[] a, int[] b){
-        super(context, R.layout.menu_listview , a);
-        this.c=context;
-        this.a=a;
-        this.b=b;
+    menuListAdapter(Context context, ArrayList<food> foodList, int s){
+        super(context, R.layout.menu_listview , foodList);
+        this.c = context;
+        this.foodList = foodList;
+        this.s = s;
     }
 
     // Hold our view for each row
@@ -43,42 +46,14 @@ public class menuListAdapter extends ArrayAdapter {
         holder.menuPrice=(TextView) convertView.findViewById(R.id.menuPrice);
 
         //assign data
-        holder.menuName.setText(a[position]);
-        holder.menuPrice.setText(""+b[position]+".-");
+        holder.menuName.setText(foodList.get(position).foodName);
+        holder.menuPrice.setText(""+foodList.get(position).foodPrice+".-");
 
+        if(position>=s) {
+            holder.menuName.setTextColor(Color.parseColor("#C4C4C4"));
+            holder.menuPrice.setTextColor(Color.parseColor("#C4C4C4"));
+        }
         return convertView;
     }
 
 }
-
-//package com.example.vcanteen;
-//
-//        import android.content.Context;
-//        import android.view.LayoutInflater;
-//        import android.view.View;
-//        import android.view.ViewGroup;
-//        import android.widget.ArrayAdapter;
-//        import android.widget.TextView;
-//
-//public class menuListAdapter extends ArrayAdapter {
-//
-//    menuListAdapter(Context context, String[] a, int[] b){
-//        super(context, R.layout.menu_listview , a);
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent){
-//        LayoutInflater menuListInflater = LayoutInflater.from(getContext());
-//        View customView = menuListInflater.inflate(R.layout.menu_listview, parent, false);
-//
-//        String singleItem = (String) getItem(position);
-//        TextView menuName = (TextView) customView.findViewById(R.id.menuName);
-//
-//        int singlePrice = (int)getItem(position);
-//        TextView menuPrice = (TextView) customView.findViewById(R.id.menuPrice);
-//
-//        menuPrice.setText(""+singlePrice+".-");
-//        menuName.setText(singleItem);
-//        return customView;
-//    }
-//}
