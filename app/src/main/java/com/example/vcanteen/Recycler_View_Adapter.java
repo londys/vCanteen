@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.Collections;
 import java.util.List;
 
+import bolts.Task;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,14 +77,67 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                             final Dialog dialog = new Dialog(context);
                             dialog.setContentView(R.layout.popup_confirm_pickup);
                             slotNumber =(TextView)dialog.findViewById(R.id.pickup_slot_number);
-                            slotNumber.setText(slotString); //TODO input slot number here
-//                    slotNumber.setText("321"); //TODO input slot number here
+                            slotNumber.setText(slotString);
                             dialog.setCancelable(true);
+
                             (dialog.findViewById(R.id.dismiss_btn))
                                     .setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             dialog.dismiss();
+                                        }
+                                    });
+
+                            (dialog.findViewById(R.id.confirmPickup_btn))
+                                    .setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+
+                                            //Send endpoint putOrderStatus
+
+
+
+                                            Retrofit retrofit = new Retrofit.Builder()
+                                                    .baseUrl("http://vcanteen.herokuapp.com/")
+                                                    .addConverterFactory(GsonConverterFactory.create())
+                                                    .build();
+                                            JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+                                            System.out.println("My order id is "+holder.orderId.getText().toString().substring(10));
+
+//                                            orderStatus orderStatus2 = new orderStatus("COLLECTED");
+//                                            Call<orderStatus> call = jsonPlaceHolderApi.putOrderStatus(orderStatus2);
+
+
+//                                            Task task = new Task(1, "my task title");
+//                                            Call<Task> call = taskService.createTask(task);
+//                                            call.enqueue(new Callback<orderStatus>() {});
+
+
+                                            int i = Integer.parseInt(holder.orderId.getText().toString().substring(10));
+
+                                            Call<orderStatus> call =  jsonPlaceHolderApi.putOrderStatus(i);
+                                            call.enqueue(new Callback<orderStatus>() {
+
+                                                @Override
+                                                public void onResponse(Call<orderStatus> call, Response<orderStatus> response) {
+                                                    if(!response.isSuccessful()) {
+                                                        Toast.makeText(context, "CODE: "+response.code(),
+                                                                Toast.LENGTH_LONG).show();
+                                                        System.out.println("PICKUP onResponse collected unsuccessful");
+                                                        System.out.println("Current - orderStatus : "+String.valueOf(holder.orderStatus.getText()));
+                                                        return;
+                                                    }
+
+                                                    System.out.println("Current + orderStatus : "+String.valueOf(holder.orderStatus));
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<orderStatus> call, Throwable t) {
+
+                                                }
+                                            });
+
                                         }
                                     });
 

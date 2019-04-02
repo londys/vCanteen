@@ -3,7 +3,7 @@ package com.example.vcanteen;
 import com.google.gson.annotations.SerializedName;
 
 public class orderHistory {
-    @SerializedName("order_id")
+    @SerializedName("orderId")
     private int orderId;
 
     @SerializedName("orderName")
