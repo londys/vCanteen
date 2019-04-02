@@ -1,8 +1,11 @@
 package com.example.vcanteen;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class orderStack {
+public class orderStack implements Parcelable {
 
     int customerId;
     int vendorId;
@@ -20,6 +23,33 @@ public class orderStack {
 //        this.createdAt = null;
 //    }
 
+
+    public orderStack(int customerId, int vendorId, ArrayList<order> orderList, int totalPrice, int customerMoneyAccount) {
+        this.customerId = customerId;
+        this.vendorId = vendorId;
+        this.orderList = orderList;
+        this.totalPrice = totalPrice;
+        this.customerMoneyAccount = customerMoneyAccount;
+    }
+
+    protected orderStack(Parcel in) {
+        customerId = in.readInt();
+        vendorId = in.readInt();
+        totalPrice = in.readInt();
+        customerMoneyAccount = in.readInt();
+    }
+
+    public static final Creator<orderStack> CREATOR = new Creator<orderStack>() {
+        @Override
+        public orderStack createFromParcel(Parcel in) {
+            return new orderStack(in);
+        }
+
+        @Override
+        public orderStack[] newArray(int size) {
+            return new orderStack[size];
+        }
+    };
 
     public int getCustomerId() {
         return customerId;
@@ -59,5 +89,18 @@ public class orderStack {
 
     public void setCustomerMoneyAccount(int customerMoneyAccount) {
         this.customerMoneyAccount = customerMoneyAccount;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(customerId);
+        dest.writeInt(vendorId);
+        dest.writeInt(totalPrice);
+        dest.writeInt(customerMoneyAccount);
     }
 }

@@ -13,8 +13,6 @@ public class menuListAdapter extends ArrayAdapter {
 
     int s;
     ArrayList<food> foodList;
-    int[]b={};
-    String[]a={};
     Context c;
     LayoutInflater inflater;
 

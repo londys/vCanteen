@@ -15,18 +15,22 @@ import android.widget.Toast;
 public class vendorMenuActivity extends AppCompatActivity {
 
     orderStack orderStack;
+    order order;
     String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky Rice","Food6", "Food 77","Food 567","Food 7321"};
     int[] testPrice = {12,30,11,60,30,23,56,55,45};
     TextView minCombinationPrice;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
 
+        final int vendorId = 45; // for testing only
 
-        orderStack = new orderStack();
-        //orderStack.setVendorId(vendorId); //< wait to get from BE
+        // cusId need to change later when connect with BE
+        orderStack = new orderStack(22,vendorId, new ArrayList<order>(),0,0);
+
 
         // to open cutomize order activity
         android.support.constraint.ConstraintLayout tappable_customize = (android.support.constraint.ConstraintLayout)findViewById(R.id.tappable_customize);
@@ -54,11 +58,11 @@ public class vendorMenuActivity extends AppCompatActivity {
         availableList.add(new food(16,"Food 2",25, "A LA CARTE"));
         soldOutList.add(new food(9,"Sold Out Food",30, "A LA CARTE"));
 
-        ArrayList<food> shownFoodList = new ArrayList<>(availableList);
+        final ArrayList<food> shownFoodList = new ArrayList<>(availableList);
         shownFoodList.addAll(soldOutList);
 
         TextView restaurantName = (TextView)findViewById(R.id.restaurantName);
-        restaurantName.setText(""+shownFoodList.get(2).foodName);
+        //restaurantName.setText(""+);
 
 
         ListAdapter testAdapter1 = new menuListAdapter(this,shownFoodList,availableList.size());
@@ -70,8 +74,9 @@ public class vendorMenuActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position<availableList.size()) {
                     Intent passALaCarte = new Intent(vendorMenuActivity.this, normalOrderActivity.class);
-                    passALaCarte.putExtra("aLaCarteName", test[position]);
-                    passALaCarte.putExtra("aLaCartePrice", "" + testPrice[position] + "");
+                    passALaCarte.putExtra("chosenFood", shownFoodList.get(position));
+                    passALaCarte.putExtra("orderStack", orderStack);
+
                     startActivity(passALaCarte);
                 }else{
                     menuList.getChildAt(position).setEnabled(false);
@@ -84,7 +89,6 @@ public class vendorMenuActivity extends AppCompatActivity {
     private void openCustomizeActivity() {
         Intent intent = new Intent(this, customizeOrderActivity.class);
         startActivity(intent);
-
     }
 
 

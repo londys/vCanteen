@@ -6,25 +6,26 @@ import android.os.Bundle;
 import android.view.View;
 import java.lang.Integer;
 import java.util.ArrayList;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
+
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
 
 
 public class normalOrderActivity extends AppCompatActivity {
 
-    int amount,fp,op;
+    int amount,op;
     TextView orderQuantity, orderPrice, foodPrice, foodName, addFoodName, addFoodPrice;
     ImageView addToCartImg;
 
 
     String[] extra = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4"};
     int[] extraPrice = {5,2,0,1};
+
+    food chosenALaCarte;
+    orderStack orderStack;
+    order order;
 
 
     @Override
@@ -36,27 +37,30 @@ public class normalOrderActivity extends AppCompatActivity {
         addToCartImg.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
                 openCart();
             }
         });
 
         orderPrice = (TextView) findViewById(R.id.orderPrice);
-        foodPrice = (TextView) findViewById(R.id.addFoodPrice);
-        foodName = (TextView) findViewById(R.id.addFoodName);
+        foodPrice = (TextView) findViewById(R.id.mainComPrice);
+        foodName = (TextView) findViewById(R.id.mainComName);
 
         //Get Selected A La Carte Info
-        Intent passALaCarte = getIntent();
-        foodName.setText(passALaCarte.getStringExtra("aLaCarteName"));
-        foodPrice.setText(""+passALaCarte.getStringExtra("aLaCartePrice")+"");
-        orderPrice.setText(""+passALaCarte.getStringExtra("aLaCartePrice")+"");
+        Bundle bundle = getIntent().getExtras();
+        //chosenALaCarte = bundle.getParcelable("chosenFood");
+        chosenALaCarte = getIntent().getExtras().getParcelable("chosenFood");
+        orderStack = getIntent().getExtras().getParcelable("orderStack");
+
+
+        foodName.setText(chosenALaCarte.foodName);
+        foodPrice.setText(""+chosenALaCarte.foodPrice);
+        orderPrice.setText(""+chosenALaCarte.foodPrice);
 
         orderQuantity = (TextView) findViewById(R.id.orderQuantity);
         TextView subtractSign = findViewById(R.id.subtractSign);
         TextView addSign = findViewById(R.id.addSign);
 
         amount = Integer.parseInt(orderQuantity.getText().toString());
-        fp = Integer.parseInt(foodPrice.getText().toString());
 
         subtractSign.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -72,9 +76,21 @@ public class normalOrderActivity extends AppCompatActivity {
         });
 
 
-        ListAdapter testAdapter2 = new foodListAdapter(this,extra,extraPrice);
-        final ListView extraList = findViewById(R.id.extraList);
-        extraList.setAdapter(testAdapter2);
+        ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
+        ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
+
+        // for testing
+        availableExtraList.add(new food(10,"Extra 1",10, "EXTRA"));
+        availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
+        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
+        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
+
+        ArrayList<food> shownFoodList = new ArrayList<>(availableExtraList);
+        shownFoodList.addAll(soldOutExtraList);
+
+        ListAdapter testAdapter2 = new foodListAdapter(this,shownFoodList,availableExtraList.size());
+        final ListView extraListShow = findViewById(R.id.extraList);
+        extraListShow.setAdapter(testAdapter2);
 
     }
 
@@ -85,7 +101,7 @@ public class normalOrderActivity extends AppCompatActivity {
             amount = amount+1;
             //Toast.makeText(normalOrderActivity.this, "Now "+amount+"!", Toast.LENGTH_LONG).show();
             orderQuantity.setText(""+amount+"");
-            op = amount * fp;
+            op = amount * chosenALaCarte.foodPrice;
             orderPrice.setText("" + op +"");
         }
     }
@@ -96,14 +112,22 @@ public class normalOrderActivity extends AppCompatActivity {
             amount = amount-1;
             //Toast.makeText(normalOrderActivity.this, "Now "+amount+"!", Toast.LENGTH_LONG).show();
             orderQuantity.setText(""+amount+"");
-            op = amount * fp;
+            op = amount * chosenALaCarte.foodPrice;
             orderPrice.setText("" + op +"");
         }
     }
 
     public void openCart(){
+        // get number of checked checkbox +1
+        food foodList[] = new food[1];
+        foodList[0] = chosenALaCarte;
+//        for(int i = 0; i<foodList.length; i++){
+//            foodList[i] = new food();
+//        }
 
-       Intent intent = new Intent(this, cartActivity.class);
-       startActivity(intent);
+        // assume that there is no extra since checkbox doesn't work yet
+        order = new order(chosenALaCarte.foodName,null, op, foodList);
+        Intent intent = new Intent(this, cartActivity.class);
+        startActivity(intent);
     }
 }

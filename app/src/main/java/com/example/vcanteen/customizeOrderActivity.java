@@ -33,45 +33,45 @@ public class customizeOrderActivity extends AppCompatActivity {
 
 
 
-
-        ListAdapter testAdapter2 = new foodListAdapter(this,items3,items3Price);
-        final ListView extraList = findViewById(R.id.list3);
-        extraList.setAdapter(testAdapter2);
-
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, items1);
-        list1.setAdapter(adapter1);
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, items2);
-        list2.setAdapter(adapter2);
-//        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_1, items3);
-//        list3.setAdapter(adapter3);
-
-        setListViewHeightBasedOnChildren(list1);
-        setListViewHeightBasedOnChildren(list2);
-        //setListViewHeightBasedOnChildren(list3);
-
-    }
-
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
+//
+//        ListAdapter testAdapter2 = new foodListAdapter(this,items3,items3Price);
+//        final ListView extraList = findViewById(R.id.list3);
+//        extraList.setAdapter(testAdapter2);
+//
+//        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1, items1);
+//        list1.setAdapter(adapter1);
+//        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_list_item_1, items2);
+//        list2.setAdapter(adapter2);
+////        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
+////                android.R.layout.simple_list_item_1, items3);
+////        list3.setAdapter(adapter3);
+//
+//        setListViewHeightBasedOnChildren(list1);
+//        setListViewHeightBasedOnChildren(list2);
+//        //setListViewHeightBasedOnChildren(list3);
+//
+//    }
+//
+//    public void setListViewHeightBasedOnChildren(ListView listView) {
+//        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
+//        if (listAdapter == null) {
+//            // pre-condition
+//            return;
+//        }
+//
+//        int totalHeight = 0;
+//        for (int i = 0; i < listAdapter.getCount(); i++) {
+//            View listItem = listAdapter.getView(i, null, listView);
+//            listItem.measure(0, 0);
+//            totalHeight += listItem.getMeasuredHeight();
+//        }
+//
+//        ViewGroup.LayoutParams params = listView.getLayoutParams();
+//        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+//        listView.setLayoutParams(params);
+//        listView.requestLayout();
     }
 
 

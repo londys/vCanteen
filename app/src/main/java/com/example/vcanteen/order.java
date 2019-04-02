@@ -10,6 +10,13 @@ public class order {
     int orderPrice;
     food foodList[];
 
+    public order(String orderName, String orderNameExtra, int orderPrice, food[] foodList) {
+        this.orderName = orderName;
+        this.orderNameExtra = orderNameExtra;
+        this.orderPrice = orderPrice;
+        this.foodList = foodList;
+    }
+
     public String getOrderName() {
         return orderName;
     }
