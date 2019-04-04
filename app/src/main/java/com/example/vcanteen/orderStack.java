@@ -13,15 +13,15 @@ public class orderStack implements Parcelable {
     int totalPrice;
     int customerMoneyAccount;
     //DATETIME createdAt; //null until the customer taps CONFIRM & PAY on popup dialog
-//
-//    public void setEmpty(){
-//        this.customerId = null;
-//        this.vendorId = null;
-//        this.orderList = new ArrayList<order>();
-//        this.totalPrice = null;
-//        this.customerMoneyAccount = null;
-//        this.createdAt = null;
-//    }
+
+    public void setEmpty(){
+        this.customerId = 0;
+        this.vendorId = 0;
+        this.orderList = new ArrayList<order>();
+        this.totalPrice = 0;
+        this.customerMoneyAccount = 0;
+       // this.createdAt = null;
+    }
 
 
     public orderStack(int customerId, int vendorId, ArrayList<order> orderList, int totalPrice, int customerMoneyAccount) {
@@ -35,8 +35,10 @@ public class orderStack implements Parcelable {
     protected orderStack(Parcel in) {
         customerId = in.readInt();
         vendorId = in.readInt();
+        orderList = in.readArrayList(order.class.getClassLoader());
         totalPrice = in.readInt();
         customerMoneyAccount = in.readInt();
+
     }
 
     public static final Creator<orderStack> CREATOR = new Creator<orderStack>() {
@@ -100,6 +102,7 @@ public class orderStack implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(customerId);
         dest.writeInt(vendorId);
+        dest.writeList(orderList);
         dest.writeInt(totalPrice);
         dest.writeInt(customerMoneyAccount);
     }

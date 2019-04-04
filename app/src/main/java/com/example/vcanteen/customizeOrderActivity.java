@@ -27,13 +27,51 @@ public class customizeOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize_order);
-        ListView list1 = (ListView) findViewById(R.id.list1);
-        ListView list2 = (ListView) findViewById(R.id.list2);
+
+///// FOR COMBINATION BASE //////
+        ArrayList<food> baseList = new ArrayList<>(); //need to get from BE
+
+        // for testing
+        baseList.add(new food(3, "Jasmine Rice", 5, "COMBINATION_BASE"));
+        baseList.add(new food(1, "Sticky Rice", 10, "COMBINATION_BASE"));
+        baseList.add(new food(2, "Fried Rice", 15, "COMBINATION_BASE"));
+
+        ListAdapter testAdapter1 = new combinationBaseListAdapter(this, baseList);
+        final ListView baseListShow = findViewById(R.id.list1);
+        baseListShow.setAdapter(testAdapter1);
+
+        setListViewHeightBasedOnChildren(baseListShow);
+
+///// FOR COMBINATION MAIN //////
+        final ArrayList<food> availableMainList = new ArrayList<>(); //need to get from BE
+        ArrayList<food> soldOutMainList = new ArrayList<>();   //need to get from BE
+
+        // for testing
+        availableMainList.add(new food(3, "Pork", 15, "COMBINATION_MAIN"));
+        availableMainList.add(new food(1, "Beef", 10, "COMBINATION_MAIN"));
+        availableMainList.add(new food(2, "Fried Chicken", 15, "COMBINATION_MAIN"));
+        availableMainList.add(new food(3, "Curry", 15, "COMBINATION_MAIN"));
+        soldOutMainList.add(new food(32, "Salad", 25, "COMBINATION_MAIN"));
+        soldOutMainList.add(new food(13, "Curry Beef", 35, "COMBINATION_MAIN"));
+
+        final ArrayList<food> mainList = new ArrayList<>(availableMainList);
+        mainList.addAll(soldOutMainList);
+
+        ListAdapter testAdapter2 = new foodListAdapter(this, mainList, availableMainList.size());
+        final ListView mainListShow = findViewById(R.id.list2);
+        mainListShow.setAdapter(testAdapter2);
+
+        setListViewHeightBasedOnChildren(mainListShow);
+
+///// FOR EXTRA //////
+
+
+    }
+//        ListView list1 = (ListView) findViewById(R.id.list1);
+//        ListView list2 = (ListView) findViewById(R.id.list2);
         //ListView list3 = (ListView) findViewById(R.id.list3);
 
 
-
-//
 //        ListAdapter testAdapter2 = new foodListAdapter(this,items3,items3Price);
 //        final ListView extraList = findViewById(R.id.list3);
 //        extraList.setAdapter(testAdapter2);
@@ -54,24 +92,24 @@ public class customizeOrderActivity extends AppCompatActivity {
 //
 //    }
 //
-//    public void setListViewHeightBasedOnChildren(ListView listView) {
-//        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
-//        if (listAdapter == null) {
-//            // pre-condition
-//            return;
-//        }
-//
-//        int totalHeight = 0;
-//        for (int i = 0; i < listAdapter.getCount(); i++) {
-//            View listItem = listAdapter.getView(i, null, listView);
-//            listItem.measure(0, 0);
-//            totalHeight += listItem.getMeasuredHeight();
-//        }
-//
-//        ViewGroup.LayoutParams params = listView.getLayoutParams();
-//        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-//        listView.setLayoutParams(params);
-//        listView.requestLayout();
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 
 

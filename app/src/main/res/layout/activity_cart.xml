@@ -31,19 +31,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="21dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="30dp"
-        android:text="Quantity"
-        android:textColor="#BDBDBD"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
-
     <View
         android:id="@+id/divider5"
         android:layout_width="0dp"
@@ -217,7 +204,7 @@
         app:layout_constraintTop_toBottomOf="@+id/orderList" />
 
     <TextView
-        android:id="@+id/orderTotalPrice"
+        android:id="@+id/orderTotalPrice1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

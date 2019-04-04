@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/mainComName"
+        android:id="@+id/baseComName"
         android:layout_width="270dp"
         android:layout_height="20dp"
         android:layout_marginStart="25dp"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
-        android:id="@+id/mainComPrice"
+        android:id="@+id/baseComPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
@@ -51,7 +51,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainComName" />
+        app:layout_constraintTop_toBottomOf="@+id/baseComName" />
 
     <TextView
         android:id="@+id/textView12"
@@ -63,8 +63,8 @@
         android:textColor="#333333"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/mainComPrice"
-        app:layout_constraintTop_toBottomOf="@+id/mainComName" />
+        app:layout_constraintStart_toEndOf="@+id/baseComPrice"
+        app:layout_constraintTop_toBottomOf="@+id/baseComName" />
 
     <View
         android:id="@+id/divider4"
@@ -76,7 +76,7 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainComPrice" />
+        app:layout_constraintTop_toBottomOf="@+id/baseComPrice" />
 
     <TextView
         android:id="@+id/textView13"

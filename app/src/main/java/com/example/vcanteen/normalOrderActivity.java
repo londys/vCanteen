@@ -1,12 +1,18 @@
 package com.example.vcanteen;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import java.lang.Integer;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
+import android.widget.Toast;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -15,19 +21,26 @@ import android.widget.TextView;
 
 public class normalOrderActivity extends AppCompatActivity {
 
-    int amount,op;
+    int eop,op;
     TextView orderQuantity, orderPrice, foodPrice, foodName, addFoodName, addFoodPrice;
     ImageView addToCartImg;
-
-
-    String[] extra = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4"};
-    int[] extraPrice = {5,2,0,1};
+    foodListAdapter adapter ;
+    ArrayList<Boolean> foodchk = new ArrayList<Boolean>();
 
     food chosenALaCarte;
     orderStack orderStack;
     order order;
+    int oPrice;
+    int mainAmount;
+
+    food[] foodList;
+    food[] sendfoodList;
+    SparseBooleanArray mCheckStates;
+
+    ArrayList<food> shownFoodList;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,25 +55,25 @@ public class normalOrderActivity extends AppCompatActivity {
         });
 
         orderPrice = (TextView) findViewById(R.id.orderPrice);
-        foodPrice = (TextView) findViewById(R.id.mainComPrice);
-        foodName = (TextView) findViewById(R.id.mainComName);
+        foodPrice = (TextView) findViewById(R.id.baseComPrice);
+        foodName = (TextView) findViewById(R.id.baseComName);
 
         //Get Selected A La Carte Info
-        Bundle bundle = getIntent().getExtras();
-        //chosenALaCarte = bundle.getParcelable("chosenFood");
         chosenALaCarte = getIntent().getExtras().getParcelable("chosenFood");
         orderStack = getIntent().getExtras().getParcelable("orderStack");
-
 
         foodName.setText(chosenALaCarte.foodName);
         foodPrice.setText(""+chosenALaCarte.foodPrice);
         orderPrice.setText(""+chosenALaCarte.foodPrice);
+        oPrice = chosenALaCarte.foodPrice;
+        mainAmount = 1;
+        eop = 0;
+        op = chosenALaCarte.foodPrice;
 
         orderQuantity = (TextView) findViewById(R.id.orderQuantity);
         TextView subtractSign = findViewById(R.id.subtractSign);
         TextView addSign = findViewById(R.id.addSign);
 
-        amount = Integer.parseInt(orderQuantity.getText().toString());
 
         subtractSign.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -85,49 +98,91 @@ public class normalOrderActivity extends AppCompatActivity {
         soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
         soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
 
-        ArrayList<food> shownFoodList = new ArrayList<>(availableExtraList);
+        shownFoodList = new ArrayList<>(availableExtraList);
         shownFoodList.addAll(soldOutExtraList);
 
-        ListAdapter testAdapter2 = new foodListAdapter(this,shownFoodList,availableExtraList.size());
+        adapter = new foodListAdapter(this,shownFoodList,availableExtraList.size());
         final ListView extraListShow = findViewById(R.id.extraList);
-        extraListShow.setAdapter(testAdapter2);
+        extraListShow.setAdapter(adapter);
 
+
+
+        //int numCheckBox = ... //how many checkbox are checked
+//        foodList = new food[2]; //[numCheckBox+1];
+//        foodList[0] = chosenALaCarte;
+//        foodList[1] = shownFoodList.get(1);
+
+        //adapter.mCheckStates.o
+
+    }
+
+    public void notifyExtraChange(){
+        int tempex = 0;
+        for (int i = 0; i < shownFoodList.size(); i++) {
+            if (adapter.isChecked(i) == true) {
+                tempex += shownFoodList.get(i).getFoodPrice();
+            }
+        }
+        eop = tempex;
+        orderPrice.setText("" + (eop + op)*mainAmount );
     }
 
 
     private void increaseQuntity() {
-        amount = Integer.parseInt(orderQuantity.getText().toString());
-        if(amount<9){
-            amount = amount+1;
+        if(mainAmount<9){
+            mainAmount = mainAmount+1;
             //Toast.makeText(normalOrderActivity.this, "Now "+amount+"!", Toast.LENGTH_LONG).show();
-            orderQuantity.setText(""+amount+"");
-            op = amount * chosenALaCarte.foodPrice;
-            orderPrice.setText("" + op +"");
+            orderQuantity.setText(""+mainAmount+"");
+            orderPrice.setText("" + (eop + op)*mainAmount);
         }
     }
 
     public void decreaseQuntity(){
-        amount = Integer.parseInt(orderQuantity.getText().toString());
-        if(amount>1){
-            amount = amount-1;
+        if(mainAmount>1){
+            mainAmount = mainAmount-1;
             //Toast.makeText(normalOrderActivity.this, "Now "+amount+"!", Toast.LENGTH_LONG).show();
-            orderQuantity.setText(""+amount+"");
-            op = amount * chosenALaCarte.foodPrice;
-            orderPrice.setText("" + op +"");
+            orderQuantity.setText(""+mainAmount+"");
+            orderPrice.setText("" + (eop + op)*mainAmount);
         }
     }
 
     public void openCart(){
-        // get number of checked checkbox +1
-        food foodList[] = new food[1];
-        foodList[0] = chosenALaCarte;
-//        for(int i = 0; i<foodList.length; i++){
-//            foodList[i] = new food();
-//        }
 
+
+        order = new order(chosenALaCarte.foodName,"", (op + eop) ,foodList);
+
+        for(int i = 0; i<mainAmount; i++){
+            orderStack.orderList.add(order);
+        }
+
+
+        int n = 0;
+        for(int i=0;i<shownFoodList.size();i++)
+        {
+            if(adapter.isChecked(i)==true)
+            {
+                order.orderNameExtra = order.orderNameExtra + "\n" + adapter.foodList.get(i).getFoodName();
+            }
+        }
+
+
+
+
+//        foodList[0] = chosenALaCarte;
+//        foodList[1] = shownFoodList.get(1);
+////        for(int i = 0; i<foodList.length; i++){
+////            foodList[i] = new food();
+////        }
+//
+//        //test
+//        orderStack.orderList.add(new order(chosenALaCarte.foodName,"Extra", op, foodList));
         // assume that there is no extra since checkbox doesn't work yet
-        order = new order(chosenALaCarte.foodName,null, op, foodList);
+        //order = new order(chosenALaCarte.foodName,null, op, foodList);
+        Log.d("1",orderStack.orderList.get(0).orderName);
         Intent intent = new Intent(this, cartActivity.class);
+
+        intent.putExtra("sendOrderStack", orderStack);
+
         startActivity(intent);
     }
 }

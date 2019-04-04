@@ -14,11 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class cartActivity extends AppCompatActivity {
 
     RadioButton scbEasy, kplus, trueMoney,cunex;
 
-    TextView orderTotalPrice, orderTotalItems;
+    TextView orderTotalPrice, orderTotalItems, orderTotalPriceTop;
 
     String[] order = {"order 1", "order 2", "order 3"};
     String[] orderInfo = {"","Extra Rice, More food, More food, More food, More food, Alibaba","put more love <3"};
@@ -32,31 +34,50 @@ public class cartActivity extends AppCompatActivity {
     TextView cancelButton;
     Button confirmButton;
 
+    orderStack orderStack;
+    ArrayList<RadioButton> unavailableService;
+    String selectedServiceProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
+
+        // test
+        paymentList.add(new paymentList(1,"SCB_EASY"));
+        paymentList.add(new paymentList(03,"TRUEMONEY_WALLET"));
 
         scbEasy = (RadioButton) findViewById(R.id.scbEasy);
         kplus = (RadioButton) findViewById(R.id.kplus);
         trueMoney = (RadioButton) findViewById(R.id.trueMoney);
         cunex = (RadioButton)findViewById(R.id.cunex);
 
-        ListAdapter testAdapter2 = new orderListAdapter(this,order,orderPrice,orderInfo);
-        final ListView orderList = findViewById(R.id.orderList);
-        orderList.setAdapter(testAdapter2);
+//// FOR DISABLE UNAVAILABLE SERVICE PROVIDER ////
+        unavailableService = new ArrayList<>();
+        unavailableService.add(scbEasy);
+        unavailableService.add(kplus);
+        unavailableService.add(cunex);
+        unavailableService.add(trueMoney);
 
-        orderTotalItems = (TextView) findViewById(R.id.orderTotalItems);
-        orderTotalPrice = (TextView) findViewById(R.id.orderTotalPrice);
-
-        for(int i = 0; i<orderPrice.length; i++){
-            total += orderPrice[i];
+        String a,b;
+        for(int i = 0; i<paymentList.size();i++){
+            a = String.valueOf(paymentList.get(i).serviceProvider.charAt(0));
+            for(int j = 0; j < unavailableService.size();j++){
+                b = String.valueOf(unavailableService.get(j).getText().toString().charAt(0));
+                if(a.equalsIgnoreCase(b)){
+                    unavailableService.remove(j);
+                }
+            }
         }
 
-        orderTotalItems.setText("Total "+ orderPrice.length+" item(s)");
-        orderTotalPrice.setText("" + total +"");
+        for(int k = 0; k<unavailableService.size();k++){
+            unavailableService.get(k).setEnabled(false);
+            unavailableService.get(k).setTextColor(Color.parseColor("#E0E0E0"));
+        }
 
-        //dealing with popup
+//// FOR DEALING WITH POP UP ////
         showpopup = new Dialog(this);
         confirmImgButton = (ImageView)findViewById(R.id.confirmImgButton);
         confirmImgButton.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +86,30 @@ public class cartActivity extends AppCompatActivity {
                 showPopUp();
             }
         });
+
+//// FOR DEALING WITH ORDER LIST ////
+        orderStack = getIntent().getExtras().getParcelable("sendOrderStack");
+
+        ListAdapter testAdapter2 = new orderListAdapter(this,orderStack);
+        final ListView orderList = findViewById(R.id.orderList);
+        orderList.setAdapter(testAdapter2);
+
+
+
+        orderTotalItems = (TextView) findViewById(R.id.orderTotalItems);
+        orderTotalPrice = (TextView) findViewById(R.id.orderTotalPrice);
+        orderTotalPriceTop = (TextView) findViewById(R.id.orderTotalPrice1);
+
+        for(int i = 0; i<orderStack.orderList.size(); i++){
+            total += orderStack.orderList.get(i).orderPrice;
+        }
+
+        orderStack.setTotalPrice(total);
+        orderTotalItems.setText("Total "+ orderStack.orderList.size()+" item(s)");
+        orderTotalPrice.setText("" + orderStack.totalPrice +"");
+        orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
+
+
 
     }
 
@@ -92,9 +137,12 @@ public class cartActivity extends AppCompatActivity {
     }
 
     public void openProcessingPayment() {
+        // fill customer money account in orderstack
+        // fill timestamp
         Intent intent = new Intent(this, processingPaymentActivity.class);
+        intent.putExtra("orderStack", orderStack);
+        intent.putExtra("selectedServiceProvider", selectedServiceProvider);
         startActivity(intent);
-
     }
 
     public void onRadioButtonClicked(View view) {
@@ -106,21 +154,25 @@ public class cartActivity extends AppCompatActivity {
                 if (checked)
                     scbEasy.setTextColor(Color.parseColor("#FF5A5A"));
                     unClickRadioButton(kplus,cunex,trueMoney);
+                    selectedServiceProvider = scbEasy.getText().toString();
                     break;
             case R.id.kplus:
                 if (checked)
                     kplus.setTextColor(Color.parseColor("#FF5A5A"));
                     unClickRadioButton(cunex,scbEasy,trueMoney);
+                    selectedServiceProvider = kplus.getText().toString();
                     break;
             case R.id.cunex:
                 if (checked)
                     cunex.setTextColor(Color.parseColor("#FF5A5A"));
                     unClickRadioButton(kplus,scbEasy,trueMoney);
+                    selectedServiceProvider = cunex.getText().toString();
                     break;
             case R.id.trueMoney:
                 if (checked)
                     trueMoney.setTextColor(Color.parseColor("#FF5A5A"));
                     unClickRadioButton(kplus,scbEasy,cunex);
+                    selectedServiceProvider = trueMoney.getText().toString();
                     break;
         }
     }
@@ -129,9 +181,15 @@ public class cartActivity extends AppCompatActivity {
         a.setChecked(false);
         b.setChecked(false);
         c.setChecked(false);
-        a.setTextColor(Color.parseColor("#828282"));
-        b.setTextColor(Color.parseColor("#828282"));
-        c.setTextColor(Color.parseColor("#828282"));
+        if(!unavailableService.contains(a)){
+            a.setTextColor(Color.parseColor("#828282"));
+        }
+        if(!unavailableService.contains(b)){
+            b.setTextColor(Color.parseColor("#828282"));
+        }
+        if(!unavailableService.contains(c)){
+            c.setTextColor(Color.parseColor("#828282"));
+        }
     }
 
 }

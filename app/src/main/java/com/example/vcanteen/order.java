@@ -1,6 +1,9 @@
 package com.example.vcanteen;
 
-public class order {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class order implements Parcelable {
 
     String orderName;
     //For combination, combination_base comes before combination_main
@@ -16,6 +19,25 @@ public class order {
         this.orderPrice = orderPrice;
         this.foodList = foodList;
     }
+
+    protected order(Parcel in) {
+        orderName = in.readString();
+        orderNameExtra = in.readString();
+        orderPrice = in.readInt();
+        foodList = in.createTypedArray(food.CREATOR);
+    }
+
+    public static final Creator<order> CREATOR = new Creator<order>() {
+        @Override
+        public order createFromParcel(Parcel in) {
+            return new order(in);
+        }
+
+        @Override
+        public order[] newArray(int size) {
+            return new order[size];
+        }
+    };
 
     public String getOrderName() {
         return orderName;
@@ -47,5 +69,18 @@ public class order {
 
     public void setFoodList(food[] foodList) {
         this.foodList = foodList;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(orderName);
+        dest.writeString(orderNameExtra);
+        dest.writeInt(orderPrice);
+        dest.writeTypedArray(foodList, flags);
     }
 }

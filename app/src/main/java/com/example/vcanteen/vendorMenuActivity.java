@@ -19,6 +19,7 @@ public class vendorMenuActivity extends AppCompatActivity {
     String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky Rice","Food6", "Food 77","Food 567","Food 7321"};
     int[] testPrice = {12,30,11,60,30,23,56,55,45};
     TextView minCombinationPrice;
+    ArrayList<order> orderList;
 
 
     @Override
@@ -28,11 +29,13 @@ public class vendorMenuActivity extends AppCompatActivity {
 
         final int vendorId = 45; // for testing only
 
+        orderList = new ArrayList<>();
         // cusId need to change later when connect with BE
-        orderStack = new orderStack(22,vendorId, new ArrayList<order>(),0,0);
+
+        orderStack = new orderStack(22,vendorId, orderList,0,0);
 
 
-        // to open cutomize order activity
+        // to open cutomize order acti vity
         android.support.constraint.ConstraintLayout tappable_customize = (android.support.constraint.ConstraintLayout)findViewById(R.id.tappable_customize);
         tappable_customize.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +96,12 @@ public class vendorMenuActivity extends AppCompatActivity {
 
 
     public void openCartActivity(View view) {
-        Intent intent = new Intent(this, cartActivity.class);
-        startActivity(intent);
+        if(orderStack.totalPrice != 0){
+            Intent intent = new Intent(this, cartActivity.class);
+            startActivity(intent);
+        }else{
+            Toast.makeText(vendorMenuActivity.this, "No Order in the Cart!", Toast.LENGTH_LONG).show();
+        }
     }
 
 

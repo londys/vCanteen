@@ -7,6 +7,59 @@
     tools:context=".customizeOrderActivity">
 
     <ImageView
+        android:id="@+id/addToCartImg2"
+        android:layout_width="297dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="57dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/button_background" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="46dp"
+        android:text="ADD TO CART"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/addToCartImg2" />
+
+    <TextView
+        android:id="@+id/orderPrice3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="46dp"
+        android:text="30"
+        android:textAlignment="textEnd"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/orderPrice4" />
+
+    <TextView
+        android:id="@+id/orderPrice4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="46dp"
+        android:text="THB"
+        android:textAlignment="textEnd"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/addToCartImg2" />
+
+    <ImageView
         android:id="@+id/imageView2"
         android:layout_width="94dp"
         android:layout_height="25dp"
@@ -62,6 +115,7 @@
 
             <ListView
                 android:id="@+id/list1"
+                android:divider="@null"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
@@ -86,6 +140,7 @@
 
             <ListView
                 android:id="@+id/list2"
+                android:divider="@null"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
@@ -111,7 +166,8 @@
             <ListView
                 android:id="@+id/list3"
                 android:layout_width="fill_parent"
-                android:layout_height="100dp" />
+                android:layout_height="wrap_content"
+                android:divider="@null" />
 
             <View
                 android:id="@+id/divider3"

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Sticky Rice With Fied Chicken"
+        android:text="Tom Yum Kung"
         android:textColor="#333333"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -21,26 +21,14 @@
 
     <TextView
         android:id="@+id/orderNameExtra"
-        android:layout_width="300dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="3dp"
-        android:text="TextView"
+        android:text="no vegetable"
         android:textColor="#333333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orderName" />
-
-    <TextView
-        android:id="@+id/removeTextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="12dp"
-        android:text="@string/removeClick"
-        android:textColor="#828282"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/orderPrice"
