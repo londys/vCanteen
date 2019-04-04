@@ -19,30 +19,24 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <ImageView
-            android:id="@+id/foodImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="@string/foodDescription" />
-
         <TextView
             android:id="@+id/orderName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/foodImg"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/sfprotext_bold"
             android:text="@string/order_name"
             android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/orderNameExtra"
-            android:layout_width="259dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/orderName"
-            android:layout_toEndOf="@+id/foodImg"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/sfprotext_medium"
+            android:paddingTop="4dp"
             android:text="@string/order_name_extra"
             android:textSize="10sp" />
 
@@ -51,7 +45,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/orderNameExtra"
-            android:layout_toEndOf="@+id/foodImg"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/sfprotext_medium"
+            android:paddingTop="4dp"
             android:text="@string/vendor_name"
             android:textSize="10sp" />
 
@@ -60,64 +56,69 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/vendorName"
-            android:layout_toEndOf="@+id/foodImg"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/sfprotext_medium"
+            android:paddingTop="4dp"
             android:text="@string/order_id"
             android:textSize="10sp" />
 
         <TextView
             android:id="@+id/orderPrice"
-            android:layout_width="69dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
 
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="238dp"
             android:layout_marginEnd="8dp"
-            android:layout_toEndOf="@+id/orderName"
+            android:fontFamily="@font/sfprotext_semibold"
             android:gravity="end"
             android:text="@string/order_price"
+            android:textAlignment="textEnd"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/blank"
-            android:layout_width="69dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:layout_below="@+id/orderPrice"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="9dp"
-            android:layout_toEndOf="@+id/vendorName"
+            android:layout_marginStart="213dp"
+            android:layout_marginEnd="8dp"
             android:gravity="end"
+            android:paddingTop="4dp"
             android:textSize="10sp" />
 
         <TextView
             android:id="@+id/orderDate"
-            android:layout_width="238dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:layout_below="@+id/blank"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="-132dp"
             android:layout_marginEnd="8dp"
-            android:layout_toEndOf="@+id/orderNameExtra"
+            android:fontFamily="@font/sfprotext_medium"
             android:gravity="end"
+            android:paddingTop="4dp"
             android:text="@string/order_date"
             android:textAlignment="textEnd"
             android:textSize="10sp" />
 
         <TextView
             android:id="@+id/orderStatus"
-            android:layout_width="103dp"
+            android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
             android:layout_below="@+id/orderDate"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="9dp"
             android:layout_marginTop="0dp"
-            android:layout_marginEnd="7dp"
-            android:layout_toEndOf="@+id/orderId"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/sfprotext_bold"
             android:gravity="end"
+            android:paddingTop="4dp"
             android:text="@string/order_status"
+            android:textAlignment="textEnd"
             android:textSize="10sp"
             android:textStyle="bold" />
 
