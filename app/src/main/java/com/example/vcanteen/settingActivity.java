@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class settingActivity extends AppCompatActivity {
     private LinearLayout tappable_password, tappable_payment;
@@ -62,6 +63,7 @@ public class settingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         LoginManager.getInstance().logOut();
+                        FirebaseAuth.getInstance().signOut();
                         sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
                         logoutWarningDialog.cancel();
                         startActivity(new Intent(settingActivity.this, emailActivity.class));

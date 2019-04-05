@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,6 +24,11 @@ import android.widget.Toast;
 import com.example.vcanteen.Data.Customers;
 import com.example.vcanteen.Data.RecoverPass;
 import com.example.vcanteen.Data.TokenResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -64,6 +70,8 @@ public class password_login_page extends AppCompatActivity {
 
     private SharedPreferences sharedPref;
     private ProgressDialog progressDialog;
+
+    private FirebaseAuth mAuth;
 
     // vcanteen.herokuapp.com/
     private final String url = "http://vcanteen.herokuapp.com/";
@@ -125,50 +133,48 @@ public class password_login_page extends AppCompatActivity {
                 passwd = passwdField.getText().toString();
                 passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
                 System.out.println(passwd);
-                JSONObject postData = new JSONObject();
-                try {
-                    postData.put("account_type", account_type);
-                    postData.put("email", email);
-                    postData.put("password", passwd == null ? JSONObject.NULL : (Object) passwd);
-                    System.out.println(postData.toString());
 
-                    Customers postCustomer = new Customers(email, null, null, account_type, null, passwd);
-                    Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
+                Customers postCustomer = new Customers(email, null, null, account_type, null, passwd);
+                Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
-                    // HTTP POST
-                    call.enqueue(new Callback<TokenResponse>() {
-                        @Override
-                        public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
-                            if (!response.isSuccessful())
-                                Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
+                // HTTP POST
+                call.enqueue(new Callback<TokenResponse>() {
+                    @Override
+                    public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                        if (!response.isSuccessful())
+                            Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                            TokenResponse tokenResponse = response.body();
 //                            System.out.println(tokenResponse.isStatusCode());
 //                            System.out.println(response.body().toString());
 
-                            if (response.code() == 404) {
-                                progressDialog.dismiss();
-                                Toast.makeText(password_login_page.this, "Either email or email is incorrect.", Toast.LENGTH_SHORT).show();
-                                System.out.println("ERROR EDOK");
-                            } else if (response.body().getStatus().equals("success")) {
-                                sharedPref.edit().putString("token", response.body().getToken()).commit();
-                                sharedPref.edit().putString("email", email).commit();
-                                sharedPref.edit().putString("account_type", account_type).commit();
-                                progressDialog.dismiss();
-                                startActivity(intent);
-                            }
+                        if (response.code() != 200) {
+                            progressDialog.dismiss();
+                            Toast.makeText(password_login_page.this, "Either email or email is incorrect.", Toast.LENGTH_SHORT).show();
+                            System.out.println("ERROR EDOK");
+                        } else if (response.body().getStatus().equals("success")) {
+                            // auth firebase
+                            mAuth.signInWithEmailAndPassword(email, passwd)
+                                    .addOnCompleteListener(password_login_page.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-
+                                }
+                            });
+                            sharedPref.edit().putString("token", response.body().getToken()).commit();
+                            sharedPref.edit().putString("email", email).commit();
+                            sharedPref.edit().putString("account_type", account_type).commit();
+                            progressDialog.dismiss();
+                            startActivity(intent);
                         }
 
-                        @Override
-                        public void onFailure(Call<TokenResponse> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
 
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT);
-                }
+                    }
+
+                    @Override
+                    public void onFailure(Call<TokenResponse> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
             }
         });
 
@@ -229,7 +235,7 @@ public class password_login_page extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
 
-                        if(response.code() != 200)
+                        if (response.code() != 200)
                             Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_SHORT).show();
                         else {
                             confirmDialog.show();
@@ -269,4 +275,5 @@ public class password_login_page extends AppCompatActivity {
          super.finish();
          overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }*/
+
 }
