@@ -19,12 +19,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
+        System.out.println("received noti---");
         if (remoteMessage.getNotification() != null) {
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-            System.out.println("received noti");
+            System.out.println("received noti"+body);
             NotificationHelper.displayNotification(getApplicationContext(), title, body);
+            startPopupActivity(body);
         }
     }
 
@@ -76,33 +77,34 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //
 //        }
 //    }
-//    Dialog dialog;
+    Dialog dialog;
     private void startPopupActivity(String notiType) {
 //        Intent intent = new Intent(this, PopupActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(intent);
 //        View v = LayoutInflater.from(getApplicationContext()).inflate(R.layout.order_row_layout, parent, false);
 //        final View_Holder holder = new View_Holder(v);
-//        dialog = new Dialog(getApplicationContext());
-//        if(notiType.equals("NOTI_DONE")) {
-//            dialog.setContentView(R.layout.popup_order_done);
-////            Button dismissBtn = (Button)
-//        } else if (notiType.equals("NOTI_5MIN")) {
-//            dialog.setContentView(R.layout.popup_5min);
-//        } else if (notiType.equals("NOTI_TIMEOUT")){
-//            dialog.setContentView(R.layout.popup_timeout);
-//        } else if (notiType.equals("NOTI_CANCELLED")){
-//            dialog.setContentView(R.layout.popup_timeout);
-//        }
-//        (dialog.findViewById(R.id.dismiss_btn))
-//                .setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-////                        dialog.dismiss();
-//
-////                        System.out.println("current slot number = "+slotNumber.getText());
-//                    }
-//                });
+        dialog = new Dialog(getApplicationContext());
+        if(notiType.equals("NOTI_DONE")) {
+            dialog.setContentView(R.layout.popup_order_done);
+//            Button dismissBtn = (Button)
+        } else if (notiType.equals("NOTI_5MIN")) {
+            dialog.setContentView(R.layout.popup_5min);
+        } else if (notiType.equals("NOTI_TIMEOUT")){
+            dialog.setContentView(R.layout.popup_timeout);
+        } else if (notiType.equals("NOTI_CANCELLED")){
+            dialog.setContentView(R.layout.popup_timeout);
+        }
+        (dialog.findViewById(R.id.dismiss_btn))
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        dialog.dismiss();
+
+//                        System.out.println("current slot number = "+slotNumber.getText());
+                    }
+                });
+        dialog.show();
 
 
     }
