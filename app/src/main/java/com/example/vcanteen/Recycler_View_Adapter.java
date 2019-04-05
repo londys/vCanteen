@@ -40,9 +40,28 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
     @Override
     public View_Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         //Inflate the layout, initialize the View Holder
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_row_layout, parent, false);
-        final View_Holder holder = new View_Holder(v);
+        View v2 = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_row_done_layout, parent, false);
+        final View_Holder holder = new View_Holder(view);
+        final View_Holder holder2 = new View_Holder(v2);
+        if(holder.orderStatus.getText().equals("WAITING FOR PICK UP")) {
+
+        }
+
+        View view;
+        switch (viewType) {
+            case 0:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_row_layout, parent, false);
+                return new View_Holder(view);
+            case 1:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_row_done_layout, parent, false);
+                return new Done_View_Holder(view);
+        }
+
+
+
 
 
         //pressed cardview
@@ -182,6 +201,22 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
     @Override
     public void onBindViewHolder(View_Holder holder, int position) {
+
+        OrderListData object = mList.get(position);
+        if (object != null) {
+            switch (object.getType()) {
+                case CITY_TYPE:
+                    ((CityViewHolder) holder).mTitle.setText(object.getName());
+                    break;
+                case EVENT_TYPE:
+                    ((EventViewHolder) holder).mTitle.setText(object.getName());
+                    ((EventViewHolder) holder).mDescription.setText(object.getDescription());
+                    break;
+            }
+        }
+
+
+
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         holder.orderId.setText("Order ID: "+list.get(position).orderId);
