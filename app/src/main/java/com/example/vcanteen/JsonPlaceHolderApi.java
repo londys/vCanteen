@@ -24,7 +24,7 @@ public interface JsonPlaceHolderApi {
     @GET("/v1/orders/{orderId}/slot")
     Call<pickupSlot> getPickupSlot(@Path("orderId") int orderId);
 
-    //    @Headers({"Accept: application/json"})
+
     @PUT("v1/orders/{orderId}/status/collected")
     Call<orderStatus> putOrderStatus(@Path("orderId") int orderId);
     //----------

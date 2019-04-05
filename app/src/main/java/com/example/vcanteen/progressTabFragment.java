@@ -121,7 +121,10 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
                 System.out.println(posts.toString());
 
                 for (orderProgress post : posts) {
-                    data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus()));
+                    if(String.valueOf(post.getOrderStatus()).equals("DONE")) {
+                        data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus(),0));
+                    }
+                    data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus(),1));
                 }
 
                 Recycler_View_Adapter adapter = new Recycler_View_Adapter(data, getContext());

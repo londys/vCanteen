@@ -51,7 +51,7 @@ public class historyTabFragment extends Fragment {
                 showData(response.body());
 
                 for (orderHistory post : posts) {
-                    data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus()));
+                    data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus(),0));
 
                 }
 
@@ -88,13 +88,13 @@ public class historyTabFragment extends Fragment {
     public List<orderListData> fill_with_data2() {
 
         List<orderListData> data = new ArrayList<>();
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "03/02/2019", "TIMEOUT"));
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "04/02/2019", "COLLECTED"));
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "05/02/2019", "COLLECTED"));
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "07/02/2019", "CANCELLED"));
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "09/03/2019", "COLLECTED"));
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "05/05/2019", "TIMEOUT"));
-        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "04/07/2019", "COLLECTED"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "03/02/2019", "TIMEOUT"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "04/02/2019", "COLLECTED"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "05/02/2019", "COLLECTED"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "07/02/2019", "CANCELLED"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "09/03/2019", "COLLECTED"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "05/05/2019", "TIMEOUT"));
+//        data.add(new orderListData("2","20","Chicken Riceeee", "No Pork", "Chicken Stall", "04/07/2019", "COLLECTED"));
 
         return data;
     }
