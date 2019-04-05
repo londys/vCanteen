@@ -4,6 +4,7 @@ package com.example.vcanteen;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +28,9 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
     List<orderListData> list = Collections.emptyList();
     Context context;
-    String slotString="10";
+    String slotString="";
+    RecyclerView recyclerView;
+    pickupSlot slot;
 
     public Recycler_View_Adapter(List<orderListData> list, Context context) {
         this.list = list;
@@ -40,6 +44,8 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_row_layout, parent, false);
         final View_Holder holder = new View_Holder(v);
 
+
+        //pressed cardview
         holder.cv.setOnClickListener(new View.OnClickListener(){
             TextView slotNumber;
             @Override
@@ -47,12 +53,12 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                 System.out.println("pressed "+String.valueOf(holder.orderStatus.getText()));
 
                 if(String.valueOf(holder.orderStatus.getText()).equals("WAITING FOR PICK UP")){
-                    Retrofit retrofit = new Retrofit.Builder()
+                    Retrofit retrofit2 = new Retrofit.Builder()
 //                .baseUrl("http://www.json-generator.com/api/json/get/")
                             .baseUrl("http://vcanteen.herokuapp.com/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
-                    JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+                    JsonPlaceHolderApi jsonPlaceHolderApi = retrofit2.create(JsonPlaceHolderApi.class);
                     System.out.println("My order id is "+holder.orderId.getText().toString().substring(10));
                     int i = Integer.parseInt(holder.orderId.getText().toString().substring(10));
                     Call<pickupSlot> call =  jsonPlaceHolderApi.getPickupSlot(i);
@@ -63,11 +69,12 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                             if(!response.isSuccessful()) {
                                 Toast.makeText(context, "CODE: "+response.code(),
                                         Toast.LENGTH_LONG).show();
-                                System.out.println("PROG onResponse unsuccessful");
+                                System.out.println("PROG onResponse getslot unsuccessful");
                                 return;
                             }
 
-                            pickupSlot slot = response.body();
+
+                            slot = response.body();
                             System.out.println("SLOT A = "+response.body());
                             System.out.println("SLOT = "+Integer.toString(slot.getPickupSlot()));
                             slotString = Integer.toString(slot.getPickupSlot());
@@ -77,7 +84,7 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                             final Dialog dialog = new Dialog(context);
                             dialog.setContentView(R.layout.popup_confirm_pickup);
                             slotNumber =(TextView)dialog.findViewById(R.id.pickup_slot_number);
-                            slotNumber.setText(slotString);
+                            slotNumber.setText(Integer.toString(slot.getPickupSlot()));
                             dialog.setCancelable(true);
 
                             (dialog.findViewById(R.id.dismiss_btn))
@@ -85,6 +92,9 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                                         @Override
                                         public void onClick(View v) {
                                             dialog.dismiss();
+
+                                            slotNumber.setText("");
+                                            System.out.println("current slot number = "+slotNumber.getText());
                                         }
                                     });
 
@@ -94,9 +104,8 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                                         public void onClick(View v) {
                                             dialog.dismiss();
 
+                                            slotNumber.setText("");
                                             //Send endpoint putOrderStatus
-
-
 
                                             Retrofit retrofit = new Retrofit.Builder()
                                                     .baseUrl("http://vcanteen.herokuapp.com/")
@@ -116,11 +125,11 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
 
                                             int i = Integer.parseInt(holder.orderId.getText().toString().substring(10));
 
-                                            Call<orderStatus> call =  jsonPlaceHolderApi.putOrderStatus(i);
-                                            call.enqueue(new Callback<orderStatus>() {
+                                            Call<orderStatus> call3 =  jsonPlaceHolderApi.putOrderStatus(i);
+                                            call3.enqueue(new Callback<orderStatus>() {
 
                                                 @Override
-                                                public void onResponse(Call<orderStatus> call, Response<orderStatus> response) {
+                                                public void onResponse(Call<orderStatus> call3, Response<orderStatus> response) {
                                                     if(!response.isSuccessful()) {
                                                         Toast.makeText(context, "CODE: "+response.code(),
                                                                 Toast.LENGTH_LONG).show();
@@ -128,15 +137,21 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                                                         System.out.println("Current - orderStatus : "+String.valueOf(holder.orderStatus.getText()));
                                                         return;
                                                     }
-
+//                                                    refresh();
                                                     System.out.println("Current + orderStatus : "+String.valueOf(holder.orderStatus));
+//                                                    orderListData delete = holder.getAdapterPosition();
+//                                                    list.remove(getAdapterPosition());
+//                                                    remove();
+
                                                 }
 
                                                 @Override
-                                                public void onFailure(Call<orderStatus> call, Throwable t) {
+                                                public void onFailure(Call<orderStatus> call3, Throwable t) {
 
                                                 }
                                             });
+
+
 
                                         }
                                     });
@@ -153,13 +168,17 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
                         }
                     });
 
+
                 }
             }
         });
 
+
         return holder;
 
     }
+
+
 
     @Override
     public void onBindViewHolder(View_Holder holder, int position) {
@@ -224,5 +243,52 @@ public class Recycler_View_Adapter extends RecyclerView.Adapter<View_Holder> {
         list.remove(position);
         notifyItemRemoved(position);
     }
+    List<orderListData> data;
+//    public void refresh() {
+//
+//        data = new ArrayList<>();
+//        System.out.println("Loading Progress Data");
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://vcanteen.herokuapp.com/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+//
+//        Call<List<orderProgress>> call =  jsonPlaceHolderApi.getProgress(1);
+//
+//        call.enqueue(new Callback<List<orderProgress>>() {
+//            @Override
+//            public void onResponse(Call<List<orderProgress>> call, Response<List<orderProgress>> response) {
+//                if(!response.isSuccessful()) {
+//                    Toast.makeText(context, "CODE: "+response.code(),
+//                            Toast.LENGTH_LONG).show();
+////                    mSwipeRefreshLayout.setRefreshing(false);
+//                    return;
+//                }
+//
+//                List<orderProgress> posts = response.body();
+//                System.out.println(posts.toString());
+//
+//                for (orderProgress post : posts) {
+//                    data.add(new orderListData(Integer.toString(post.getOrderId()),Integer.toString(post.getOrderPrice()),post.getOrderName(),post.getOrderNameExtra(), post.getRestaurantName(), post.getCreatedAt(), post.getOrderStatus()));
+//                }
+//                System.out.println("checkpoint");
+//
+//                Recycler_View_Adapter adapter = new Recycler_View_Adapter(data, context);
+//
+//                recyclerView.setAdapter(adapter);
+//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+////                mSwipeRefreshLayout.setRefreshing(false);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<orderProgress>> call, Throwable t) {
+//                Toast.makeText(context, "ERROR: "+t.getMessage(),
+//                        Toast.LENGTH_LONG).show();
+//                System.out.println("some error");
+////                mSwipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
+//    }
 
 }

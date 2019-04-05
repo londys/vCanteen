@@ -36,7 +36,7 @@ public class historyTabFragment extends Fragment {
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<List<orderHistory>> call =  jsonPlaceHolderApi.getHistory();
+        Call<List<orderHistory>> call =  jsonPlaceHolderApi.getHistory(1);
 
         call.enqueue(new Callback<List<orderHistory>>() {
             @Override
