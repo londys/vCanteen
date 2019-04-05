@@ -123,7 +123,7 @@ public class password_login_page extends AppCompatActivity {
                         "Loading. Please wait...", true);
                 final Intent intent = new Intent(password_login_page.this, homev1Activity.class);
                 passwd = passwdField.getText().toString();
-//                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
+                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
                 System.out.println(passwd);
                 JSONObject postData = new JSONObject();
                 try {

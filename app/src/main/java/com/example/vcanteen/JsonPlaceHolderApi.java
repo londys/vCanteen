@@ -2,6 +2,7 @@ package com.example.vcanteen;
 
 import com.example.vcanteen.Data.Customers;
 import com.example.vcanteen.Data.RecoverPass;
+import com.example.vcanteen.Data.ResetPass;
 import com.example.vcanteen.Data.Token;
 import com.example.vcanteen.Data.TokenResponse;
 import com.example.vcanteen.Data.TokenVerification;
@@ -21,5 +22,11 @@ public interface JsonPlaceHolderApi {
 
     @PUT("v1/user-authentication/customer/password/recover")
     Call<Void> recoverPass(@Body RecoverPass email);
+
+    @PUT("v1/user-authentication/customer/password/change")
+    Call<Void> resetPass(@Body ResetPass object);
+
+    @PUT("v1/user-authentication/customer/verify/email")
+    Call<Void> verifyEmail(@Body RecoverPass recoverPass);
 
 }

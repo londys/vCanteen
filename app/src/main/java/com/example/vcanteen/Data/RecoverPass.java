@@ -6,4 +6,11 @@ public class RecoverPass {
     public RecoverPass(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "RecoverPass{" +
+                "email='" + email + '\'' +
+                '}';
+    }
 }

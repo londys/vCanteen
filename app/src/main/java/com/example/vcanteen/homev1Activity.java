@@ -25,16 +25,13 @@ public class homev1Activity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_profile:
-                    // emergency logout lol
-                    LoginManager.getInstance().logOut();
-                    sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
-                    startActivity(new Intent(homev1Activity.this, emailActivity.class));
                     return true;
                 case R.id.navigation_orders:
                     mTextMessage.setText("ORDERS");
                     return true;
                 case R.id.navigation_settings:
-                    mTextMessage.setText("SETTINGS");
+//                    mTextMessage.setText("SETTINGS");
+                    startActivity(new Intent(homev1Activity.this, settingActivity.class));
                     return true;
             }
             return false;

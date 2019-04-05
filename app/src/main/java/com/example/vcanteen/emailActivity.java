@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 
 import com.example.vcanteen.Data.Customers;
+import com.example.vcanteen.Data.RecoverPass;
 import com.example.vcanteen.Data.TokenResponse;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -61,6 +62,10 @@ public class emailActivity extends AppCompatActivity {
     private CallbackManager callbackManager = CallbackManager.Factory.create();
     private SharedPreferences sharedPref;
     private ProgressDialog progressDialog;
+    private String email;
+    private TextView error1;
+    private TextView error2;
+    EditText emailbox2;
 
     private final String url = "https://vcanteen.herokuapp.com/";
     private boolean exit = false;
@@ -77,6 +82,8 @@ public class emailActivity extends AppCompatActivity {
 
         next_button = (ImageButton) findViewById(R.id.next_button /*xml next_button */);
         loginButton = (LoginButton) findViewById(R.id.login_button);
+        emailbox2 = (EditText) findViewById(R.id.editEmail);
+        final Context context = this;
 
         next_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +93,8 @@ public class emailActivity extends AppCompatActivity {
         });
         final Button cleartxtbtn = (Button) findViewById(R.id.clear_text_btn);
         final EditText emailbox = (EditText) findViewById(R.id.editEmail);
+        error1 = (TextView) findViewById(R.id.error1);
+        error2 = (TextView) findViewById(R.id.error2);
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         System.out.println(sharedPref.getString("token", "empty token"));
@@ -105,7 +114,7 @@ public class emailActivity extends AppCompatActivity {
             }
         });
 
-        final Context context = this;
+
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -121,7 +130,7 @@ public class emailActivity extends AppCompatActivity {
                             public void onCompleted(JSONObject object, GraphResponse response) {
 
                                 final Intent intent = new Intent(emailActivity.this, homev1Activity.class);
-                                final String email = object.optString("email");
+                                email = object.optString("email");
                                 String first_name = object.optString("first_name");
                                 String last_name = object.optString("last_name");
 
@@ -197,13 +206,6 @@ public class emailActivity extends AppCompatActivity {
     }
 
     public void openpassword_login_page() {
-        Intent pwloginintent = new Intent(this, password_login_page.class);
-        //check for email validation here
-        TextView error1 = (TextView) findViewById(R.id.error1);
-        TextView error2 = (TextView) findViewById(R.id.error2);
-        EditText emailbox2 = (EditText) findViewById(R.id.editEmail);
-        emailbox2.setInputType(InputType.TYPE_CLASS_TEXT);
-        String customerEmail = null;
         if (TextUtils.isEmpty(emailbox2.getText().toString())) {
             error2.setVisibility(View.INVISIBLE);
             error1.setVisibility(View.VISIBLE);
@@ -212,10 +214,48 @@ public class emailActivity extends AppCompatActivity {
             error1.setVisibility(View.INVISIBLE);
             error2.setVisibility(View.VISIBLE);
             return;
-        } else
-            customerEmail = emailbox2.getText().toString();
-        pwloginintent.putExtra("cachedemail", customerEmail);
-        startActivity(pwloginintent);
+        }
+        progressDialog = new ProgressDialog(emailActivity.this);
+        progressDialog = ProgressDialog.show(emailActivity.this, "",
+                "Loading. Please wait...", true);
+        final Intent pwloginintent = new Intent(this, password_login_page.class);
+        //check for email validation here
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        email = emailbox2.getText().toString();
+        Call<Void> call = jsonPlaceHolderApi.verifyEmail(new RecoverPass(email));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                System.out.println(response.code());
+                System.out.println(new RecoverPass(email).toString());
+                if(response.code()!= 200) {
+                    error1.setVisibility(View.INVISIBLE);
+                    error2.setVisibility(View.VISIBLE);
+                    progressDialog.dismiss();
+                } else {
+                    emailbox2.setInputType(InputType.TYPE_CLASS_TEXT);
+                    String customerEmail = null;
+                    customerEmail = emailbox2.getText().toString();
+
+                    pwloginintent.putExtra("cachedemail", customerEmail);
+                    progressDialog.dismiss();
+                    startActivity(pwloginintent);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
+
+
     }
 
     @Override
