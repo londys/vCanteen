@@ -27,15 +27,18 @@ public class vendorMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
 
-        final int vendorId = 45; // for testing only
-
-        orderList = new ArrayList<>();
+        //final int vendorId = 45; // for testing only
+        //orderList = new ArrayList<>();
         // cusId need to change later when connect with BE
+        //orderStack = new orderStack(22,vendorId, orderList,0,0);
 
-        orderStack = new orderStack(22,vendorId, orderList,0,0);
+        orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
+        String n = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity
 
+        TextView restaurantName = (TextView)findViewById(R.id.restaurantName);// delete if don't want from home activity
+        restaurantName.setText(n);// delete if don't want from home activity
 
-        // to open cutomize order acti vity
+        // to open cutomize order activity
         android.support.constraint.ConstraintLayout tappable_customize = (android.support.constraint.ConstraintLayout)findViewById(R.id.tappable_customize);
         tappable_customize.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +67,7 @@ public class vendorMenuActivity extends AppCompatActivity {
         final ArrayList<food> shownFoodList = new ArrayList<>(availableList);
         shownFoodList.addAll(soldOutList);
 
-        TextView restaurantName = (TextView)findViewById(R.id.restaurantName);
+        //TextView restaurantName = (TextView)findViewById(R.id.restaurantName);
         //restaurantName.setText(""+);
 
 

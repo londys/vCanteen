@@ -19,7 +19,7 @@
         <activity android:name=".cartActivity" />
         <activity android:name=".normalOrderActivity" />
         <activity android:name=".customizeOrderActivity" />
-        <activity android:name=".homev1Activity" />
+        <activity android:name=".vendorMenuActivity" />
         <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
         <activity android:name=".password_login_page" />
@@ -51,7 +51,7 @@
             android:name="com.google.android.actions"
             android:resource="@xml/dimension" />
 
-        <activity android:name=".vendorMenuActivity">
+        <activity android:name=".homev1Activity">
 
             <!-- for start main ตอนแรก .emailActivity -->
             <intent-filter>

@@ -1,17 +1,24 @@
 package com.example.vcanteen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class homev1Activity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    orderStack orderStack; //pin add
+    ArrayList<order> orderList; //pin add
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -46,6 +53,29 @@ public class homev1Activity extends AppCompatActivity {
         ListAdapter testAdapter = new vendorListAdapter(this, test);
         ListView vendorList = findViewById(R.id.vendorlist);
         vendorList.setAdapter(testAdapter);
+
+        //pin add
+
+        final int vendorId = 45; // for testing only
+
+        orderList = new ArrayList<>();
+        orderStack = new orderStack(22,vendorId, orderList,0,0);
+
+        vendorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position<test.length) {
+                    Intent sent = new Intent(homev1Activity.this, vendorMenuActivity.class);
+                    sent.putExtra("chosenVendor", test[position]);
+                    sent.putExtra("orderStack", orderStack);
+
+                    startActivity(sent);
+                }
+//                else{
+//                    vendorList.getChildAt(position).setEnabled(false);
+//                }
+            }
+        });
     }
     
 }

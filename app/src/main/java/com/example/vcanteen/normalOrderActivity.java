@@ -148,7 +148,6 @@ public class normalOrderActivity extends AppCompatActivity {
 
     public void openCart(){
 
-
         order = new order(chosenALaCarte.foodName,"", (op + eop) ,foodList);
 
         for(int i = 0; i<mainAmount; i++){
@@ -166,18 +165,6 @@ public class normalOrderActivity extends AppCompatActivity {
         }
 
 
-
-
-//        foodList[0] = chosenALaCarte;
-//        foodList[1] = shownFoodList.get(1);
-////        for(int i = 0; i<foodList.length; i++){
-////            foodList[i] = new food();
-////        }
-//
-//        //test
-//        orderStack.orderList.add(new order(chosenALaCarte.foodName,"Extra", op, foodList));
-        // assume that there is no extra since checkbox doesn't work yet
-        //order = new order(chosenALaCarte.foodName,null, op, foodList);
         Log.d("1",orderStack.orderList.get(0).orderName);
         Intent intent = new Intent(this, cartActivity.class);
 

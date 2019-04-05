@@ -57,7 +57,13 @@
         <ListView
             android:id="@+id/confirmedList"
             android:layout_width="match_parent"
-            android:layout_height="415dp" />
+            android:layout_height="wrap_content" />
+
+        <View
+            android:id="@+id/divider8"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
 
         <TextView
             android:id="@+id/showServiceProvider"

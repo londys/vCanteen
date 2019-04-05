@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class orderStack implements Parcelable {
 
@@ -12,7 +13,7 @@ public class orderStack implements Parcelable {
     ArrayList<order> orderList;
     int totalPrice;
     int customerMoneyAccount;
-    //DATETIME createdAt; //null until the customer taps CONFIRM & PAY on popup dialog
+    //Date createdAt; //null until the customer taps CONFIRM & PAY on popup dialog
 
     public void setEmpty(){
         this.customerId = 0;

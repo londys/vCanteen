@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.widget.TextView;
 
+import static android.content.Intent.getIntent;
+
 public class orderListAdapter extends ArrayAdapter {
 
     //declarations
@@ -17,6 +19,7 @@ public class orderListAdapter extends ArrayAdapter {
 //    String[]d={}; // info
     Context c;
     LayoutInflater inflater;
+    orderListAdapter orderListAdapter;
 
     orderListAdapter(Context context, orderStack orderStack){
         super(context, R.layout.order_listview , orderStack.orderList);
@@ -66,6 +69,11 @@ public class orderListAdapter extends ArrayAdapter {
             public void onClick(View v) {
                 orderStack.orderList.remove(position);
                 //.remove(position);
+               // Intent intent = getIntent();
+
+               // orderListAdapter.notifyDataSetChanged();
+                notifyDataSetChanged();
+
             }
         });
 

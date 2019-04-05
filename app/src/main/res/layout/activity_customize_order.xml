@@ -7,7 +7,7 @@
     tools:context=".customizeOrderActivity">
 
     <ImageView
-        android:id="@+id/addToCartImg2"
+        android:id="@+id/addToCartImgFromCustomize"
         android:layout_width="297dp"
         android:layout_height="56dp"
         android:layout_marginStart="57dp"
@@ -29,7 +29,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/addToCartImg2" />
+        app:layout_constraintStart_toStartOf="@+id/addToCartImgFromCustomize" />
 
     <TextView
         android:id="@+id/orderPrice3"
@@ -57,7 +57,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/addToCartImg2" />
+        app:layout_constraintEnd_toEndOf="@+id/addToCartImgFromCustomize" />
 
     <ImageView
         android:id="@+id/imageView2"

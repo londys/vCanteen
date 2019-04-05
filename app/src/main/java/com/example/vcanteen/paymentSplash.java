@@ -2,6 +2,7 @@ package com.example.vcanteen;
 
 import android.content.Intent;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ public class paymentSplash extends AppCompatActivity {
         setContentView(R.layout.activity_payment_splash);
 
         orderStack = getIntent().getExtras().getParcelable("orderStack");
+
 
         String selectedServiceProvider = getIntent().getStringExtra("selectedServiceProvider");
         ImageView img= (ImageView) findViewById(R.id.serviceProviderImg);
