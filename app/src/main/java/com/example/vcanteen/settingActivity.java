@@ -63,7 +63,11 @@ public class settingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         LoginManager.getInstance().logOut();
-                        FirebaseAuth.getInstance().signOut();
+                        boolean isSignedIn = FirebaseAuth.getInstance().isSignInWithEmailLink(sharedPref.getString("email", "no email"));
+                        System.out.println(sharedPref.getString("email", "no email"));
+                        System.out.println(isSignedIn);
+                        if (isSignedIn)
+                            FirebaseAuth.getInstance().signOut();
                         sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
                         logoutWarningDialog.cancel();
                         startActivity(new Intent(settingActivity.this, emailActivity.class));

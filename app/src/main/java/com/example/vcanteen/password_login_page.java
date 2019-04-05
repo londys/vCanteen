@@ -24,11 +24,18 @@ import android.widget.Toast;
 import com.example.vcanteen.Data.Customers;
 import com.example.vcanteen.Data.RecoverPass;
 import com.example.vcanteen.Data.TokenResponse;
+import com.example.vcanteen.Data.UserFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,6 +79,8 @@ public class password_login_page extends AppCompatActivity {
     private ProgressDialog progressDialog;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference dbUsers;
+    private String firebaseToken;
 
     // vcanteen.herokuapp.com/
     private final String url = "http://vcanteen.herokuapp.com/";
@@ -80,6 +89,9 @@ public class password_login_page extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_login_page);
+
+        FirebaseApp.initializeApp(password_login_page.this);
+        mAuth = FirebaseAuth.getInstance();
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         System.out.println(sharedPref.getString("token", "empty token"));
@@ -140,7 +152,7 @@ public class password_login_page extends AppCompatActivity {
                 // HTTP POST
                 call.enqueue(new Callback<TokenResponse>() {
                     @Override
-                    public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                    public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
                         if (!response.isSuccessful())
                             Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                            TokenResponse tokenResponse = response.body();
@@ -152,19 +164,44 @@ public class password_login_page extends AppCompatActivity {
                             Toast.makeText(password_login_page.this, "Either email or email is incorrect.", Toast.LENGTH_SHORT).show();
                             System.out.println("ERROR EDOK");
                         } else if (response.body().getStatus().equals("success")) {
-                            // auth firebase
+                            System.out.println("Firebase email: "+email);
+                            System.out.println("Firebase passwd: "+passwd);
                             mAuth.signInWithEmailAndPassword(email, passwd)
                                     .addOnCompleteListener(password_login_page.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+//                                    System.out.println(task.getException().getMessage());
+                                    if (task.isSuccessful()) {
+                                        System.out.println("SUCCESS");
+                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                        dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
 
+                                        dbUsers.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                for(DataSnapshot dsUser: dataSnapshot.getChildren())
+                                                    firebaseToken = dsUser.getValue(String.class);
+                                                System.out.println(firebaseToken);
+                                                sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                                sharedPref.edit().putString("email", email).commit();
+                                                sharedPref.edit().putString("account_type", account_type).commit();
+                                                sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
+                                                progressDialog.dismiss();
+                                                startActivity(intent);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    } else {
+                                        System.out.println("Firebase login FAIL");
+                                        progressDialog.dismiss();
+                                    }
                                 }
                             });
-                            sharedPref.edit().putString("token", response.body().getToken()).commit();
-                            sharedPref.edit().putString("email", email).commit();
-                            sharedPref.edit().putString("account_type", account_type).commit();
-                            progressDialog.dismiss();
-                            startActivity(intent);
+
                         }
 
 

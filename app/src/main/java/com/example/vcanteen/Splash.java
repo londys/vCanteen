@@ -47,20 +47,25 @@ public class Splash extends AppCompatActivity {
         call.enqueue(new Callback<TokenVerification>() {
             @Override
             public void onResponse(Call<TokenVerification> call, final Response<TokenVerification> response) {
-                if(!response.isSuccessful())
+                if (!response.isSuccessful())
                     Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
-                System.out.println(response.body().isExpired());
-                final boolean expired = response.body().isExpired();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        // yourMethod();
-                        if(expired)
-                            startActivity(new Intent(Splash.this, emailActivity.class));
-                        else
-                            startActivity(new Intent(Splash.this, homev1Activity.class));
-                    }
-                }, 1000);
+                if (response.code() != 200) {
+                    //do smth
+                    Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                } else {
+                    System.out.println(response.body().isExpired());
+                    final boolean expired = response.body().isExpired();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            // yourMethod();
+                            if (expired)
+                                startActivity(new Intent(Splash.this, emailActivity.class));
+                            else
+                                startActivity(new Intent(Splash.this, homev1Activity.class));
+                        }
+                    }, 1000);
+                }
 
             }
 

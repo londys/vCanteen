@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -33,6 +34,16 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,16 +76,23 @@ public class emailActivity extends AppCompatActivity {
     private String email;
     private TextView error1;
     private TextView error2;
-    EditText emailbox2;
+    private EditText emailbox2;
 
     private final String url = "https://vcanteen.herokuapp.com/";
     private boolean exit = false;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference dbUsers;
+    private String firebaseToken;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_enter_page);
+
+        FirebaseApp.initializeApp(emailActivity.this);
+        mAuth = FirebaseAuth.getInstance();
 
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);
@@ -154,7 +172,7 @@ public class emailActivity extends AppCompatActivity {
                                 // HTTP POST
                                 call.enqueue(new Callback<TokenResponse>() {
                                     @Override
-                                    public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                                    public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
                                         if(!response.isSuccessful())
                                             Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                                        TokenResponse tokenResponse = response.body();
@@ -162,18 +180,49 @@ public class emailActivity extends AppCompatActivity {
 //                                        System.out.println(response.body().toString());
                                         if(response.code() != 200)
                                             Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
-                                        else if(response.body().getStatus().equals("success")) {
-                                            sharedPref.edit().putString("token", response.body().getToken()).commit();
-                                            sharedPref.edit().putString("email", email).commit();
-                                            sharedPref.edit().putString("account_type", account_type).commit();
-                                            progressDialog.dismiss();
-                                            startActivity(intent);
+                                        else {
+                                            mAuth.signInWithEmailAndPassword(email, "firebaseOnlyNaja")
+                                                    .addOnCompleteListener(emailActivity.this, new OnCompleteListener<AuthResult>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                                            if (task.isSuccessful()) {
+                                                                System.out.println("SUCCESS");
+                                                                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                                                dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
+
+                                                                dbUsers.addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                        for(DataSnapshot dsUser: dataSnapshot.getChildren())
+                                                                            firebaseToken = dsUser.getValue(String.class);
+                                                                        System.out.println(firebaseToken);
+                                                                        sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                                                        sharedPref.edit().putString("email", email).commit();
+                                                                        sharedPref.edit().putString("account_type", account_type).commit();
+                                                                        sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
+                                                                        progressDialog.dismiss();
+                                                                        startActivity(intent);
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                System.out.println("Firebase login FAIL");
+                                                                progressDialog.dismiss();
+                                                            }
+                                                        }
+                                                    });
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<TokenResponse> call, Throwable t) {
                                         System.out.println("ERROR ESUS");
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "An error occured. Please try again.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
