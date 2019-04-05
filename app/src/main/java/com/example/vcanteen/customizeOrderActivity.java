@@ -28,6 +28,8 @@ public class customizeOrderActivity extends AppCompatActivity {
     int[] items3Price = {10,5,3,6,2};
 
     order order;
+    ArrayList<food> mainList;
+    ListAdapter testAdapter2;
 
     ImageView addToCartImgFromCustomize;
 
@@ -70,10 +72,10 @@ public class customizeOrderActivity extends AppCompatActivity {
         soldOutMainList.add(new food(32, "Salad", 25, "COMBINATION_MAIN"));
         soldOutMainList.add(new food(13, "Curry Beef", 35, "COMBINATION_MAIN"));
 
-        final ArrayList<food> mainList = new ArrayList<>(availableMainList);
+        mainList = new ArrayList<>(availableMainList);
         mainList.addAll(soldOutMainList);
 
-        ListAdapter testAdapter2 = new foodListAdapter(this, mainList, availableMainList.size());
+        testAdapter2 = new foodListAdapter(this, mainList, availableMainList.size());
         final ListView mainListShow = findViewById(R.id.list2);
         mainListShow.setAdapter(testAdapter2);
 
@@ -111,13 +113,13 @@ public class customizeOrderActivity extends AppCompatActivity {
     public void openCart(){
 
 
-//        order = new order("Base, Main","", 100 ,foodList);
-//
-//
-////        int n = 0;
-//        for(int i=0;i<... .size();i++)
+        //order = new order("Base, Main","", 100 ,foodList);
+
+
+//        int n = 0;
+//        for(int i=0;i<mainList.size();i++)
 //        {
-//            if(adapter.isChecked(i)==true)
+//            if(testAdapter2.isChecked(i)==true)
 //            {
 //                order.orderNameExtra = order.orderNameExtra + "\n" + adapter.foodList.get(i).getFoodName();
 //            }
@@ -131,6 +133,17 @@ public class customizeOrderActivity extends AppCompatActivity {
 
        // startActivity(intent);
     }
+//
+//    public void notifyExtraChange(){
+//        int tempex = 0;
+//        for (int i = 0; i < mainList.size(); i++) {
+//            if (testAdapter2.isChecked(i) == true) {
+//                tempex += shownFoodList.get(i).getFoodPrice();
+//            }
+//        }
+//        eop = tempex;
+//        orderPrice.setText("" + (eop + op)*mainAmount );
+//    }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();

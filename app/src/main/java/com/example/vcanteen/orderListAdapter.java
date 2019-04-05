@@ -19,7 +19,7 @@ public class orderListAdapter extends ArrayAdapter {
 //    String[]d={}; // info
     Context c;
     LayoutInflater inflater;
-    orderListAdapter orderListAdapter;
+    //orderListAdapter orderListAdapter;
 
     orderListAdapter(Context context, orderStack orderStack){
         super(context, R.layout.order_listview , orderStack.orderList);

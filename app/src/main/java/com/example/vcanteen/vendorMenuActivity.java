@@ -107,5 +107,10 @@ public class vendorMenuActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
+        orderStack o = intent.getExtras().getParcelable("orderStackFromCart");
+    }
 }

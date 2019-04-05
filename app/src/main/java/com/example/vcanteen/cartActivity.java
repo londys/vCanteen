@@ -109,6 +109,13 @@ public class cartActivity extends AppCompatActivity {
         orderTotalPrice.setText("" + orderStack.totalPrice +"");
         orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
 
+//        orderList.setOnItemClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
 
 
     }
@@ -191,5 +198,16 @@ public class cartActivity extends AppCompatActivity {
             c.setTextColor(Color.parseColor("#828282"));
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent goToMenu = new Intent(cartActivity.this,vendorMenuActivity.class);
+        goToMenu.putExtra("orderStackFromCart",orderStack);
+        //goToMenu.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(goToMenu);
+        finish();
+    }
+
 
 }

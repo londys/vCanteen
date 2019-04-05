@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.ListView;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class combinationBaseListAdapter extends ArrayAdapter {
     public class ViewHolder{
         TextView baseComName;
         TextView baseComPrice;
+        RadioButton selectedBase;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class combinationBaseListAdapter extends ArrayAdapter {
         //initalize our view
         holder.baseComName=(TextView) convertView.findViewById(R.id.baseComName);
         holder.baseComPrice=(TextView) convertView.findViewById(R.id.baseComPrice);
+        holder.selectedBase=(RadioButton)convertView.findViewById(R.id.selectedBase);
 
         //assign data
         holder.baseComName.setText(foodList.get(position).foodName);
@@ -48,23 +51,5 @@ public class combinationBaseListAdapter extends ArrayAdapter {
         return convertView;
     }
 
-//    public void setListViewHeightBasedOnChildren(ListView listView) {
-//        ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
-//        if (listAdapter == null) {
-//            // pre-condition
-//            return;
-//        }
-//
-//        int totalHeight = 0;
-//        for (int i = 0; i < listAdapter.getCount(); i++) {
-//            View listItem = listAdapter.getView(i, null, listView);
-//            listItem.measure(0, 0);
-//            totalHeight += listItem.getMeasuredHeight();
-//        }
-//
-//        ViewGroup.LayoutParams params = listView.getLayoutParams();
-//        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-//        listView.setLayoutParams(params);
-//        listView.requestLayout();
-//    }
+
 }

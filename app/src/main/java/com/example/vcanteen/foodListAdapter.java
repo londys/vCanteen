@@ -27,8 +27,8 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
     Observable check = Observable.just("1");
 
 
-    foodListAdapter(Context context, ArrayList<food> foodList, int s){
-        super(context, R.layout.food_listview , foodList);
+    foodListAdapter(Context context, ArrayList<food> foodList, int s) {
+        super(context, R.layout.food_listview, foodList);
         this.c = context;
         this.foodList = foodList;
         this.s = s;
@@ -38,11 +38,11 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         mCheckStates.put((Integer) buttonView.getTag(), isChecked);
-        ((normalOrderActivity)c).notifyExtraChange();
+        ((normalOrderActivity) c).notifyExtraChange();
 
     }
 
-    public class ViewHolder{
+    public class ViewHolder {
         TextView addFoodName;
         TextView addFoodPrice;
         CheckBox chkSelect;
@@ -63,29 +63,29 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-        if(convertView==null){
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
             inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.food_listview,parent,false);
+            convertView = inflater.inflate(R.layout.food_listview, parent, false);
         }
 
         //view holder object
         final foodListAdapter.ViewHolder holder = new foodListAdapter.ViewHolder();
 
         //initalize our view
-        holder.addFoodName=(TextView) convertView.findViewById(R.id.addFoodName);
-        holder.addFoodPrice=(TextView) convertView.findViewById(R.id.addFoodPrice);
+        holder.addFoodName = (TextView) convertView.findViewById(R.id.addFoodName);
+        holder.addFoodPrice = (TextView) convertView.findViewById(R.id.addFoodPrice);
         holder.chkSelect = (CheckBox) convertView.findViewById(R.id.checkBox2);
 
         //assign data
         holder.addFoodName.setText(foodList.get(position).foodName);
-        holder.addFoodPrice.setText("+ "+foodList.get(position).foodPrice+" Baht");
+        holder.addFoodPrice.setText("+ " + foodList.get(position).foodPrice + " Baht");
         holder.chkSelect.setChecked(mCheckStates.get(position, false));
-        if(position<s) {
+        if (position < s) {
             holder.chkSelect.setOnCheckedChangeListener(this);
 
         }
-        if(position>=s) { //for sold out
+        if (position >= s) { //for sold out
             holder.addFoodName.setTextColor(Color.parseColor("#E5E5E5"));
             holder.addFoodPrice.setTextColor(Color.parseColor("#C4C4C4"));
             holder.chkSelect.setEnabled(false);

@@ -19,7 +19,8 @@
         <activity android:name=".cartActivity" />
         <activity android:name=".normalOrderActivity" />
         <activity android:name=".customizeOrderActivity" />
-        <activity android:name=".vendorMenuActivity" />
+        <activity android:name=".vendorMenuActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
         <activity android:name=".password_login_page" />
