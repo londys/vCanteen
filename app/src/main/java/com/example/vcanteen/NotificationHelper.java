@@ -12,7 +12,7 @@ public class NotificationHelper {
     public static void displayNotification(Context context, String title, String body) {
 
         Intent intent = new Intent(context, OrderListActivity.class);
-
+        System.out.println("received noti222:"+ body);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
                 100,
