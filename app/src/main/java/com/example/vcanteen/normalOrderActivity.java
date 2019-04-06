@@ -68,10 +68,10 @@ public class normalOrderActivity extends AppCompatActivity {
 
 
         //can delete this 4 rows - it's for testing
-        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println("Create at 2 time: "+dateformat.format(orderStack.getCreatedAt()));
-        orderStack.setCreatedAt(new Date());
-        System.out.println("Create at 3 time: "+dateformat.format(orderStack.getCreatedAt()));
+//        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println("Create at 2 time: "+dateformat.format(orderStack.getCreatedAt()));
+//        orderStack.setCreatedAt(new Date());
+//        System.out.println("Create at 3 time: "+dateformat.format(orderStack.getCreatedAt()));
 
         foodName.setText(chosenALaCarte.foodName);
         foodPrice.setText(""+chosenALaCarte.foodPrice);

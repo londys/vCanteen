@@ -23,9 +23,8 @@ public class cartActivity extends AppCompatActivity {
 
     TextView orderTotalPrice, orderTotalItems, orderTotalPriceTop;
 
-    String[] order = {"order 1", "order 2", "order 3"};
-    String[] orderInfo = {"","Extra Rice, More food, More food, More food, More food, Alibaba","put more love <3"};
-    int [] orderPrice = {30,45,55};
+    orderListAdapter orderAdapter;
+
 
     int total=0;
 
@@ -92,9 +91,9 @@ public class cartActivity extends AppCompatActivity {
         //orderStack = getIntent().getExtras().getParcelable("sendOrderStack");
         orderStack = com.example.vcanteen.orderStack.getInstance();
 
-        ListAdapter testAdapter2 = new orderListAdapter(this,orderStack);
+        orderAdapter = new orderListAdapter(this,orderStack);
         final ListView orderList = findViewById(R.id.orderList);
-        orderList.setAdapter(testAdapter2);
+        orderList.setAdapter(orderAdapter);
 
 
 
@@ -214,4 +213,18 @@ public class cartActivity extends AppCompatActivity {
     }
 
 
+    public void updateOrder() {
+
+        orderStack.orderList.remove(orderAdapter.passPosition());
+        total = 0;
+        for(int i = 0; i<orderStack.orderList.size(); i++){
+            total += orderStack.orderList.get(i).orderPrice;
+        }
+
+        orderStack.setTotalPrice(total);
+        orderTotalItems.setText("Total "+ orderStack.orderList.size()+" item(s)");
+        orderTotalPrice.setText("" + total +"");
+        orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
+
+    }
 }
