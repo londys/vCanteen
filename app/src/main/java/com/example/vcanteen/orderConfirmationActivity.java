@@ -29,7 +29,7 @@ public class orderConfirmationActivity extends AppCompatActivity {
             }
         });
 
-        orderStack = getIntent().getExtras().getParcelable("orderStack");
+        orderStack = com.example.vcanteen.orderStack.getInstance();//getIntent().getExtras().getParcelable("orderStack");
 
         ListAdapter testAdapter3 = new confirmedOrderListAdapter(this,orderStack);
         final ListView confirmedList = findViewById(R.id.confirmedList);
@@ -41,6 +41,20 @@ public class orderConfirmationActivity extends AppCompatActivity {
         service.setText("Paid through "+ selectedServiceProvider);
 
         setListViewHeightBasedOnChildren(confirmedList);
+
+        //to check can be delete
+        System.out.println("From order confirmation page");
+        for(int j = 0; j<orderStack.orderList.size();j++){
+            System.out.println(orderStack.orderList.get(j).getOrderName());
+            System.out.println(orderStack.orderList.get(j).getOrderNameExtra());
+            System.out.println("order price = "+orderStack.orderList.get(j).getOrderPrice());
+            System.out.println("Food List");
+            for(int k = 0; k<orderStack.orderList.get(j).foodList.size();k++){
+                System.out.println(orderStack.orderList.get(j).foodList.get(k).getFoodName());
+                System.out.println(orderStack.orderList.get(j).foodList.get(k).getFoodPrice());
+                System.out.println(orderStack.orderList.get(j).foodList.get(k).getFoodType());
+            }
+        }
 
     }
 

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class cartActivity extends AppCompatActivity {
 
@@ -88,7 +89,8 @@ public class cartActivity extends AppCompatActivity {
         });
 
 //// FOR DEALING WITH ORDER LIST ////
-        orderStack = getIntent().getExtras().getParcelable("sendOrderStack");
+        //orderStack = getIntent().getExtras().getParcelable("sendOrderStack");
+        orderStack = com.example.vcanteen.orderStack.getInstance();
 
         ListAdapter testAdapter2 = new orderListAdapter(this,orderStack);
         final ListView orderList = findViewById(R.id.orderList);
@@ -122,7 +124,7 @@ public class cartActivity extends AppCompatActivity {
 
     public void showPopUp(){
         showpopup.setContentView(R.layout.cart_reset_popup);
-        confirmButton = (Button)showpopup.findViewById(R.id.confirmButton);
+        confirmButton = (Button)showpopup.findViewById(R.id.confirmButtonPassword);
         cancelButton = (TextView)showpopup.findViewById(R.id.cancelButton);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +148,8 @@ public class cartActivity extends AppCompatActivity {
     public void openProcessingPayment() {
         // fill customer money account in orderstack
         // fill timestamp
+        orderStack.setCreatedAt(new Date());
+
         Intent intent = new Intent(this, processingPaymentActivity.class);
         intent.putExtra("orderStack", orderStack);
         intent.putExtra("selectedServiceProvider", selectedServiceProvider);

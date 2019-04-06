@@ -1,5 +1,8 @@
 package com.example.vcanteen;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +27,7 @@ public class changePasswordActivity extends AppCompatActivity {
     private EditText currentPassword, newPassword, confirmNewPassword;
     private TextView showHide1, showHide2, showHide3; //show and hide password button
     private TextView checkCurrentPasswordText,checkNewPasswordText;
+    Dialog showConfirmChangePassPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,8 @@ public class changePasswordActivity extends AppCompatActivity {
             }
         });
 
+        showConfirmChangePassPopup = new Dialog(this);
+
         changePasswordButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -214,18 +220,41 @@ public class changePasswordActivity extends AppCompatActivity {
                 else {
                     check2 = true;
                     if (check1 ==true && check2 == true) {
-                        updatePassword();
-                        currentPassword.setText("");
-                        newPassword.setText("");
-                        confirmNewPassword.setText("");
-                        checkNewPasswordText.setText("");
-                        Toast.makeText(changePasswordActivity.this, "Password successfully changed.", Toast.LENGTH_LONG).show();
-
+                        changePasswordPopUp();
                     }
                 }
             }
         });
 
+    }
+
+    public void changePasswordPopUp(){
+        showConfirmChangePassPopup.setContentView(R.layout.change_password_popup);
+        Button confirmButton = (Button)findViewById(R.id.confirmButtonPassword);
+        TextView cancelButton = (TextView)findViewById(R.id.cancelButtonPassword);
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatePassword();
+                currentPassword.setText("");
+                newPassword.setText("");
+                confirmNewPassword.setText("");
+                checkNewPasswordText.setText("");
+                Toast.makeText(changePasswordActivity.this, "Password successfully changed.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConfirmChangePassPopup.dismiss();
+            }
+        });
+
+
+        showConfirmChangePassPopup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        showConfirmChangePassPopup.show();
     }
 
     public void updatePassword(){

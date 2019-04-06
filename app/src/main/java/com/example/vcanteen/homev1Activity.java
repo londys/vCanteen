@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class homev1Activity extends AppCompatActivity {
 
@@ -56,10 +57,10 @@ public class homev1Activity extends AppCompatActivity {
 
         //pin add
 
-        final int vendorId = 45; // for testing only
-
-        orderList = new ArrayList<>();
-        orderStack = new orderStack(22,vendorId, orderList,0,0);
+//        final int vendorId = 45; // for testing only
+//
+//        orderList = new ArrayList<>();
+//        orderStack = new orderStack(22,vendorId, orderList,0,0,new Date());
 
         vendorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -19,6 +20,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class customizeOrderActivity extends AppCompatActivity {
 
@@ -27,9 +31,19 @@ public class customizeOrderActivity extends AppCompatActivity {
     String[] items3 = { "Extra1", "Extra2", "Extra3" ,"Extra4","Extra5"};
     int[] items3Price = {10,5,3,6,2};
 
+    int mainP, extraP, baseP;
+
+    orderStack orderStack;
     order order;
-    ArrayList<food> mainList;
-    ListAdapter testAdapter2;
+    ArrayList<food> mainList, extraList, baseList, foodList;
+    //ListAdapter testMainAdapter;
+
+    foodListAdapterForCombi testMainAdapter, testExtraAdapter;
+
+    combinationBaseListAdapter testBaseAdapter; // pin add
+    food b; //pin add
+
+    TextView orderPriceCombi;
 
     ImageView addToCartImgFromCustomize;
 
@@ -38,25 +52,25 @@ public class customizeOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize_order);
 
-        addToCartImgFromCustomize = (ImageView) findViewById(R.id.addToCartImgFromCustomize);
-        addToCartImgFromCustomize.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                openCart();
-            }
-        });
+        orderStack = com.example.vcanteen.orderStack.getInstance();
+        orderPriceCombi = (TextView)findViewById(R.id.orderPriceCombi);
+
+        foodList = new ArrayList<>();
+
+
 
 ///// FOR COMBINATION BASE //////
-        ArrayList<food> baseList = new ArrayList<>(); //need to get from BE
+        baseList = new ArrayList<>(); //need to get from BE
 
         // for testing
         baseList.add(new food(3, "Jasmine Rice", 5, "COMBINATION_BASE"));
         baseList.add(new food(1, "Sticky Rice", 10, "COMBINATION_BASE"));
         baseList.add(new food(2, "Fried Rice", 15, "COMBINATION_BASE"));
 
-        ListAdapter testAdapter1 = new combinationBaseListAdapter(this, baseList);
+        testBaseAdapter = new combinationBaseListAdapter(this, baseList);
         final ListView baseListShow = findViewById(R.id.list1);
-        baseListShow.setAdapter(testAdapter1);
+
+        baseListShow.setAdapter(testBaseAdapter);
 
         setListViewHeightBasedOnChildren(baseListShow);
 
@@ -75,45 +89,95 @@ public class customizeOrderActivity extends AppCompatActivity {
         mainList = new ArrayList<>(availableMainList);
         mainList.addAll(soldOutMainList);
 
-        testAdapter2 = new foodListAdapter(this, mainList, availableMainList.size());
+        testMainAdapter = new foodListAdapterForCombi(this, mainList, availableMainList.size());
         final ListView mainListShow = findViewById(R.id.list2);
-        mainListShow.setAdapter(testAdapter2);
+        mainListShow.setAdapter(testMainAdapter);
 
         setListViewHeightBasedOnChildren(mainListShow);
 
 ///// FOR EXTRA //////
+        extraList = new ArrayList<>();
+        extraList.add(new food(11, "More Rice", 5, "EXTRA"));
+        extraList.add(new food(12, "Extra Large", 10, "EXTRA"));
+        extraList.add(new food(13, "No Spicy", 0, "EXTRA"));
+        extraList.add(new food(14, "Extra Spicy", 0, "EXTRA"));
+        extraList.add(new food(15, "No Vegetable", 0, "EXTRA"));
+
+        testExtraAdapter = new foodListAdapterForCombi(this,extraList,extraList.size());
+        final ListView extraListShow = findViewById(R.id.list3);
+        extraListShow.setAdapter(testExtraAdapter);
+
+        setListViewHeightBasedOnChildren(extraListShow);
+
+        addToCartImgFromCustomize = (ImageView) findViewById(R.id.addToCartImgFromCustomize);
+        addToCartImgFromCustomize.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("Try open cart");
+                openCart();
+            }
+        });
 
 
     }
-//        ListView list1 = (ListView) findViewById(R.id.list1);
-//        ListView list2 = (ListView) findViewById(R.id.list2);
-        //ListView list3 = (ListView) findViewById(R.id.list3);
 
+    public void notifyExtraChangeBase() {
+        System.out.println("Enter Notify Change Extra Base Has Enter");
+        b=testBaseAdapter.getSelectedBase();
+        baseP = b.foodPrice;
+        orderPriceCombi.setText(""+(mainP+extraP+baseP));
 
-//        ListAdapter testAdapter2 = new foodListAdapter(this,items3,items3Price);
-//        final ListView extraList = findViewById(R.id.list3);
-//        extraList.setAdapter(testAdapter2);
-//
-//        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_1, items1);
-//        list1.setAdapter(adapter1);
-//        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_list_item_1, items2);
-//        list2.setAdapter(adapter2);
-////        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
-////                android.R.layout.simple_list_item_1, items3);
-////        list3.setAdapter(adapter3);
-//
-//        setListViewHeightBasedOnChildren(list1);
-//        setListViewHeightBasedOnChildren(list2);
-//        //setListViewHeightBasedOnChildren(list3);
-//
-//    }
-//
+    }
+
+    public void notifyExtraChange() {
+
+        int tempex = 0;
+        for (int i = 0; i < mainList.size(); i++) {
+            if (testMainAdapter.isChecked(i)==true) {
+                tempex += mainList.get(i).getFoodPrice();
+            }
+        }
+        mainP = tempex;
+
+        int tempex2 = 0;
+        for (int i = 0; i < extraList.size(); i++) {
+            if (testExtraAdapter.isChecked(i)==true) {
+                tempex2 += extraList.get(i).getFoodPrice();
+            }
+        }
+        extraP = tempex2;
+        orderPriceCombi.setText(""+(mainP+extraP+baseP));
+
+    }
+
     public void openCart(){
 
+        foodList.add(b); // add base
 
-        //order = new order("Base, Main","", 100 ,foodList);
+        //add Main to orderStack
+        String mainName = ""+ b.getFoodName();
+        for(int i=0;i<mainList.size();i++)
+        {
+            if(testMainAdapter.isChecked(i)==true)
+            {
+                foodList.add(mainList.get(i));
+                mainName = mainName + ", " + testMainAdapter.foodList.get(i).getFoodName();
+            }
+        }
+
+        String extraName = "";
+        for(int i=0;i<extraList.size();i++)
+        {
+            if(testExtraAdapter.isChecked(i)==true)
+            {
+                foodList.add(extraList.get(i));
+                extraName = extraName + "\n" + testExtraAdapter.foodList.get(i).getFoodName();
+            }
+        }
+
+
+        order = new order(mainName,extraName,Integer.parseInt(orderPriceCombi.getText().toString()),foodList);
+        orderStack.orderList.add(order);
 
 
 //        int n = 0;
@@ -127,23 +191,13 @@ public class customizeOrderActivity extends AppCompatActivity {
 //
 //
 //        Log.d("1",orderStack.orderList.get(0).orderName);
-//        Intent intent = new Intent(this, cartActivity.class);
+        Intent intent = new Intent(this, cartActivity.class);
 //
 //        intent.putExtra("sendOrderStack", orderStack);
 
-       // startActivity(intent);
+        startActivity(intent);
     }
-//
-//    public void notifyExtraChange(){
-//        int tempex = 0;
-//        for (int i = 0; i < mainList.size(); i++) {
-//            if (testAdapter2.isChecked(i) == true) {
-//                tempex += shownFoodList.get(i).getFoodPrice();
-//            }
-//        }
-//        eop = tempex;
-//        orderPrice.setText("" + (eop + op)*mainAmount );
-//    }
+
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
@@ -164,6 +218,7 @@ public class customizeOrderActivity extends AppCompatActivity {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+
 
 
 }

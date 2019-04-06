@@ -3,17 +3,33 @@ package com.example.vcanteen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class orderStack implements Parcelable {
+
+    private static orderStack instance;
+
+    DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     int customerId;
     int vendorId;
     ArrayList<order> orderList;
     int totalPrice;
     int customerMoneyAccount;
-    //Date createdAt; //null until the customer taps CONFIRM & PAY on popup dialog
+    Date createdAt; //null until the customer taps CONFIRM & PAY on popup dialog
+
+    public orderStack() {
+
+    }
+
+    public static orderStack getInstance(){
+        if(instance == null) instance = new orderStack();
+        return  instance;
+    }
 
     public void setEmpty(){
         this.customerId = 0;
@@ -21,16 +37,17 @@ public class orderStack implements Parcelable {
         this.orderList = new ArrayList<order>();
         this.totalPrice = 0;
         this.customerMoneyAccount = 0;
-       // this.createdAt = null;
+        this.createdAt = null;
     }
 
 
-    public orderStack(int customerId, int vendorId, ArrayList<order> orderList, int totalPrice, int customerMoneyAccount) {
+    public orderStack(int customerId, int vendorId, ArrayList<order> orderList, int totalPrice, int customerMoneyAccount,Date createdAt) {
         this.customerId = customerId;
         this.vendorId = vendorId;
         this.orderList = orderList;
         this.totalPrice = totalPrice;
         this.customerMoneyAccount = customerMoneyAccount;
+        this.createdAt = createdAt;
     }
 
     protected orderStack(Parcel in) {
@@ -39,7 +56,7 @@ public class orderStack implements Parcelable {
         orderList = in.readArrayList(order.class.getClassLoader());
         totalPrice = in.readInt();
         customerMoneyAccount = in.readInt();
-
+        createdAt = new Date(in.readLong());
     }
 
     public static final Creator<orderStack> CREATOR = new Creator<orderStack>() {
@@ -53,6 +70,23 @@ public class orderStack implements Parcelable {
             return new orderStack[size];
         }
     };
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(customerId);
+        dest.writeInt(vendorId);
+        dest.writeList(orderList);
+        dest.writeInt(totalPrice);
+        dest.writeInt(customerMoneyAccount);
+        dest.writeLong(createdAt.getTime());
+    }
 
     public int getCustomerId() {
         return customerId;
@@ -94,17 +128,12 @@ public class orderStack implements Parcelable {
         this.customerMoneyAccount = customerMoneyAccount;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(customerId);
-        dest.writeInt(vendorId);
-        dest.writeList(orderList);
-        dest.writeInt(totalPrice);
-        dest.writeInt(customerMoneyAccount);
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

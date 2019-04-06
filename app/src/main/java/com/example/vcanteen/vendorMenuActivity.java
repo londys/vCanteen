@@ -8,8 +8,19 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import android.widget.Toast;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class vendorMenuActivity extends AppCompatActivity {
@@ -26,13 +37,62 @@ public class vendorMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
+        System.out.println("Entered Menu.....");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://vcanteen.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        System.out.println("Entered Menu.....");
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<vendorAlacarteMenu> call = jsonPlaceHolderApi.getVendorMenu();
+        System.out.println("Entered Menu2.....");
+        call.enqueue(new Callback<vendorAlacarteMenu>() {
+            @Override
+            public void onResponse(Call<vendorAlacarteMenu> call, Response<vendorAlacarteMenu> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(vendorMenuActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
+                    return;
+
+                }
+                //get result here
+                vendorAlacarteMenu menu = response.body();
+                System.out.println("Received Menu: "+menu.getVendorInfo().restaurantNumber);
+            }
+
+            @Override
+            public void onFailure(Call<vendorAlacarteMenu> call, Throwable t) {
+                System.out.println("Entered Menu Fail.....");
+
+            }
+        });
+        System.out.println("Entered Menu3.....");
+
+///TRY SINGLETON////
+        orderStack = com.example.vcanteen.orderStack.getInstance();
+        orderStack.setCustomerId(22);
+        orderStack.setVendorId(45);
+        orderStack.setOrderList(new ArrayList<>());
+        orderStack.setTotalPrice(0);
+        orderStack.setCreatedAt(new Date());
+
+//        final int vendorId = 45; // for testing only
+//
+//        orderList = new ArrayList<>();
+//        orderStack = new orderStack(22,vendorId, orderList,0,0,new Date());
+///////////////////
 
         //final int vendorId = 45; // for testing only
         //orderList = new ArrayList<>();
         // cusId need to change later when connect with BE
         //orderStack = new orderStack(22,vendorId, orderList,0,0);
 
-        orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
+
+
+        //try date
+        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println("Create at "+dateformat.format(orderStack.getCreatedAt()));
+
+        //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
         String n = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity
 
         TextView restaurantName = (TextView)findViewById(R.id.restaurantName);// delete if don't want from home activity
@@ -81,7 +141,7 @@ public class vendorMenuActivity extends AppCompatActivity {
                 if(position<availableList.size()) {
                     Intent passALaCarte = new Intent(vendorMenuActivity.this, normalOrderActivity.class);
                     passALaCarte.putExtra("chosenFood", shownFoodList.get(position));
-                    passALaCarte.putExtra("orderStack", orderStack);
+                    //passALaCarte.putExtra("orderStack", orderStack);
 
                     startActivity(passALaCarte);
                 }else{

@@ -3,6 +3,8 @@ package com.example.vcanteen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class order implements Parcelable {
 
     String orderName;
@@ -11,9 +13,10 @@ public class order implements Parcelable {
     //ask for the code of forming orderName from BE
     String orderNameExtra;
     int orderPrice;
-    food foodList[];
+    //food foodList[];
+    ArrayList<food> foodList;
 
-    public order(String orderName, String orderNameExtra, int orderPrice, food[] foodList) {
+    public order(String orderName, String orderNameExtra, int orderPrice, ArrayList<food> foodList) {
         this.orderName = orderName;
         this.orderNameExtra = orderNameExtra;
         this.orderPrice = orderPrice;
@@ -24,7 +27,7 @@ public class order implements Parcelable {
         orderName = in.readString();
         orderNameExtra = in.readString();
         orderPrice = in.readInt();
-        foodList = in.createTypedArray(food.CREATOR);
+        foodList = in.readArrayList(food.class.getClassLoader());
     }
 
     public static final Creator<order> CREATOR = new Creator<order>() {
@@ -63,11 +66,11 @@ public class order implements Parcelable {
         this.orderPrice = orderPrice;
     }
 
-    public food[] getFoodList() {
+    public ArrayList<food> getFoodList() {
         return foodList;
     }
 
-    public void setFoodList(food[] foodList) {
+    public void setFoodList(ArrayList<food> foodList) {
         this.foodList = foodList;
     }
 
@@ -81,6 +84,6 @@ public class order implements Parcelable {
         dest.writeString(orderName);
         dest.writeString(orderNameExtra);
         dest.writeInt(orderPrice);
-        dest.writeTypedArray(foodList, flags);
+        dest.writeList(foodList);
     }
 }
