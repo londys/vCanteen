@@ -227,6 +227,8 @@ public class password_login_page extends AppCompatActivity {
                                     });
                                 } else {
                                     System.out.println("Firebase login FAIL");
+                                    errorMessage.setText("THE PASSWORD IS INCORRECT");
+                                    errorMessage.setVisibility(View.VISIBLE);
                                     progressDialog.dismiss();
                                 }
                             }

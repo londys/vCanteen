@@ -45,7 +45,15 @@ public class changePasswordActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private ProgressDialog progressDialog;
 
+    private Dialog confirmChangePassDialog;
+    private Button confirmChangePass;
+    private Button cancelChangePass;
+
     private String firebaseToken;
+
+    private String x;
+    private String y;
+    private String z;
 
     private final String url = "https://vcanteen.herokuapp.com/";
 
@@ -65,6 +73,7 @@ public class changePasswordActivity extends AppCompatActivity {
         showHide1 = (TextView) findViewById(R.id.showHide1);
         showHide2 = (TextView) findViewById(R.id.showHide2);
         showHide3 = (TextView) findViewById(R.id.showHide3);
+
 
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
@@ -192,45 +201,62 @@ public class changePasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                progressDialog = new ProgressDialog(changePasswordActivity.this);
-                progressDialog = ProgressDialog.show(changePasswordActivity.this
-                        , "",
-                        "Loading. Please wait...", true);
-                String x = currentPassword.getText().toString();
-                final String y = newPassword.getText().toString();
-                String z = confirmNewPassword.getText().toString();
-                final boolean[] check1 = {true};
-                boolean check2 = false;
+                changePassword();
 
-                if (x.equals(y)) {
-                    checkNewPasswordText.setText("Your new password can't be the same as your current passaword.");
-                    currentPassword.setText("");
-                    newPassword.setText("");
-                    confirmNewPassword.setText("");
-                    progressDialog.dismiss();
+            }
+        });
 
-                } else if (!(y.equals(z))) {
-                    checkNewPasswordText.setText("Password doesn't match. Please try again.");
-                    //currentPassword.setText("");
-                    newPassword.setText("");
-                    confirmNewPassword.setText("");
-                    progressDialog.dismiss();
+    }
 
-                } else if (y.length() < 8 || y.length() > 20) {
-                    checkNewPasswordText.setText("Invalid Password. Please try again.");
-                    //currentPassword.setText("");
-                    newPassword.setText("");
-                    confirmNewPassword.setText("");
-                    progressDialog.dismiss();
-                } else if (!PASSWORD_PATTERN.matcher(y).matches()) {
-                    checkNewPasswordText.setText("Invalid Password. Please try again.");
-                    //currentPassword.setText("");
-                    newPassword.setText("");
-                    confirmNewPassword.setText("");
-                    progressDialog.dismiss();
-                } else {
+    private void changePassword() {
+        x = currentPassword.getText().toString();
+        y = newPassword.getText().toString();
+        z = confirmNewPassword.getText().toString();
+        final boolean[] check1 = {true};
+        boolean check2 = false;
 
+        if (x.equals(y)) {
+            checkNewPasswordText.setText("Your new password can't be the same as your current passaword.");
+            currentPassword.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+            progressDialog.dismiss();
 
+        } else if (!(y.equals(z))) {
+            checkNewPasswordText.setText("Password doesn't match. Please try again.");
+            //currentPassword.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+            progressDialog.dismiss();
+
+        } else if (y.length() < 8 || y.length() > 20) {
+            checkNewPasswordText.setText("Invalid Password. Please try again.");
+            //currentPassword.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+            progressDialog.dismiss();
+        } else if (!PASSWORD_PATTERN.matcher(y).matches()) {
+            checkNewPasswordText.setText("Invalid Password. Please try again.");
+            //currentPassword.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+            progressDialog.dismiss();
+        } else {
+            confirmChangePassDialog = new Dialog(changePasswordActivity.this);
+            confirmChangePassDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            confirmChangePassDialog.setContentView(R.layout.dialog_confirm_changepass);
+
+            confirmChangePass = confirmChangePassDialog.findViewById(R.id.confirm_changepass);
+            cancelChangePass = confirmChangePassDialog.findViewById(R.id.cancel_confirm_changepass);
+
+            confirmChangePass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmChangePassDialog.cancel();
+                    progressDialog = new ProgressDialog(changePasswordActivity.this);
+                    progressDialog = ProgressDialog.show(changePasswordActivity.this
+                            , "",
+                            "Loading. Please wait...", true);
                     //check if match with current database password
                     // replace "asdfg" with data from database
                     Gson gson = new GsonBuilder().serializeNulls().create();
@@ -290,9 +316,17 @@ public class changePasswordActivity extends AppCompatActivity {
                         }
                     });
                 }
+            });
 
-            }
-        });
+            cancelChangePass.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmChangePassDialog.cancel();
+                }
+            });
 
+            confirmChangePassDialog.show();
+
+        }
     }
 }
