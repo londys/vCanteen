@@ -45,6 +45,7 @@ public class changePasswordActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private ProgressDialog progressDialog;
 
+    private String firebaseToken;
 
     private final String url = "https://vcanteen.herokuapp.com/";
 
@@ -69,6 +70,7 @@ public class changePasswordActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         email = sharedPref.getString("email", "empty email");
         account_type = sharedPref.getString("account_type", "UNKONWN");
+        firebaseToken = sharedPref.getString("firebaseToken", "NO TOKEN");
 
 
         // show and hide password for current password field
@@ -238,7 +240,7 @@ public class changePasswordActivity extends AppCompatActivity {
                             .build();
                     final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-                    Customers postCustomer = new Customers(email, null, null, account_type, null, org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
+                    Customers postCustomer = new Customers(email, null, null, account_type, null, org.apache.commons.codec.digest.DigestUtils.sha256Hex(x), firebaseToken);
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
                     System.out.println("Curr pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
                     System.out.println("New pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(y));

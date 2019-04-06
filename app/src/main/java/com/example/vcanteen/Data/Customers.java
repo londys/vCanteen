@@ -16,14 +16,16 @@ public class Customers {
     private String profile_url;
     @Nullable
     private String password;
+    private String firebaseToken;
 
-    public Customers(String email, @Nullable String first_name, @Nullable String last_name, String account_type, @Nullable String profile_url, @Nullable String password) {
+    public Customers(String email, @Nullable String first_name, @Nullable String last_name, String account_type, @Nullable String profile_url, @Nullable String password, String firebaseToken) {
         this.email = email;
         this.first_name = first_name;
         this.last_name = last_name;
         this.account_type = account_type;
         this.profile_url = profile_url;
         this.password = password;
+        this.firebaseToken = firebaseToken;
     }
 
     public String getAccount_type() {
@@ -54,6 +56,15 @@ public class Customers {
         return profile_url;
     }
 
+    @Nullable
+    public String getProfile_url() {
+        return profile_url;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
     @Override
     public String toString() {
         return "Customers{" +
@@ -63,6 +74,7 @@ public class Customers {
                 ", account_type='" + account_type + '\'' +
                 ", profile_url='" + profile_url + '\'' +
                 ", password='" + password + '\'' +
+                ", firebaseToken='" + firebaseToken + '\'' +
                 '}';
     }
 }
