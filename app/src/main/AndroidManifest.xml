@@ -31,6 +31,8 @@
         <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
         <activity android:name=".emailActivity" />
+        <activity android:name=".OrderListActivity"></activity>
+        <activity android:name=".vendorMenuActivity"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -57,16 +59,8 @@
             android:name="com.google.android.actions"
             android:resource="@xml/dimension" />
 
-        <activity android:name=".emailActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-        <activity android:name=".OrderListActivity">
-        </activity>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".vendorMenuActivity"></activity>
+
     </application>
 
 </manifest>

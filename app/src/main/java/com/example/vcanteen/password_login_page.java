@@ -41,6 +41,8 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -151,7 +153,9 @@ public class password_login_page extends AppCompatActivity {
                     progressDialog.dismiss();
                     return;
                 }
-                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
+
+                passwd = new String(Hex.encodeHex(DigestUtils.sha256(passwd)));
+//                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
                 System.out.println(passwd);
 
                 Customers postCustomer = new Customers(email, null, null, account_type, null, passwd);
