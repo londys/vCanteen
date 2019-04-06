@@ -1,15 +1,15 @@
 package com.example.vcanteen;
 
+import com.example.vcanteen.POJO.orderHistory;
+import com.example.vcanteen.POJO.orderProgress;
+import com.example.vcanteen.POJO.orderStatus;
+import com.example.vcanteen.POJO.pickupSlot;
+
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
-import retrofit2.http.PATCH;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface JsonPlaceHolderApi {

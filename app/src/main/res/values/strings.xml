@@ -37,5 +37,5 @@
     <string name="go_to_order">GO TO ORDER</string>
     <string name="popup_confirm_pickup_title">Your order is ready at slot.</string>
     <string name="popup_confirm_pickup_subtitle_text">Only press confirm after picking up your meal.</string>
-    <string name="pickup_tab">PICK UP ▶</string>
+    <string name="pickup_tab">  PICK UP ▶  </string>
 </resources>

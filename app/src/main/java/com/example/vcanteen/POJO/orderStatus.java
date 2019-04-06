@@ -1,4 +1,4 @@
-package com.example.vcanteen;
+package com.example.vcanteen.POJO;
 
 import com.google.gson.annotations.SerializedName;
 
