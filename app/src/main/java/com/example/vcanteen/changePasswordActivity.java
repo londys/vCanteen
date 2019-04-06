@@ -240,6 +240,8 @@ public class changePasswordActivity extends AppCompatActivity {
 
                     Customers postCustomer = new Customers(email, null, null, account_type, null, org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
+                    System.out.println("Curr pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
+                    System.out.println("New pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(y));
                     call.enqueue(new Callback<TokenResponse>() {
                         @Override
                         public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
@@ -248,6 +250,7 @@ public class changePasswordActivity extends AppCompatActivity {
                                 currentPassword.setText("");
                                 newPassword.setText("");
                                 confirmNewPassword.setText("");
+                                progressDialog.dismiss();
                                 check1[0] = false;
                             } else {
 
