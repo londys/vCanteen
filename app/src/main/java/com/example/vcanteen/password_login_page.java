@@ -84,7 +84,6 @@ public class password_login_page extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference dbUsers;
-    private String firebaseToken;
 
     // vcanteen.herokuapp.com/
     private final String url = "http://vcanteen.herokuapp.com/";
@@ -155,84 +154,45 @@ public class password_login_page extends AppCompatActivity {
                 }
 
                 passwd = new String(Hex.encodeHex(DigestUtils.sha256(passwd)));
-//                passwd = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdField.getText().toString());
                 System.out.println(passwd);
 
-                Customers postCustomer = new Customers(email, null, null, account_type, null, passwd, firebaseToken);
+                Customers postCustomer = new Customers(email, null, null, account_type, null, passwd);
                 final Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
-                // start firebase login
-                System.out.println("Firebase email: " + email);
-                System.out.println("Firebase passwd: " + passwd);
-                mAuth.signInWithEmailAndPassword(email, passwd)
-                        .addOnCompleteListener(password_login_page.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-//                                    System.out.println(task.getException().getMessage());
-                                if (task.isSuccessful()) {
-                                    System.out.println("SUCCESS");
-
-                                    // Reteive firebase token
-                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                    dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
-
-                                    dbUsers.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot dsUser : dataSnapshot.getChildren())
-                                                firebaseToken = dsUser.getValue(String.class);
-                                            System.out.println(firebaseToken);
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                                    call.enqueue(new Callback<TokenResponse>() {
-                                        @Override
-                                        public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
-                                            if (!response.isSuccessful()) {
+                call.enqueue(new Callback<TokenResponse>() {
+                    @Override
+                    public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
+                        if (!response.isSuccessful()) {
 //                            Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
-                                                errorMessage.setText("THE PASSWORD IS INCORRECT");
-                                                errorMessage.setVisibility(View.VISIBLE);
-                                                progressDialog.dismiss();
-                                            }
+                            errorMessage.setText("THE PASSWORD IS INCORRECT");
+                            errorMessage.setVisibility(View.VISIBLE);
+                            progressDialog.dismiss();
+                        }
 //                            TokenResponse tokenResponse = response.body();
 //                            System.out.println(tokenResponse.isStatusCode());
 //                            System.out.println(response.body().toString());
 
-                                            if (response.code() != 200) {
-                                                errorMessage.setText("THE PASSWORD IS INCORRECT");
-                                                errorMessage.setVisibility(View.VISIBLE);
-                                                progressDialog.dismiss();
-                                            } else {
-                                                sharedPref.edit().putString("token", response.body().getToken()).commit();
-                                                sharedPref.edit().putString("email", email).commit();
-                                                sharedPref.edit().putString("account_type", account_type).commit();
-                                                sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
-                                                progressDialog.dismiss();
-                                                startActivity(intent);
+                        if (response.code() != 200) {
+                            errorMessage.setText("THE PASSWORD IS INCORRECT");
+                            errorMessage.setVisibility(View.VISIBLE);
+                            progressDialog.dismiss();
+                        } else {
+                            sharedPref.edit().putString("token", response.body().getToken()).commit();
+                            sharedPref.edit().putString("email", email).commit();
+                            sharedPref.edit().putString("account_type", account_type).commit();
+                            progressDialog.dismiss();
+                            startActivity(intent);
 
-                                            }
+                        }
 
 
-                                        }
+                    }
 
-                                        @Override
-                                        public void onFailure(Call<TokenResponse> call, Throwable t) {
-                                            t.printStackTrace();
-                                        }
-                                    });
-                                } else {
-                                    System.out.println("Firebase login FAIL");
-                                    errorMessage.setText("THE PASSWORD IS INCORRECT");
-                                    errorMessage.setVisibility(View.VISIBLE);
-                                    progressDialog.dismiss();
-                                }
-                            }
-                        });
+                    @Override
+                    public void onFailure(Call<TokenResponse> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
             }
         });
 

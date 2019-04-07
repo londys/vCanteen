@@ -35,7 +35,6 @@
         <activity android:name=".settingActivity" />
         <activity android:name=".emailActivity" />
         <activity android:name=".OrderListActivity"></activity>
-        <activity android:name=".vendorMenuActivity"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

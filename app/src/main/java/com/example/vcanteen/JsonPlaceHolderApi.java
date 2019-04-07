@@ -10,6 +10,7 @@ import com.example.vcanteen.Data.ResetPass;
 import com.example.vcanteen.Data.Token;
 import com.example.vcanteen.Data.TokenResponse;
 import com.example.vcanteen.Data.TokenVerification;
+import com.example.vcanteen.POJO.vendorCombinationMenu;
 
 import java.util.List;
 import retrofit2.Call;
@@ -48,7 +49,10 @@ public interface JsonPlaceHolderApi {
     @PUT("v1/user-authentication/customer/verify/email")
     Call<Void> verifyEmail(@Body RecoverPass recoverPass);
 
-    @GET("v1/orders/1/menu")
-    Call<vendorAlacarteMenu> getVendorMenu();
+    @GET("v1/orders/{vendorId}/menu")
+    Call<vendorAlacarteMenu> getVendorAlacarte(@Path("vendorId") int vendorId);
+
+    @GET("v1/orders/{vendorId}/combination")
+    Call<vendorCombinationMenu> getVendorCombination(@Path("vendorId") int vendorId);
 
 }

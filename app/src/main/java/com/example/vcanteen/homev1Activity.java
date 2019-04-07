@@ -29,7 +29,8 @@ public class homev1Activity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     return true;
                 case R.id.navigation_orders:
-                    mTextMessage.setText("ORDERS");
+//                    mTextMessage.setText("ORDERS");
+                    startActivity(new Intent(homev1Activity.this, OrderListActivity.class));
                     return true;
                 case R.id.navigation_settings:
 //                    mTextMessage.setText("SETTINGS");
@@ -53,7 +54,7 @@ public class homev1Activity extends AppCompatActivity {
         System.out.println(sharedPref.getString("token", "empty token"));
         System.out.println(sharedPref.getString("email", "empty email"));
 
-        String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
+        final String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
         ListAdapter testAdapter = new vendorListAdapter(this, test);
         ListView vendorList = findViewById(R.id.vendorlist);
         vendorList.setAdapter(testAdapter);
@@ -71,9 +72,10 @@ public class homev1Activity extends AppCompatActivity {
                 if(position<test.length) {
                     Intent sent = new Intent(homev1Activity.this, vendorMenuActivity.class);
                     sent.putExtra("chosenVendor", test[position]);
-                    sent.putExtra("orderStack", orderStack);
-
+//                    sent.putExtra("orderStack", orderStack); //TODO NOTSURE
+//
                     startActivity(sent);
+
                 }
 //                else{
 //                    vendorList.getChildAt(position).setEnabled(false);

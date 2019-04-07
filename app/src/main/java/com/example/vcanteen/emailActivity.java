@@ -83,7 +83,7 @@ public class emailActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference dbUsers;
-    private String firebaseToken;
+
 
     private String first_name;
     private String last_name;
@@ -166,68 +166,38 @@ public class emailActivity extends AppCompatActivity {
 
                                 final String account_type = "FACEBOOK";
 
-                                // get firebase token
-                                mAuth.signInWithEmailAndPassword(email, "firebaseOnlyNaja")
-                                        .addOnCompleteListener(emailActivity.this, new OnCompleteListener<AuthResult>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                                if (task.isSuccessful()) {
-                                                    System.out.println("SUCCESS");
-                                                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                                    dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
+                                Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "alsfkjsadf");
+                                System.out.println(postCustomer.toString());
+                                postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, null);
+                                Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
 
-                                                    dbUsers.addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                            for(DataSnapshot dsUser: dataSnapshot.getChildren())
-                                                                firebaseToken = dsUser.getValue(String.class);
-                                                            System.out.println(firebaseToken);
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                        }
-                                                    });
-                                                    Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "alsfkjsadf", firebaseToken);
-                                                    System.out.println(postCustomer.toString());
-                                                    postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, null, firebaseToken);
-                                                    Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
-
-                                                    // HTTP POST
-                                                    call.enqueue(new Callback<TokenResponse>() {
-                                                        @Override
-                                                        public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
-                                                            if(!response.isSuccessful())
-                                                                Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
+                                // HTTP POST
+                                call.enqueue(new Callback<TokenResponse>() {
+                                    @Override
+                                    public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
+                                        if(!response.isSuccessful())
+                                            Toast.makeText(getApplicationContext(), "Error Occured, please try again.", Toast.LENGTH_SHORT);
 //                                        TokenResponse tokenResponse = response.body();
 //                                        System.out.println(tokenResponse.statusCode);
 //                                        System.out.println(response.body().toString());
-                                                            if(response.code() != 200)
-                                                                Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
-                                                            else {
-                                                                sharedPref.edit().putString("token", response.body().getToken()).commit();
-                                                                sharedPref.edit().putString("email", email).commit();
-                                                                sharedPref.edit().putString("account_type", account_type).commit();
-                                                                sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
-                                                                progressDialog.dismiss();
-                                                                startActivity(intent);
-                                                            }
-                                                        }
+                                        if(response.code() != 200)
+                                            Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
+                                        else {
+                                            sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                            sharedPref.edit().putString("email", email).commit();
+                                            sharedPref.edit().putString("account_type", account_type).commit();
+                                            progressDialog.dismiss();
+                                            startActivity(intent);
+                                        }
+                                    }
 
-                                                        @Override
-                                                        public void onFailure(Call<TokenResponse> call, Throwable t) {
-                                                            System.out.println("ERROR ESUS");
-                                                            progressDialog.dismiss();
-                                                            Toast.makeText(getApplicationContext(), "An error occured. Please try again.", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                                } else {
-                                                    System.out.println("Firebase login FAIL");
-                                                    progressDialog.dismiss();
-                                                }
-                                            }
-                                        });
+                                    @Override
+                                    public void onFailure(Call<TokenResponse> call, Throwable t) {
+                                        System.out.println("ERROR ESUS");
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "An error occured. Please try again.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         });
                 Bundle parameters = new Bundle();

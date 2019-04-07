@@ -24,6 +24,17 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.vcanteen.POJO.baseList;
+import com.example.vcanteen.POJO.extraList;
+import com.example.vcanteen.POJO.mainList;
+import com.example.vcanteen.POJO.vendorCombinationMenu;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class customizeOrderActivity extends AppCompatActivity {
 
     String[] items1 = { "Base1", "Base2" };
@@ -57,15 +68,49 @@ public class customizeOrderActivity extends AppCompatActivity {
 
         foodList = new ArrayList<>();
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://vcanteen.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        System.out.println("Entered Menu.....");
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<vendorCombinationMenu> call = jsonPlaceHolderApi.getVendorCombination(1);
 
+        call.enqueue(new Callback<vendorCombinationMenu>() {
+            @Override
+            public void onResponse(Call<vendorCombinationMenu> call, Response<vendorCombinationMenu> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(customizeOrderActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
+                    return;
+
+                }
+                vendorCombinationMenu menu = response.body();
+                addCombinationToList(menu.baseList, menu.mainList,menu.extraList);
+            }
+
+            @Override
+            public void onFailure(Call<vendorCombinationMenu> call, Throwable t) {
+                System.out.println("Entered Menu Fail.....");
+            }
+        });
+
+
+
+
+    }
+
+    private void addCombinationToList(ArrayList<baseList> inputBaseList, ArrayList<mainList> inputMainList, ArrayList<extraList> inputExtraList) {
 
 ///// FOR COMBINATION BASE //////
         baseList = new ArrayList<>(); //need to get from BE
 
+        for(baseList list : inputBaseList) {
+            baseList.add(new food(list.getFoodId(), list.getFoodName(), list.getFoodPrice(), "COMBINATION_BASE"));
+        }
         // for testing
-        baseList.add(new food(3, "Jasmine Rice", 5, "COMBINATION_BASE"));
-        baseList.add(new food(1, "Sticky Rice", 10, "COMBINATION_BASE"));
-        baseList.add(new food(2, "Fried Rice", 15, "COMBINATION_BASE"));
+//        baseList.add(new food(3, "Jasmine Rice", 5, "COMBINATION_BASE"));
+//        baseList.add(new food(1, "Sticky Rice", 10, "COMBINATION_BASE"));
+//        baseList.add(new food(2, "Fried Rice", 15, "COMBINATION_BASE"));
 
         testBaseAdapter = new combinationBaseListAdapter(this, baseList);
         final ListView baseListShow = findViewById(R.id.list1);
@@ -78,13 +123,22 @@ public class customizeOrderActivity extends AppCompatActivity {
         final ArrayList<food> availableMainList = new ArrayList<>(); //need to get from BE
         ArrayList<food> soldOutMainList = new ArrayList<>();   //need to get from BE
 
+        for(mainList list : inputMainList) {
+            if(list.getFoodStatus().equals("AVAILABLE")) {
+                availableMainList.add(new food(list.getFoodId(), list.getFoodName(), list.getFoodPrice(), "COMBINATION_BASE"));
+            } else {
+                soldOutMainList.add(new food(list.getFoodId(), list.getFoodName(), list.getFoodPrice(), "COMBINATION_BASE"));
+            }
+
+        }
+
         // for testing
-        availableMainList.add(new food(3, "Pork", 15, "COMBINATION_MAIN"));
-        availableMainList.add(new food(1, "Beef", 10, "COMBINATION_MAIN"));
-        availableMainList.add(new food(2, "Fried Chicken", 15, "COMBINATION_MAIN"));
-        availableMainList.add(new food(3, "Curry", 15, "COMBINATION_MAIN"));
-        soldOutMainList.add(new food(32, "Salad", 25, "COMBINATION_MAIN"));
-        soldOutMainList.add(new food(13, "Curry Beef", 35, "COMBINATION_MAIN"));
+//        availableMainList.add(new food(3, "Pork", 15, "COMBINATION_MAIN"));
+//        availableMainList.add(new food(1, "Beef", 10, "COMBINATION_MAIN"));
+//        availableMainList.add(new food(2, "Fried Chicken", 15, "COMBINATION_MAIN"));
+//        availableMainList.add(new food(3, "Curry", 15, "COMBINATION_MAIN"));
+//        soldOutMainList.add(new food(32, "Salad", 25, "COMBINATION_MAIN"));
+//        soldOutMainList.add(new food(13, "Curry Beef", 35, "COMBINATION_MAIN"));
 
         mainList = new ArrayList<>(availableMainList);
         mainList.addAll(soldOutMainList);
@@ -97,11 +151,15 @@ public class customizeOrderActivity extends AppCompatActivity {
 
 ///// FOR EXTRA //////
         extraList = new ArrayList<>();
-        extraList.add(new food(11, "More Rice", 5, "EXTRA"));
-        extraList.add(new food(12, "Extra Large", 10, "EXTRA"));
-        extraList.add(new food(13, "No Spicy", 0, "EXTRA"));
-        extraList.add(new food(14, "Extra Spicy", 0, "EXTRA"));
-        extraList.add(new food(15, "No Vegetable", 0, "EXTRA"));
+
+        for(extraList list : inputExtraList) {
+            extraList.add(new food(list.getFoodId(), list.getFoodName(), list.getFoodPrice(), "EXTRA"));
+        }
+//        extraList.add(new food(11, "More Rice", 5, "EXTRA"));
+//        extraList.add(new food(12, "Extra Large", 10, "EXTRA"));
+//        extraList.add(new food(13, "No Spicy", 0, "EXTRA"));
+//        extraList.add(new food(14, "Extra Spicy", 0, "EXTRA"));
+//        extraList.add(new food(15, "No Vegetable", 0, "EXTRA"));
 
         testExtraAdapter = new foodListAdapterForCombi(this,extraList,extraList.size());
         final ListView extraListShow = findViewById(R.id.list3);
@@ -109,7 +167,7 @@ public class customizeOrderActivity extends AppCompatActivity {
 
         setListViewHeightBasedOnChildren(extraListShow);
 
-        addToCartImgFromCustomize = (ImageView) findViewById(R.id.addToCartImgFromCustomize);
+        addToCartImgFromCustomize = findViewById(R.id.addToCartImgFromCustomize);
         addToCartImgFromCustomize.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -117,8 +175,6 @@ public class customizeOrderActivity extends AppCompatActivity {
                 openCart();
             }
         });
-
-
     }
 
     public void notifyExtraChangeBase() {

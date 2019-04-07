@@ -23,8 +23,8 @@ public class vendorAlacarteMenu {
 
     @SerializedName("vendor")
     public vendorInfo vendorInfo;
-    @SerializedName("avaliableList")
-    public ArrayList<avaliableList> avaliableList;
+    @SerializedName("availableList")
+    public ArrayList<availableList> availableList;
     @SerializedName("soldOutList")
     public ArrayList<soldOutList> soldOutList;
     @SerializedName("hasCombination")
