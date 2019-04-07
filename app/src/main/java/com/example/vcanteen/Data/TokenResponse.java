@@ -11,14 +11,14 @@ public class TokenResponse {
 
     @SerializedName("customer_id")
     @Nullable
-    private String custID;
+    private int custID;
     @SerializedName("token")
     @Nullable
     private String token;
     @SerializedName("status")
     private String status;
 
-    public String getCustID() {
+    public int getCustID() {
         return custID;
     }
 

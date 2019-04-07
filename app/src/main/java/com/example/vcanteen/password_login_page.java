@@ -152,8 +152,7 @@ public class password_login_page extends AppCompatActivity {
                     progressDialog.dismiss();
                     return;
                 }
-
-                passwd = new String(Hex.encodeHex(DigestUtils.sha256(passwd)));
+                passwd = new String(Hex.encodeHex(DigestUtils.sha256(passwdField.getText().toString())));
                 System.out.println(passwd);
 
                 Customers postCustomer = new Customers(email, null, null, account_type, null, passwd);
@@ -172,16 +171,19 @@ public class password_login_page extends AppCompatActivity {
 //                            System.out.println(tokenResponse.isStatusCode());
 //                            System.out.println(response.body().toString());
 
-                        if (response.code() != 200) {
-                            errorMessage.setText("THE PASSWORD IS INCORRECT");
-                            errorMessage.setVisibility(View.VISIBLE);
-                            progressDialog.dismiss();
-                        } else {
-                            sharedPref.edit().putString("token", response.body().getToken()).commit();
-                            sharedPref.edit().putString("email", email).commit();
-                            sharedPref.edit().putString("account_type", account_type).commit();
-                            progressDialog.dismiss();
-                            startActivity(intent);
+                                            if (response.code() != 200) {
+                                                errorMessage.setText("THE PASSWORD IS INCORRECT");
+                                                errorMessage.setVisibility(View.VISIBLE);
+                                                progressDialog.dismiss();
+                                            } else {
+                                                System.out.println(response.body().toString());
+                                                sharedPref.edit().putInt("customerId", response.body().getCustID()).commit();
+                                                sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                                sharedPref.edit().putString("email", email).commit();
+                                                sharedPref.edit().putString("account_type", account_type).commit();
+                                                sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
+                                                progressDialog.dismiss();
+                                                startActivity(intent);
 
                         }
 

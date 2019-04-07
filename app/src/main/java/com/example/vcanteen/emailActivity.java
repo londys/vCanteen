@@ -180,16 +180,19 @@ public class emailActivity extends AppCompatActivity {
 //                                        TokenResponse tokenResponse = response.body();
 //                                        System.out.println(tokenResponse.statusCode);
 //                                        System.out.println(response.body().toString());
-                                        if(response.code() != 200)
-                                            Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
-                                        else {
-                                            sharedPref.edit().putString("token", response.body().getToken()).commit();
-                                            sharedPref.edit().putString("email", email).commit();
-                                            sharedPref.edit().putString("account_type", account_type).commit();
-                                            progressDialog.dismiss();
-                                            startActivity(intent);
-                                        }
-                                    }
+                                                            if(response.code() != 200)
+                                                                Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
+                                                            else {
+                                                                System.out.println(response.body().toString());
+                                                                sharedPref.edit().putInt("customerId", response.body().getCustID()).commit();
+                                                                sharedPref.edit().putString("token", response.body().getToken()).commit();
+                                                                sharedPref.edit().putString("email", email).commit();
+                                                                sharedPref.edit().putString("account_type", account_type).commit();
+                                                                sharedPref.edit().putString("firebaseToken", firebaseToken).commit();
+                                                                progressDialog.dismiss();
+                                                                startActivity(intent);
+                                                            }
+                                                        }
 
                                     @Override
                                     public void onFailure(Call<TokenResponse> call, Throwable t) {

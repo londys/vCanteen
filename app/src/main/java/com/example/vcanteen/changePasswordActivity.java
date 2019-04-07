@@ -269,8 +269,7 @@ public class changePasswordActivity extends AppCompatActivity {
                             .build();
                     final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-
-                    Customers postCustomer = new Customers(email, null, null, account_type, null, new String(Hex.encodeHex(DigestUtils.sha256(x))));
+                    Customers postCustomer = new Customers(email, null, null, account_type, null, new String(Hex.encodeHex(DigestUtils.sha256(x))), firebaseToken);
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
                     System.out.println("Curr pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
                     System.out.println("New pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(y));
