@@ -16,6 +16,15 @@ public class food implements Parcelable {
         this.foodType = foodType;
     }
 
+    @Override
+    public String toString() {
+        return "{ \"foodId\": "+"\""+foodId+"\""+
+                ", \"foodName\": "+foodName+"\""+
+                ", \"foodPrice\": "+"\""+foodPrice+"\""+
+                ", \"foodType\": "+"\""+foodType+"\""+
+                "}";
+    }
+
     public int getFoodId() {
         return foodId;
     }
@@ -99,6 +108,8 @@ public class food implements Parcelable {
         dest.writeInt(foodPrice);
         dest.writeString(foodType);
     }
+
+
 }
 //old one without parcel
 

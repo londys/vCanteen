@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
 
 public class settingActivity extends AppCompatActivity {
     private LinearLayout tappable_password, tappable_payment;
@@ -68,9 +71,23 @@ public class settingActivity extends AppCompatActivity {
                         System.out.println(isSignedIn);
                         if (isSignedIn)
                             FirebaseAuth.getInstance().signOut();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).start();
                         sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
                         sharedPref.edit().putInt("customerId", 0);
                         logoutWarningDialog.cancel();
+
+
+
+
                         startActivity(new Intent(settingActivity.this, emailActivity.class));
                     }
                 });

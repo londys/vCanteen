@@ -2,6 +2,7 @@ package com.example.vcanteen;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +57,7 @@ public class cartActivity extends AppCompatActivity {
     int customerMoneyAccountId;
     ArrayList<paymentList> paymentList;
 
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +210,7 @@ public class cartActivity extends AppCompatActivity {
         orderStack.setCustomerMoneyAccount(customerMoneyAccountId);
 
         newOrder checkout = new newOrder();
-        checkout.customerId = orderStack.getCustomerId();
+        checkout.customerId = sharedPref.getInt("customerId", 1);
         checkout.vendorId = orderStack.getVendorId();
         checkout.order = orderStack.getOrderList();
         checkout.totalPrice = orderStack.getTotalPrice();

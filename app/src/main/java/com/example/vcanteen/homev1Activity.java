@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -12,13 +13,23 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.vcanteen.Data.Customers;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 public class homev1Activity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private SharedPreferences sharedPref;
+    private FirebaseAuth mAuth;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -45,6 +56,23 @@ public class homev1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_v1);
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (task.isSuccessful()) {
+                            String token = task.getResult().getToken();
+                            System.out.println(token);
+                            saveToken(token);
+                        } else {
+
+                        }
+                    }
+                });
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -82,6 +110,28 @@ public class homev1Activity extends AppCompatActivity {
 //                }
             }
         });
+    }
+
+    private void saveToken(String token) {
+        System.out.println("entered aavetoken");
+        String email = mAuth.getCurrentUser().getEmail();
+//        User user = new User(email, token);
+
+        System.out.println("firebase: "+email);
+        Customers customer = new Customers(email, null, null, "CUSTOMER", null, null, token);
+
+        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("users");
+
+        dbUsers.child(mAuth.getCurrentUser().getUid())
+                .setValue(customer).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(homev1Activity.this, "Token Saved", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     @Override
