@@ -57,8 +57,6 @@ public class cartActivity extends AppCompatActivity {
     ArrayList<paymentList> paymentList;
 
 
-    final ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
