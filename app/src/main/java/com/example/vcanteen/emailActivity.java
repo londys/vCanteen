@@ -206,6 +206,8 @@ public class emailActivity extends AppCompatActivity {
                                                             if(response.code() != 200)
                                                                 Toast.makeText(getApplicationContext(), "Either email or password is incorrect.", Toast.LENGTH_SHORT).show();
                                                             else {
+                                                                System.out.println(response.body().toString());
+                                                                sharedPref.edit().putInt("customerId", response.body().getCustID()).commit();
                                                                 sharedPref.edit().putString("token", response.body().getToken()).commit();
                                                                 sharedPref.edit().putString("email", email).commit();
                                                                 sharedPref.edit().putString("account_type", account_type).commit();

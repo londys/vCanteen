@@ -69,6 +69,7 @@ public class settingActivity extends AppCompatActivity {
                         if (isSignedIn)
                             FirebaseAuth.getInstance().signOut();
                         sharedPref.edit().putString("token", "NO TOKEN JA EDOK").commit();
+                        sharedPref.edit().putInt("customerId", 0);
                         logoutWarningDialog.cancel();
                         startActivity(new Intent(settingActivity.this, emailActivity.class));
                     }
