@@ -90,11 +90,11 @@ public class order implements Parcelable {
     @Override
     public String toString() {
         return  "{"+
-                "\"orderName\": "+orderName+
-                ", \"orderNameExtra\": "+orderNameExtra+
+                "\"orderName\": "+"\""+orderName+"\""+
+                ", \"orderNameExtra\": "+"\""+orderNameExtra+"\""+
                 ", \"orderPrice\": "+orderPrice+
                 ", \"foodList\": "+foodList.toString()+
-                "]"
+                "}"
 
                 ;
     }

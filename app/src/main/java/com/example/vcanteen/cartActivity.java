@@ -210,16 +210,21 @@ public class cartActivity extends AppCompatActivity {
         orderStack.setCustomerMoneyAccount(customerMoneyAccountId);
 
         newOrder checkout = new newOrder();
-        checkout.customerId = sharedPref.getInt("customerId", 1);
+        sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+        int i = sharedPref.getInt("customerId", 1);
+        System.out.println("id: "+i);
+        orderStack.setCustomerId(1);
+        orderStack.setVendorId(1);
+        checkout.customerId = orderStack.getCustomerId();
         checkout.vendorId = orderStack.getVendorId();
         checkout.order = orderStack.getOrderList();
         checkout.totalPrice = orderStack.getTotalPrice();
-        checkout.createdAt = "2019-03-26 11:23";
+        checkout.createdAt = "\"2019-03-26 11:23\"";
         checkout.customerMoneyAccountId = orderStack.getCustomerMoneyAccount();
 
+        System.out.println("cID: "+orderStack.getCustomerId());
         System.out.println(checkout.toString());
-        orderStack.setCreatedAt(new Date());
-
+//        orderStack.setCreatedAt(new Date());
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -237,7 +242,7 @@ public class cartActivity extends AppCompatActivity {
             public void onResponse(Call<newOrder> call, Response<newOrder> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(cartActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
-                    System.out.println("POST ERROR CODE"+response.code());
+                    System.out.println("POST ERROR : "+response.code());
                     return;
                 }
                 System.out.println("POST SUCCESS");

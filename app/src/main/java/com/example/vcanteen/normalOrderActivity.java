@@ -21,6 +21,16 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.vcanteen.POJO.extraList;
+import com.example.vcanteen.POJO.menuExtra;
+import com.example.vcanteen.POJO.paymentMethod;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class normalOrderActivity extends AppCompatActivity {
 
@@ -58,6 +68,7 @@ public class normalOrderActivity extends AppCompatActivity {
                 openCart();
             }
         });
+
 
         orderPrice = (TextView) findViewById(R.id.orderPrice);
         foodPrice = (TextView) findViewById(R.id.baseComPrice);
@@ -102,23 +113,68 @@ public class normalOrderActivity extends AppCompatActivity {
         });
 
 
-        ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
-        ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://vcanteen.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        // for testing
-        availableExtraList.add(new food(10,"Extra 1",10, "EXTRA"));
-        availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
-        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
-        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<menuExtra> call = jsonPlaceHolderApi.getMenuExtra(1,chosenALaCarte.foodId);
 
-        shownFoodList = new ArrayList<>(availableExtraList);
-        shownFoodList.addAll(soldOutExtraList);
+        call.enqueue(new Callback<menuExtra>() {
+            @Override
+            public void onResponse(Call<menuExtra> call, Response<menuExtra> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(normalOrderActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
+                    return;
+                }
+                System.out.println("menu Extra success");
 
-        adapter = new foodListAdapter(this,shownFoodList,availableExtraList.size());
-        final ListView extraListShow = findViewById(R.id.extraList);
-        extraListShow.setAdapter(adapter);
+                menuExtra menuExtra = response.body();
+//                ArrayList<extraList> list = response.body().extraList;
+//                list.get
+//                System.out.println("list size : "+list.size());
+//                addMenuExtraToList(menuExtra.food, list);
 
-        foodList = new ArrayList<>();
+
+                ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
+                ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
+
+
+//        System.out.println(inputFood.foodName);
+//        for(extraList list : inputExtraList){
+//            if(list.foodStatus.equals("AVAILABLE")) {
+//                availableExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
+//            } else {
+//                soldOutExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
+//            }
+//            availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
+//                System.out.println("extraaa:"+inputExtraList.size());
+//        }
+
+                // for testing
+                availableExtraList.add(new food(10,"Extra 1",10, "EXTRA"));
+                availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
+//        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
+//        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
+
+                shownFoodList = new ArrayList<>(availableExtraList);
+                shownFoodList.addAll(soldOutExtraList);
+
+                adapter = new foodListAdapter(getApplicationContext(),shownFoodList,availableExtraList.size());
+                final ListView extraListShow = findViewById(R.id.extraList);
+                extraListShow.setAdapter(adapter);
+
+                foodList = new ArrayList<>();
+            }
+
+            @Override
+            public void onFailure(Call<menuExtra> call, Throwable t) {
+                System.out.println("menu Extra fail");
+            }
+        });
+
+
 
         //int numCheckBox = ... //how many checkbox are checked
 //        foodList = new food[2]; //[numCheckBox+1];
@@ -126,6 +182,11 @@ public class normalOrderActivity extends AppCompatActivity {
 //        foodList[1] = shownFoodList.get(1);
 
         //adapter.mCheckStates.o
+
+    }
+
+    private void addMenuExtraToList(food inputFood, ArrayList<extraList> inputExtraList) {
+
 
     }
 
