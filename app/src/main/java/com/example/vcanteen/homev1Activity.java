@@ -4,9 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -38,32 +43,11 @@ public class homev1Activity extends AppCompatActivity {
     private TextView mTextMessage;
     private ListView listView;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    FloatingActionButton profilebtn;
+    FloatingActionButton ordersbtn;
+    FloatingActionButton settingsbtn;
+    orderStack orderStack;
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-
-                //remove the comments and edit class name
-
-
-                case R.id.navigation_profile:
-                    //Intent intent = new Intent(homev1Activity.this, profile class here.class);
-                    //startActivity(intent);
-                    break;
-                case R.id.navigation_orders:
-                    //Intent intent = new Intent(homev1Activity.this, orders class here.class);
-                    //startActivity(intent);
-                    break;
-                case R.id.navigation_settings:
-                    //Intent intent = new Intent(homev1Activity.this, setting class here.class);
-                    //startActivity(intent);
-                    break;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +56,37 @@ public class homev1Activity extends AppCompatActivity {
 
         mTextMessage = (TextView) findViewById(R.id.message);
         listView = findViewById(R.id.vendorlist);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        profilebtn = findViewById(R.id.buttonprofile);
+        ordersbtn = findViewById(R.id.buttonorders);
+        settingsbtn = findViewById(R.id.buttonsettings);
+
+        //orderStack.setEmpty();
+        //orderStack = new orderStack(orderStack.getCustomerId(),orderStack.getVendorId(),orderStack.getOrderList(),orderStack.getTotalPrice(),orderStack.getCustomerMoneyAccount());
+
+
+        /*profilebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homev1Activity.this, profile .class);
+                startActivity(intent);
+            }
+        });*/
+
+       /*ordersbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homev1Activity.this, order in progress.class);
+                startActivity(intent);
+            }
+        });*/
+
+        settingsbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homev1Activity.this, settingActivity.class);
+                startActivity(intent);
+            }
+        });
 
        /* String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
         ListAdapter testAdapter = new vendorListAdapter(this, test);
@@ -107,29 +120,24 @@ public class homev1Activity extends AppCompatActivity {
                     //System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
                     return;
                 }
-                //Log.w("gson response :",new Gson().toJson(response.body().getRestaurantName()));
-               // vendorLists = (List<vendorList>) response.body();
-
-                //listView.setAdapter(new vendorListAdapter(getApplicationContext(), vendorLists));
 
                 List<vendorList> vendorLists = response.body();
                 Log.d("TEST", String.valueOf(vendorLists.size()));
                 ArrayList<vendorList> temp = new ArrayList<vendorList>();
                 //for(vendorList v: vendorLists){
-                    for(int i =0; i<vendorLists.size();i++){
-                   // Log.d("vendor name: ",v.getRestaurantName());
+                    // Log.d("vendor name: ",v.getRestaurantName());
                     /*int vendorId = v.getVendorId();
                     String vendorName = v.getRestaurantName();
                     int vendorNumber = v.getRestaurantNumber();
                     String vendorImageURL = v.getVendorImage();
                     String vendorStatus = v.getVendorStatus();*/
+                for(int i =0; i<vendorLists.size();i++){
 
                     int vendorId = vendorLists.get(i).getVendorId();
                     String vendorName = vendorLists.get(i).getRestaurantName();
                     int vendorNumber = vendorLists.get(i).getRestaurantNumber();
                     String vendorImageURL = vendorLists.get(i).getVendorImage();
                     String vendorStatus = vendorLists.get(i).getVendorStatus();
-
 
                     vendorList newVendorList = new vendorList(vendorId,vendorName,vendorNumber,vendorImageURL,vendorStatus);
                     temp.add(newVendorList);
@@ -143,6 +151,21 @@ public class homev1Activity extends AppCompatActivity {
 
                 listView.setAdapter(adapter);
 
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        int vendornumber = vendorLists.get(position).getVendorId();
+                        Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
+                        i.putExtra("vendor id", vendornumber);
+                        startActivity(i);
+                        /*On the second activity:
+                        Bundle bundle = getIntent().getExtras();
+                         int value = bundle.getInt("vendor id");
+                         */
+                    }
+                });
+
+
             }
 
             @Override
@@ -150,36 +173,6 @@ public class homev1Activity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-        /*call.enqueue(new Callback<vendorList>() {
-            @Override
-            public void onResponse(Call<vendorList> call, Response<vendorList> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(),"cannot connect error code: "+response.code(),Toast.LENGTH_LONG).show();
-                    //System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
-                    return;
-                }
-                Log.w("gson response :",new Gson().toJson(response.body().getRestaurantName()));
-                    vendorLists = (List<vendorList>) response.body();
-
-                listView.setAdapter(new vendorListAdapter(getApplicationContext(), vendorLists));
-
-            }
-
-            @Override
-            public void onFailure(Call<vendorList> call, Throwable t) {
-
-            }
-        });*/
-    }
-    public boolean isEnabled(String status) {
-        if (status == "CLOSED") {
-            return false;
-        } else {
-            return true;
-        }
     }
 
 }

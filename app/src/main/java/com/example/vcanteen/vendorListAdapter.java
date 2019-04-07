@@ -1,11 +1,13 @@
 package com.example.vcanteen;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +36,7 @@ public class vendorListAdapter extends ArrayAdapter<vendorList> {
         vendorStatus = item.getVendorStatus();
             if(vendorStatus.equals("CLOSED")){
                 convertView = LayoutInflater.from(context).inflate(R.layout.vendor_listview_disabled, parent, false);
+                convertView.setClickable(false);
             } else
             convertView = LayoutInflater.from(context).inflate(R.layout.vendor_listview, parent, false);
 
@@ -49,6 +52,7 @@ public class vendorListAdapter extends ArrayAdapter<vendorList> {
 
         return convertView;
     }
+
 
 }
 

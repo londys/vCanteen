@@ -11,5 +11,7 @@
     <string name="title_orders">ORDERS</string>
     <string name="title_settings">SETTINGS</string>
     <string name="facebook_app_id">1176355219192143</string>
+    <string name="removeClick"><u>REMOVE</u></string>
     <string name="fb_login_protocol_scheme">fb1176355219192143</string>
+    <string name="title_activity_test">testActivity</string>
 </resources>

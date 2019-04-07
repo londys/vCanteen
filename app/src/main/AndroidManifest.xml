@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.vcanteen">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -13,29 +13,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".password_login_page"></activity>
-        <activity android:name=".homev1Activity">
+        <activity
+            android:name=".testActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".homev1Activity"></activity>
+        <activity android:name=".paymentSplash" />
+        <activity android:name=".orderConfirmationActivity" />
+        <activity android:name=".processingPaymentActivity" />
+        <activity android:name=".cartActivity" />
+        <activity android:name=".normalOrderActivity" />
+        <activity android:name=".customizeOrderActivity" />
+        <activity android:name=".vendorMenuActivity" />
+        <activity android:name=".changePasswordActivity" />
+        <activity android:name=".settingActivity" />
+        <activity android:name=".password_login_page" />
+        <activity android:name=".emailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".passwordLoginActivity"></activity>
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <activity android:name=".passwordLoginActivity" />
 
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -43,10 +61,6 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/dimension" />
-
-        <activity android:name=".emailActivity">
-
-        </activity>
     </application>
 
 </manifest>
