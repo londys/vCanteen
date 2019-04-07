@@ -21,13 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".paymentSplash"></activity>
+        <activity android:name=".orderConfirmationActivity" />
         <activity android:name=".password_login_page" />
         <activity android:name=".homev1Activity" />
-        <activity android:name=".orderConfirmationActivity"></activity>
         <activity android:name=".processingPaymentActivity" />
         <activity android:name=".cartActivity" />
         <activity android:name=".normalOrderActivity" />
         <activity android:name=".customizeOrderActivity" />
+        <activity android:name=".vendorMenuActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
         <activity android:name=".emailActivity" />

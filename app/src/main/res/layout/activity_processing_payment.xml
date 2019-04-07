@@ -7,7 +7,7 @@
     tools:context=".processingPaymentActivity">
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/selectedServiceProvider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

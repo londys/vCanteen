@@ -2,7 +2,6 @@ package com.example.vcanteen;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.icu.text.DateFormat;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,10 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.function.BooleanSupplier;
 
 import io.reactivex.Observable;
 
-public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCheckedChangeListener {
+public class foodListAdapterForCombi extends ArrayAdapter implements CompoundButton.OnCheckedChangeListener{
 
     int s;
     ArrayList<food> foodList;
@@ -27,7 +25,7 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
     Observable check = Observable.just("1");
 
 
-    foodListAdapter(Context context, ArrayList<food> foodList, int s) {
+    foodListAdapterForCombi(Context context, ArrayList<food> foodList, int s) {
         super(context, R.layout.food_listview, foodList);
         this.c = context;
         this.foodList = foodList;
@@ -38,7 +36,7 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         mCheckStates.put((Integer) buttonView.getTag(), isChecked);
-        ((normalOrderActivity) c).notifyExtraChange();
+        ((customizeOrderActivity) c).notifyExtraChange();
 
     }
 
@@ -70,7 +68,7 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
         }
 
         //view holder object
-        final foodListAdapter.ViewHolder holder = new foodListAdapter.ViewHolder();
+        final foodListAdapterForCombi.ViewHolder holder = new foodListAdapterForCombi.ViewHolder();
 
         //initalize our view
         holder.addFoodName = (TextView) convertView.findViewById(R.id.addFoodName);

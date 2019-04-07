@@ -48,4 +48,7 @@ public interface JsonPlaceHolderApi {
     @PUT("v1/user-authentication/customer/verify/email")
     Call<Void> verifyEmail(@Body RecoverPass recoverPass);
 
+    @GET("v1/orders/1/menu")
+    Call<vendorAlacarteMenu> getVendorMenu();
+
 }
