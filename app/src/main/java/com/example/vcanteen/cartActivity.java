@@ -38,6 +38,9 @@ public class cartActivity extends AppCompatActivity {
 
     orderListAdapter orderAdapter;
 
+    String restaurantNameString; //just add for minor fix in order confirmation
+
+    int selectedMoneyAccountId;
 
     int total=0;
 
@@ -50,6 +53,8 @@ public class cartActivity extends AppCompatActivity {
     orderStack orderStack;
     ArrayList<RadioButton> unavailableService;
     String selectedServiceProvider;
+    int customerMoneyAccountId;
+    ArrayList<paymentList> paymentList;
 
 
     final ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
@@ -59,6 +64,8 @@ public class cartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
+        restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
+        paymentList = new ArrayList<>(); // need to get from BE
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://vcanteen.herokuapp.com/")
@@ -157,13 +164,6 @@ public class cartActivity extends AppCompatActivity {
         orderTotalPrice.setText("" + orderStack.totalPrice +"");
         orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
 
-//        orderList.setOnItemClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//
-//            }
-//        });
 
 
     }
@@ -199,6 +199,15 @@ public class cartActivity extends AppCompatActivity {
     public void openProcessingPayment() {
         // fill customer money account in orderstack
         // fill timestamp
+        //orderStack.setCustomerMoneyAccount(/* fill here*/);
+
+        for(int i=0;i<paymentList.size();i++){
+            String x = String.valueOf(selectedServiceProvider.charAt(0));
+            if(x.equalsIgnoreCase(String.valueOf(paymentList.get(i).serviceProvider.charAt(0)))){
+                customerMoneyAccountId = paymentList.get(i).getCustomerMoneyAccountId();
+            }
+        }
+        orderStack.setCustomerMoneyAccount(customerMoneyAccountId);
 
         newOrder checkout = new newOrder();
         checkout.customerId = orderStack.getCustomerId();
@@ -209,7 +218,6 @@ public class cartActivity extends AppCompatActivity {
         checkout.customerMoneyAccountId = orderStack.getCustomerMoneyAccount();
 
         System.out.println(checkout.toString());
-        orderStack.setCustomerMoneyAccount(1);
         orderStack.setCreatedAt(new Date());
 
 
@@ -245,6 +253,8 @@ public class cartActivity extends AppCompatActivity {
         Intent intent = new Intent(this, processingPaymentActivity.class);
         intent.putExtra("orderStack", orderStack);
         intent.putExtra("selectedServiceProvider", selectedServiceProvider);
+        intent.putExtra("sendRestaurantName", restaurantNameString);//just add for minor fix in order confirmation
+
         startActivity(intent);
     }
 
@@ -297,6 +307,8 @@ public class cartActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+
         super.onBackPressed();
         Intent goToMenu = new Intent(cartActivity.this,vendorMenuActivity.class);
         goToMenu.putExtra("orderStackFromCart",orderStack);

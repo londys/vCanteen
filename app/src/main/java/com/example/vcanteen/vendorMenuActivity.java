@@ -30,11 +30,9 @@ public class vendorMenuActivity extends AppCompatActivity {
 
     orderStack orderStack;
     order order;
-    String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky Rice","Food6", "Food 77","Food 567","Food 7321"};
-    int[] testPrice = {12,30,11,60,30,23,56,55,45};
     TextView minCombinationPrice;
     ArrayList<order> orderList;
-
+    String restaurantNameString; //just add for minor fix in order confirmation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,28 +80,15 @@ public class vendorMenuActivity extends AppCompatActivity {
         orderStack.setTotalPrice(0);
         orderStack.setCreatedAt(new Date());
 
-//        final int vendorId = 45; // for testing only
-//
-//        orderList = new ArrayList<>();
-//        orderStack = new orderStack(22,vendorId, orderList,0,0,new Date());
-///////////////////
-
-        //final int vendorId = 45; // for testing only
-        //orderList = new ArrayList<>();
-        // cusId need to change later when connect with BE
-        //orderStack = new orderStack(22,vendorId, orderList,0,0);
-
-
-
         //try date
         DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Create at "+dateformat.format(orderStack.getCreatedAt()));
 
         //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
-        String n = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity
+        restaurantNameString = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity  //just add for minor fix in order confirmation
 
         TextView restaurantName = (TextView)findViewById(R.id.restaurantName);// delete if don't want from home activity
-        restaurantName.setText(n);// delete if don't want from home activity
+        restaurantName.setText(""+restaurantNameString);// delete if don't want from home activity   //just add for minor fix in order confirmation
 
         // to open cutomize order activity
         android.support.constraint.ConstraintLayout tappable_customize = (android.support.constraint.ConstraintLayout)findViewById(R.id.tappable_customize);
@@ -153,7 +138,7 @@ public class vendorMenuActivity extends AppCompatActivity {
                     Intent passALaCarte = new Intent(vendorMenuActivity.this, normalOrderActivity.class);
                     passALaCarte.putExtra("chosenFood", shownFoodList.get(position));
                     //passALaCarte.putExtra("orderStack", orderStack);
-
+                    passALaCarte.putExtra("sendRestaurantName", restaurantNameString); //just add for minor fix in order confirmation
                     startActivity(passALaCarte);
                 }else{
                     menuList.getChildAt(position).setEnabled(false);
@@ -166,6 +151,7 @@ public class vendorMenuActivity extends AppCompatActivity {
 
     private void openCustomizeActivity() {
         Intent intent = new Intent(this, customizeOrderActivity.class);
+        intent.putExtra("sendRestaurantName", restaurantNameString); //just add for minor fix in order confirmation
         startActivity(intent);
     }
 
@@ -173,6 +159,7 @@ public class vendorMenuActivity extends AppCompatActivity {
     public void openCartActivity(View view) {
         if(orderStack.totalPrice != 0){
             Intent intent = new Intent(this, cartActivity.class);
+            intent.putExtra("sendRestaurantName", restaurantNameString); //just add for minor fix in order confirmation
             startActivity(intent);
         }else{
             Toast.makeText(vendorMenuActivity.this, "No Order in the Cart!", Toast.LENGTH_LONG).show();

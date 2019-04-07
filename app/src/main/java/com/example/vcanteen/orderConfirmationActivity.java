@@ -21,6 +21,8 @@ public class orderConfirmationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_confirmation);
 
+        String restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
+
         orderMoreButton = (Button) findViewById(R.id.orderMoreButton);
         orderMoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,7 +33,7 @@ public class orderConfirmationActivity extends AppCompatActivity {
 
         orderStack = com.example.vcanteen.orderStack.getInstance();//getIntent().getExtras().getParcelable("orderStack");
 
-        ListAdapter testAdapter3 = new confirmedOrderListAdapter(this,orderStack);
+        ListAdapter testAdapter3 = new confirmedOrderListAdapter(this,orderStack, restaurantNameString);  //just add for minor fix in order confirmation
         final ListView confirmedList = findViewById(R.id.confirmedList);
         confirmedList.setAdapter(testAdapter3);
 
@@ -79,6 +81,7 @@ public class orderConfirmationActivity extends AppCompatActivity {
     }
 
     public void orderMoreBackToHome(){
+        orderStack.setEmpty();
         Intent intent = new Intent(this,homev1Activity.class);
         startActivity(intent);
     }

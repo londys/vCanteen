@@ -39,15 +39,17 @@ public class normalOrderActivity extends AppCompatActivity {
     ArrayList<food> foodList;
     food[] sendfoodList;
     SparseBooleanArray mCheckStates;
-
     ArrayList<food> shownFoodList;
 
+    String restaurantNameString; //just add for minor fix in order confirmation
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_normal_order);
+
+        restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
         addToCartImg = (ImageView)findViewById(R.id.addToCartImg);
         addToCartImg.setOnClickListener(new View.OnClickListener(){
@@ -197,7 +199,7 @@ public class normalOrderActivity extends AppCompatActivity {
 
         Log.d("1",orderStack.orderList.get(0).orderName);
         Intent intent = new Intent(this, cartActivity.class);
-
+        intent.putExtra("sendRestaurantName", restaurantNameString);//just add for minor fix in order confirmation
         //intent.putExtra("sendOrderStack", orderStack);
 
         startActivity(intent);

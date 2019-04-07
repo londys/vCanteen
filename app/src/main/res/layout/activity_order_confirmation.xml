@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="6dp"
-        android:text="Your Order is Now Cooking!"
+        android:text="Your Order Summary"
         android:textColor="#333333"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -83,24 +83,13 @@
         android:layout_marginEnd="116dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/button_background"
-        android:text="ORDER MORE"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="BACK TO HOME PAGE"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="175dp"
-        android:layout_marginEnd="176dp"
-        android:layout_marginBottom="7dp"
-        android:text="Still hungry?"
-        android:textColor="#FF9494"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/orderMoreButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

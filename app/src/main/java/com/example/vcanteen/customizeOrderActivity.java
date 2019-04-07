@@ -55,13 +55,16 @@ public class customizeOrderActivity extends AppCompatActivity {
     food b; //pin add
 
     TextView orderPriceCombi;
-
     ImageView addToCartImgFromCustomize;
+
+    String restaurantNameString; //just add for minor fix in order confirmation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customize_order);
+
+        restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
         orderStack = com.example.vcanteen.orderStack.getInstance();
         orderPriceCombi = (TextView)findViewById(R.id.orderPriceCombi);
@@ -234,21 +237,10 @@ public class customizeOrderActivity extends AppCompatActivity {
         order = new order(mainName,extraName,Integer.parseInt(orderPriceCombi.getText().toString()),foodList);
         orderStack.orderList.add(order);
 
-
-//        int n = 0;
-//        for(int i=0;i<mainList.size();i++)
-//        {
-//            if(testAdapter2.isChecked(i)==true)
-//            {
-//                order.orderNameExtra = order.orderNameExtra + "\n" + adapter.foodList.get(i).getFoodName();
-//            }
-//        }
-//
-//
-//        Log.d("1",orderStack.orderList.get(0).orderName);
         Intent intent = new Intent(this, cartActivity.class);
-//
-//        intent.putExtra("sendOrderStack", orderStack);
+
+        intent.putExtra("sendRestaurantName", restaurantNameString);//just add for minor fix in order confirmation
+
 
         startActivity(intent);
     }

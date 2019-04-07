@@ -17,8 +17,9 @@ public class paymentSplash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_splash);
 
-        orderStack = getIntent().getExtras().getParcelable("orderStack");
+        String restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
+        orderStack = getIntent().getExtras().getParcelable("orderStack");
 
         String selectedServiceProvider = getIntent().getStringExtra("selectedServiceProvider");
         ImageView img= (ImageView) findViewById(R.id.serviceProviderImg);
@@ -40,6 +41,8 @@ public class paymentSplash extends AppCompatActivity {
                 Intent intent = new Intent(paymentSplash.this,orderConfirmationActivity.class);
                 intent.putExtra("orderStack", orderStack);
                 intent.putExtra("selectedServiceProvider",selectedServiceProvider);
+                intent.putExtra("sendRestaurantName", restaurantNameString);//just add for minor fix in order confirmation
+
                 startActivity(intent);
                 finish();
             }
