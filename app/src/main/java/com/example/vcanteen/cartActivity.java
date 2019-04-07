@@ -27,6 +27,7 @@ public class cartActivity extends AppCompatActivity {
 
     String restaurantNameString; //just add for minor fix in order confirmation
 
+    int selectedMoneyAccountId;
 
     int total=0;
 
@@ -39,6 +40,8 @@ public class cartActivity extends AppCompatActivity {
     orderStack orderStack;
     ArrayList<RadioButton> unavailableService;
     String selectedServiceProvider;
+    int customerMoneyAccountId;
+    ArrayList<paymentList> paymentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,7 @@ public class cartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
-
-        ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
+        paymentList = new ArrayList<>(); // need to get from BE
 
         // test
         paymentList.add(new paymentList(1,"SCB_EASY"));
@@ -114,13 +116,6 @@ public class cartActivity extends AppCompatActivity {
         orderTotalPrice.setText("" + orderStack.totalPrice +"");
         orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
 
-//        orderList.setOnItemClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//
-//            }
-//        });
 
 
     }
@@ -151,6 +146,15 @@ public class cartActivity extends AppCompatActivity {
     public void openProcessingPayment() {
         // fill customer money account in orderstack
         // fill timestamp
+        //orderStack.setCustomerMoneyAccount(/* fill here*/);
+
+        for(int i=0;i<paymentList.size();i++){
+            String x = String.valueOf(selectedServiceProvider.charAt(0));
+            if(x.equalsIgnoreCase(String.valueOf(paymentList.get(i).serviceProvider.charAt(0)))){
+                customerMoneyAccountId = paymentList.get(i).getCustomerMoneyAccountId();
+            }
+        }
+        orderStack.setCustomerMoneyAccount(customerMoneyAccountId);
         orderStack.setCreatedAt(new Date());
 
         Intent intent = new Intent(this, processingPaymentActivity.class);
@@ -210,6 +214,8 @@ public class cartActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+
         super.onBackPressed();
         Intent goToMenu = new Intent(cartActivity.this,vendorMenuActivity.class);
         goToMenu.putExtra("orderStackFromCart",orderStack);
