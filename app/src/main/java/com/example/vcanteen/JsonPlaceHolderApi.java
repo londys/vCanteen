@@ -1,8 +1,10 @@
 package com.example.vcanteen;
 
+import com.example.vcanteen.POJO.newOrder;
 import com.example.vcanteen.POJO.orderHistory;
 import com.example.vcanteen.POJO.orderProgress;
 import com.example.vcanteen.POJO.orderStatus;
+import com.example.vcanteen.POJO.paymentMethod;
 import com.example.vcanteen.POJO.pickupSlot;
 import com.example.vcanteen.Data.Customers;
 import com.example.vcanteen.Data.RecoverPass;
@@ -54,5 +56,11 @@ public interface JsonPlaceHolderApi {
 
     @GET("v1/orders/{vendorId}/combination")
     Call<vendorCombinationMenu> getVendorCombination(@Path("vendorId") int vendorId);
+
+    @GET("v1/orders/{customerId}/payment-method")
+    Call<paymentMethod> getPaymentMethod(@Path("customerId") int vendorId);
+
+    @POST("v1/orders/new")
+    Call<newOrder> postOrder(@Body newOrder newOrder);
 
 }

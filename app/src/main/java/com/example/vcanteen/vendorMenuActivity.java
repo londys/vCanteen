@@ -76,7 +76,7 @@ public class vendorMenuActivity extends AppCompatActivity {
 
 ///TRY SINGLETON////
         orderStack = com.example.vcanteen.orderStack.getInstance();
-        orderStack.setCustomerId(22);
+        orderStack.setCustomerId(5);
         orderStack.setVendorId(45);
         orderStack.setOrderList(new ArrayList<order>());
         orderStack.setTotalPrice(0);

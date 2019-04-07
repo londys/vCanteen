@@ -13,9 +13,22 @@ import android.widget.RadioButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.vcanteen.POJO.availablePaymentMethod;
+import com.example.vcanteen.POJO.newOrder;
+import com.example.vcanteen.POJO.orderList;
+import com.example.vcanteen.POJO.paymentMethod;
+import com.example.vcanteen.POJO.vendorCombinationMenu;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class cartActivity extends AppCompatActivity {
 
@@ -38,44 +51,78 @@ public class cartActivity extends AppCompatActivity {
     ArrayList<RadioButton> unavailableService;
     String selectedServiceProvider;
 
+
+    final ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
 
-        // test
-        paymentList.add(new paymentList(1,"SCB_EASY"));
-        paymentList.add(new paymentList(03,"TRUEMONEY_WALLET"));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://vcanteen.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        scbEasy = (RadioButton) findViewById(R.id.scbEasy);
-        kplus = (RadioButton) findViewById(R.id.kplus);
-        trueMoney = (RadioButton) findViewById(R.id.trueMoney);
-        cunex = (RadioButton)findViewById(R.id.cunex);
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        Call<paymentMethod> call = jsonPlaceHolderApi.getPaymentMethod(1);
+
+
+        call.enqueue(new Callback<paymentMethod>() {
+            @Override
+            public void onResponse(Call<paymentMethod> call, Response<paymentMethod> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(cartActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                paymentMethod methods = response.body();
+                ArrayList<availablePaymentMethod> lists = methods.availablePaymentMethod;
+
+                for (availablePaymentMethod list :lists){
+                    System.out.println("payment");
+                    System.out.println(list.getCustomerMoneyAccountId()+","+list.getServiceProvider());
+
+                    paymentList.add(new paymentList(list.getCustomerMoneyAccountId(), list.getServiceProvider()));
+
+                }
+                scbEasy = findViewById(R.id.scbEasy);
+                kplus = findViewById(R.id.kplus);
+                trueMoney = findViewById(R.id.trueMoney);
+                cunex = findViewById(R.id.cunex);
 
 //// FOR DISABLE UNAVAILABLE SERVICE PROVIDER ////
-        unavailableService = new ArrayList<>();
-        unavailableService.add(scbEasy);
-        unavailableService.add(kplus);
-        unavailableService.add(cunex);
-        unavailableService.add(trueMoney);
+                unavailableService = new ArrayList<>();
+                unavailableService.add(scbEasy);
+                unavailableService.add(kplus);
+                unavailableService.add(cunex);
+                unavailableService.add(trueMoney);
 
-        String a,b;
-        for(int i = 0; i<paymentList.size();i++){
-            a = String.valueOf(paymentList.get(i).serviceProvider.charAt(0));
-            for(int j = 0; j < unavailableService.size();j++){
-                b = String.valueOf(unavailableService.get(j).getText().toString().charAt(0));
-                if(a.equalsIgnoreCase(b)){
-                    unavailableService.remove(j);
+                String a,b;
+                for(int i = 0; i<paymentList.size();i++){
+                    a = String.valueOf(paymentList.get(i).serviceProvider.charAt(0));
+                    for(int j = 0; j < unavailableService.size();j++){
+                        b = String.valueOf(unavailableService.get(j).getText().toString().charAt(0));
+                        if(a.equalsIgnoreCase(b)){
+                            unavailableService.remove(j);
+                        }
+                    }
                 }
-            }
-        }
 
-        for(int k = 0; k<unavailableService.size();k++){
-            unavailableService.get(k).setEnabled(false);
-            unavailableService.get(k).setTextColor(Color.parseColor("#E0E0E0"));
-        }
+                for(int k = 0; k<unavailableService.size();k++){
+                    unavailableService.get(k).setEnabled(false);
+                    unavailableService.get(k).setTextColor(Color.parseColor("#E0E0E0"));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<paymentMethod> call, Throwable t) {
+
+            }
+        });
+
 
 //// FOR DEALING WITH POP UP ////
         showpopup = new Dialog(this);
@@ -121,6 +168,10 @@ public class cartActivity extends AppCompatActivity {
 
     }
 
+    private void addPayment(int customerMoneyAccountId, String serviceProvider) {
+//        paymentList.add(new paymentList(customerMoneyAccountId, serviceProvider));
+    }
+
     public void showPopUp(){
         showpopup.setContentView(R.layout.cart_reset_popup);
         confirmButton = (Button)showpopup.findViewById(R.id.confirmButtonPassword);
@@ -130,6 +181,7 @@ public class cartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openProcessingPayment();
+
             }
         });
 
@@ -147,7 +199,48 @@ public class cartActivity extends AppCompatActivity {
     public void openProcessingPayment() {
         // fill customer money account in orderstack
         // fill timestamp
+
+        newOrder checkout = new newOrder();
+        checkout.customerId = orderStack.getCustomerId();
+        checkout.vendorId = orderStack.getVendorId();
+        checkout.order = orderStack.getOrderList();
+        checkout.totalPrice = orderStack.getTotalPrice();
+        checkout.createdAt = "2019-03-26 11:23";
+        checkout.customerMoneyAccountId = orderStack.getCustomerMoneyAccount();
+
+        System.out.println(checkout.toString());
+        orderStack.setCustomerMoneyAccount(1);
         orderStack.setCreatedAt(new Date());
+
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://vcanteen.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+
+        System.out.println("BB: "+checkout.toString());
+        Call<newOrder> call = jsonPlaceHolderApi.postOrder(checkout);
+
+        System.out.println("entered post...");
+        call.enqueue(new Callback<newOrder>() {
+            @Override
+            public void onResponse(Call<newOrder> call, Response<newOrder> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(cartActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
+                    System.out.println("POST ERROR CODE"+response.code());
+                    return;
+                }
+                System.out.println("POST SUCCESS");
+            }
+
+            @Override
+            public void onFailure(Call<newOrder> call, Throwable t) {
+                System.out.println("POST ERROR");
+            }
+        });
+
 
         Intent intent = new Intent(this, processingPaymentActivity.class);
         intent.putExtra("orderStack", orderStack);

@@ -82,7 +82,6 @@ public class customizeOrderActivity extends AppCompatActivity {
                 if (!response.isSuccessful()) {
                     Toast.makeText(customizeOrderActivity.this, "CODE: "+response.code(),Toast.LENGTH_LONG).show();
                     return;
-
                 }
                 vendorCombinationMenu menu = response.body();
                 addCombinationToList(menu.baseList, menu.mainList,menu.extraList);
