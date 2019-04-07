@@ -1,4 +1,4 @@
-package com.newbs.tryvcanteen;
+package com.example.vcanteen;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,7 +10,7 @@ public class NotificationHelper {
 
     public static void displayNotification(Context context, String title, String body) {
 
-        Intent intent = new Intent(context, ProfileActivity.class);
+        Intent intent = new Intent(context, OrderListActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
@@ -20,7 +20,7 @@ public class NotificationHelper {
         );
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
+                new NotificationCompat.Builder(context, "Random")
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(title)
                         .setContentText(body)

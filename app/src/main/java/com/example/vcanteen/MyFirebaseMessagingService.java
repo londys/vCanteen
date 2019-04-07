@@ -1,4 +1,4 @@
-package com.newbs.tryvcanteen;
+package com.example.vcanteen;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
