@@ -11,10 +11,13 @@ public class processingPaymentActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
     orderStack orderStack;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processing_payment);
+
+        String restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
         String name = getIntent().getStringExtra("selectedServiceProvider");
 
@@ -29,6 +32,7 @@ public class processingPaymentActivity extends AppCompatActivity {
                 Intent intent = new Intent(processingPaymentActivity.this,paymentSplash.class);
                 intent.putExtra("selectedServiceProvider", name);
                 intent.putExtra("orderStack", orderStack);
+                intent.putExtra("sendRestaurantName", restaurantNameString);//just add for minor fix in order confirmation
                 startActivity(intent);
                 finish();
             }

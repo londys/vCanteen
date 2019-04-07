@@ -25,6 +25,8 @@ public class cartActivity extends AppCompatActivity {
 
     orderListAdapter orderAdapter;
 
+    String restaurantNameString; //just add for minor fix in order confirmation
+
 
     int total=0;
 
@@ -42,6 +44,8 @@ public class cartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
         ArrayList<paymentList> paymentList = new ArrayList<>(); // need to get from BE
 
@@ -152,6 +156,8 @@ public class cartActivity extends AppCompatActivity {
         Intent intent = new Intent(this, processingPaymentActivity.class);
         intent.putExtra("orderStack", orderStack);
         intent.putExtra("selectedServiceProvider", selectedServiceProvider);
+        intent.putExtra("sendRestaurantName", restaurantNameString);//just add for minor fix in order confirmation
+
         startActivity(intent);
     }
 

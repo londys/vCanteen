@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="6dp"
-        android:text="Your Order is Now Cooking!"
+        android:text="Your Order Summary"
         android:textColor="#333333"
         android:textSize="18sp"
         android:textStyle="bold"
