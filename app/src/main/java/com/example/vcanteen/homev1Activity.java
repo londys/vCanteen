@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,39 +29,65 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.facebook.internal.LockOnGetVariable;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class homev1Activity extends AppCompatActivity {
 
+    private List<vendorList> vendorLists;
     private TextView mTextMessage;
+    private ListView listView;
+
+    FloatingActionButton profilebtn;
+    FloatingActionButton ordersbtn;
+    FloatingActionButton settingsbtn;
+    orderStack orderStack;
+
     private SharedPreferences sharedPref;
     private FirebaseAuth mAuth;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_profile:
-                    return true;
-                case R.id.navigation_orders:
-//                    mTextMessage.setText("ORDERS");
-                    startActivity(new Intent(homev1Activity.this, OrderListActivity.class));
-                    return true;
-                case R.id.navigation_settings:
-//                    mTextMessage.setText("SETTINGS");
-                    startActivity(new Intent(homev1Activity.this, settingActivity.class));
-                    return true;
-            }
-            return false;
-        }
-    };
+//    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+//            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+//
+//        @Override
+//        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//            switch (item.getItemId()) {
+//                case R.id.navigation_profile:
+//                    return true;
+//                case R.id.navigation_orders:
+////                    mTextMessage.setText("ORDERS");
+//                    startActivity(new Intent(homev1Activity.this, OrderListActivity.class));
+//                    return true;
+//                case R.id.navigation_settings:
+////                    mTextMessage.setText("SETTINGS");
+//                    startActivity(new Intent(homev1Activity.this, settingActivity.class));
+//                    return true;
+//            }
+//            return false;
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_v1);
-
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -75,39 +106,118 @@ public class homev1Activity extends AppCompatActivity {
                 });
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        listView = findViewById(R.id.vendorlist);
+        profilebtn = findViewById(R.id.buttonprofile);
+        ordersbtn = findViewById(R.id.buttonorders);
+        settingsbtn = findViewById(R.id.buttonsettings);
+
+        //orderStack.setEmpty();
+        //orderStack = new orderStack(orderStack.getCustomerId(),orderStack.getVendorId(),orderStack.getOrderList(),orderStack.getTotalPrice(),orderStack.getCustomerMoneyAccount());
+
+
+//        profilebtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(homev1Activity.this, profile.class);
+//                startActivity(intent);
+//            }
+//        });
+
+//       ordersbtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(homev1Activity.this, OrderListActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        settingsbtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(homev1Activity.this, settingActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         System.out.println(sharedPref.getString("token", "empty token"));
         System.out.println(sharedPref.getString("email", "empty email"));
 
-        final String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
-        ListAdapter testAdapter = new vendorListAdapter(this, test);
-        ListView vendorList = findViewById(R.id.vendorlist);
-        vendorList.setAdapter(testAdapter);
+//        final String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
+//        ListAdapter testAdapter = new vendorListAdapter(this, test);
+//        ListView vendorList = findViewById(R.id.vendorlist);
+//        vendorList.setAdapter(testAdapter);
+        getVendorList();
 
-        //pin add
+    }
 
-//        final int vendorId = 45; // for testing only
-//
-//        orderList = new ArrayList<>();
-//        orderStack = new orderStack(22,vendorId, orderList,0,0,new Date());
+    private void getVendorList(){
 
-        vendorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        String url = "https://vcanteen.herokuapp.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        vendorListApi jsonPlaceHolderApi = retrofit.create(vendorListApi.class);
+
+
+
+
+        Call<List<vendorList>> call = jsonPlaceHolderApi.getVendorList();
+
+        call.enqueue(new Callback<List<vendorList>>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position<test.length) {
-                    Intent sent = new Intent(homev1Activity.this, vendorMenuActivity.class);
-                    sent.putExtra("chosenVendor", test[position]);
-//                    sent.putExtra("orderStack", orderStack); //TODO NOTSURE
-//
-                    startActivity(sent);
+            public void onResponse(Call<List<vendorList>> call, Response<List<vendorList>> response) {
+
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(),"cannot connect error code: "+response.code(),Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                List<vendorList> vendorLists = response.body();
+                Log.d("TEST", String.valueOf(vendorLists.size()));
+                ArrayList<vendorList> temp = new ArrayList<vendorList>();
+                for(int i =0; i<vendorLists.size();i++){
+
+                    int vendorId = vendorLists.get(i).getVendorId();
+                    String vendorName = vendorLists.get(i).getRestaurantName();
+                    int vendorNumber = vendorLists.get(i).getRestaurantNumber();
+                    String vendorImageURL = vendorLists.get(i).getVendorImage();
+                    String vendorStatus = vendorLists.get(i).getVendorStatus();
+
+                    vendorList newVendorList = new vendorList(vendorId,vendorName,vendorNumber,vendorImageURL,vendorStatus);
+                    temp.add(newVendorList);
 
                 }
-//                else{
-//                    vendorList.getChildAt(position).setEnabled(false);
-//                }
+                vendorListAdapter adapter = new vendorListAdapter(homev1Activity.this,temp);
+
+                listView.setAdapter(adapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        int vendornumber = vendorLists.get(position).getVendorId();
+                        Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
+                        i.putExtra("vendor id", vendornumber);
+                        startActivity(i);
+                        /*On the second activity:
+                        Bundle bundle = getIntent().getExtras();
+                         int value = bundle.getInt("vendor id");
+                         */
+                    }
+
+
+
+                });
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<vendorList>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(),t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -138,4 +248,5 @@ public class homev1Activity extends AppCompatActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
+
 }

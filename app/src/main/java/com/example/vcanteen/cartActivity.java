@@ -271,27 +271,27 @@ public class cartActivity extends AppCompatActivity {
             case R.id.scbEasy:
                 if (checked)
                     scbEasy.setTextColor(Color.parseColor("#FF5A5A"));
-                    unClickRadioButton(kplus,cunex,trueMoney);
-                    selectedServiceProvider = scbEasy.getText().toString();
-                    break;
+                unClickRadioButton(kplus,cunex,trueMoney);
+                selectedServiceProvider = scbEasy.getText().toString();
+                break;
             case R.id.kplus:
                 if (checked)
                     kplus.setTextColor(Color.parseColor("#FF5A5A"));
-                    unClickRadioButton(cunex,scbEasy,trueMoney);
-                    selectedServiceProvider = kplus.getText().toString();
-                    break;
+                unClickRadioButton(cunex,scbEasy,trueMoney);
+                selectedServiceProvider = kplus.getText().toString();
+                break;
             case R.id.cunex:
                 if (checked)
                     cunex.setTextColor(Color.parseColor("#FF5A5A"));
-                    unClickRadioButton(kplus,scbEasy,trueMoney);
-                    selectedServiceProvider = cunex.getText().toString();
-                    break;
+                unClickRadioButton(kplus,scbEasy,trueMoney);
+                selectedServiceProvider = cunex.getText().toString();
+                break;
             case R.id.trueMoney:
                 if (checked)
                     trueMoney.setTextColor(Color.parseColor("#FF5A5A"));
-                    unClickRadioButton(kplus,scbEasy,cunex);
-                    selectedServiceProvider = trueMoney.getText().toString();
-                    break;
+                unClickRadioButton(kplus,scbEasy,cunex);
+                selectedServiceProvider = trueMoney.getText().toString();
+                break;
         }
     }
 
