@@ -1,5 +1,7 @@
 package com.example.vcanteen.POJO;
 
+import io.reactivex.annotations.Nullable;
+
 public class extraList {
 
     public int getFoodId() {
@@ -46,5 +48,6 @@ public class extraList {
     public String foodName;
     public int foodPrice;
     public String foodStatus;
+    @Nullable
     public String foodType;
 }
