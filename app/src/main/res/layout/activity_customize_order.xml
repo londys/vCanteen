@@ -51,11 +51,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="46dp"
-        android:text="THB"
+        android:fontFamily="@font/sfprotext_bold"
+        android:text="฿"
         android:textAlignment="textEnd"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:fontFamily="@font/sfprotext_bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/addToCartImgFromCustomize" />
 

@@ -94,7 +94,7 @@
         android:fontFamily="@font/sfprotext_semibold"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="ORDER MORE"
+        android:text="BACK TO HOME"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
