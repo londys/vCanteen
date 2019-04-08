@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.view.View;
@@ -18,10 +17,9 @@ import android.widget.Toast;
 
 import com.example.vcanteen.POJO.availablePaymentMethod;
 import com.example.vcanteen.POJO.newOrder;
-import com.example.vcanteen.POJO.orderList;
 import com.example.vcanteen.POJO.paymentMethod;
-import com.example.vcanteen.POJO.vendorCombinationMenu;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -173,7 +171,7 @@ public class cartActivity extends AppCompatActivity {
     }
 
     public void showPopUp(){
-        showpopup.setContentView(R.layout.cart_reset_popup);
+        showpopup.setContentView(R.layout.cart_confirm_popup);
         confirmButton = (Button)showpopup.findViewById(R.id.confirmButtonPassword);
         cancelButton = (TextView)showpopup.findViewById(R.id.cancelButton);
 
@@ -213,16 +211,21 @@ public class cartActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         int i = sharedPref.getInt("customerId", 1);
         System.out.println("id: "+i);
-        orderStack.setCustomerId(1);
-        orderStack.setVendorId(1);
         checkout.customerId = orderStack.getCustomerId();
         checkout.vendorId = orderStack.getVendorId();
         checkout.order = orderStack.getOrderList();
         checkout.totalPrice = orderStack.getTotalPrice();
-        checkout.createdAt = "2013-07-17T03:58:00.000Z";
-        checkout.customerMoneyAccountId = orderStack.getCustomerMoneyAccount();
+//        checkout.createdAt = "2019-04-02 11:00:22";
 
-        System.out.println("cID: "+orderStack.getCustomerId());
+//        String pattern = "HH:mm:ss";
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+//        Date date = simpleDateFormat.parse("22:00:03");
+//        System.out.println(date);
+
+//        System.out.println(d.toString());
+        checkout.customerMoneyAccountId = orderStack.getCustomerMoneyAccount();
+        orderStack.setCreatedAt(new Date());
+        System.out.println("order: "+orderStack.getOrderList().toString());
         System.out.println(checkout.toString());
 //        orderStack.setCreatedAt(new Date());
 

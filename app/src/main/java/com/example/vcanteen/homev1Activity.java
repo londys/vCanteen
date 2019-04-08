@@ -123,21 +123,21 @@ public class homev1Activity extends AppCompatActivity {
 //            }
 //        });
 
-//       ordersbtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(homev1Activity.this, OrderListActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        settingsbtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(homev1Activity.this, settingActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+       ordersbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homev1Activity.this, OrderListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        settingsbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homev1Activity.this, settingActivity.class);
+                startActivity(intent);
+            }
+        });
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         System.out.println(sharedPref.getString("token", "empty token"));
@@ -199,8 +199,10 @@ public class homev1Activity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         int vendornumber = vendorLists.get(position).getVendorId();
+                        String chosenVendor = vendorLists.get(position).getRestaurantName();
                         Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
                         i.putExtra("vendor id", vendornumber);
+                        i.putExtra("chosenVendor",chosenVendor);
                         startActivity(i);
                         /*On the second activity:
                         Bundle bundle = getIntent().getExtras();
@@ -223,10 +225,10 @@ public class homev1Activity extends AppCompatActivity {
     }
 
     private void saveToken(String token) {
-        System.out.println("entered aavetoken");
+        System.out.println("entered savetoken");
         String email = mAuth.getCurrentUser().getEmail();
-//        User user = new User(email, token);
-
+        orderStack = com.example.vcanteen.orderStack.getInstance();
+        orderStack.setCustomerId(1);
         System.out.println("firebase: "+email);
         Customers customer = new Customers(email, null, null, "CUSTOMER", null, null, token);
 
@@ -237,7 +239,9 @@ public class homev1Activity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(homev1Activity.this, "Token Saved", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(homev1Activity.this, "Token Saved", Toast.LENGTH_LONG).show();
+                    System.out.println("TOKEN SAVED - AUTO LOGIN");
+
                 }
             }
         });

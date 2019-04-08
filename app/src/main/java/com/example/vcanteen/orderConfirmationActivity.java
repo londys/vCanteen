@@ -57,7 +57,6 @@ public class orderConfirmationActivity extends AppCompatActivity {
                 System.out.println(orderStack.orderList.get(j).foodList.get(k).getFoodType());
             }
         }
-
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {

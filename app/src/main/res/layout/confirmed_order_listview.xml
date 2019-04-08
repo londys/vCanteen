@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/orderName"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="8dp"
@@ -34,6 +34,7 @@
         android:id="@+id/orderPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:text="40 THB"
@@ -41,6 +42,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/orderName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

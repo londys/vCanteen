@@ -88,7 +88,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Customize Your Menu"
                 android:textColor="#333333"
-                android:textStyle="bold"
+
+                android:fontFamily="@font/sfprotext_semibold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,6 +100,8 @@
                 android:layout_marginStart="16dp"
                 android:text="Starting from - THB"
                 android:textColor="@color/colorAccent"
+
+                android:fontFamily="@font/sfprotext_regular"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />

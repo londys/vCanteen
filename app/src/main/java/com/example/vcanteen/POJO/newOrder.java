@@ -27,9 +27,9 @@ public class newOrder {
     @Expose
     public int totalPrice;
 
-    @SerializedName("createdAt")
-    @Expose
-    public String createdAt;
+//    @SerializedName("createdAt")
+//    @Expose
+//    public String createdAt;
 
     @SerializedName("customerMoneyAccountId")
     @Expose
@@ -42,7 +42,7 @@ public class newOrder {
                 ", \"vendorId\": " + vendorId +
                 ", \"orderList\": " + order.toString() +
                 ", \"totalPrice\": " + totalPrice +
-                ", \"createdAt\": " + createdAt +
+//                ", \"createdAt\": " + createdAt +
                 ", \"customerMoneyAccountId\": " + customerMoneyAccountId +
                 '}';
     }
