@@ -21,6 +21,7 @@ public class orderStack implements Parcelable {
     int totalPrice;
     int customerMoneyAccount;
     Date createdAt; //null until the customer taps CONFIRM & PAY on popup dialog
+    //String createdAt;
 
     public orderStack() {
 
@@ -57,6 +58,7 @@ public class orderStack implements Parcelable {
         totalPrice = in.readInt();
         customerMoneyAccount = in.readInt();
         createdAt = new Date(in.readLong());
+        //createdAt = in.readString();
     }
 
     public static final Creator<orderStack> CREATOR = new Creator<orderStack>() {
@@ -86,6 +88,7 @@ public class orderStack implements Parcelable {
         dest.writeInt(totalPrice);
         dest.writeInt(customerMoneyAccount);
         dest.writeLong(createdAt.getTime());
+        //dest.writeString(createdAt)
     }
 
     public int getCustomerId() {
@@ -136,4 +139,12 @@ public class orderStack implements Parcelable {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+//    public String getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    public void setCreatedAt(String createdAt) {
+//        this.createdAt = createdAt;
+//    }
 }

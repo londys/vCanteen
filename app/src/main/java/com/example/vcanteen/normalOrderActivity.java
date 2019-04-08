@@ -120,13 +120,6 @@ public class normalOrderActivity extends AppCompatActivity {
 
         foodList = new ArrayList<>();
 
-        //int numCheckBox = ... //how many checkbox are checked
-//        foodList = new food[2]; //[numCheckBox+1];
-//        foodList[0] = chosenALaCarte;
-//        foodList[1] = shownFoodList.get(1);
-
-        //adapter.mCheckStates.o
-
     }
 
     public void notifyExtraChange(){

@@ -39,7 +39,6 @@ public class foodListAdapter extends ArrayAdapter implements CompoundButton.OnCh
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         mCheckStates.put((Integer) buttonView.getTag(), isChecked);
         ((normalOrderActivity) c).notifyExtraChange();
-
     }
 
     public class ViewHolder {

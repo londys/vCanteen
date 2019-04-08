@@ -168,18 +168,21 @@ public class customizeOrderActivity extends AppCompatActivity {
             }
         }
 
-        String extraName = "";
+        //String extraName = "";
+        String extraNameSend = "";
         for(int i=0;i<extraList.size();i++)
         {
             if(testExtraAdapter.isChecked(i)==true)
             {
                 foodList.add(extraList.get(i));
-                extraName = extraName + "\n" + testExtraAdapter.foodList.get(i).getFoodName();
+                //extraName = extraName + "\n" + testExtraAdapter.foodList.get(i).getFoodName();
+                extraNameSend += "" + testExtraAdapter.foodList.get(i).getFoodName()+", ";
+
             }
         }
 
 
-        order = new order(mainName,extraName,Integer.parseInt(orderPriceCombi.getText().toString()),foodList);
+        order = new order(mainName,extraNameSend,Integer.parseInt(orderPriceCombi.getText().toString()),foodList);
         orderStack.orderList.add(order);
 
         Intent intent = new Intent(this, cartActivity.class);
