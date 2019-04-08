@@ -33,7 +33,6 @@
             android:launchMode="singleTask"/>
         <activity android:name=".changePasswordActivity" />
         <activity android:name=".settingActivity" />
-        <activity android:name=".password_login_page" />
         <activity android:name=".emailActivity" />
         <activity android:name=".OrderListActivity"></activity>
         <activity android:name=".passwordLoginActivity" />

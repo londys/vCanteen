@@ -229,8 +229,14 @@ public class customizeOrderActivity extends AppCompatActivity {
             if(testExtraAdapter.isChecked(i)==true)
             {
                 foodList.add(extraList.get(i));
-                extraName = extraName + "\n" + testExtraAdapter.foodList.get(i).getFoodName();
+                extraName = extraName + testExtraAdapter.foodList.get(i).getFoodName()+ ", " ;
             }
+        }
+        if(!extraName.equals("")) {
+            System.out.println("BEFORE: "+extraName);
+            extraName = extraName.substring(0, extraName.length() - 2);
+            System.out.println("AFTER: "+extraName);
+
         }
 
 

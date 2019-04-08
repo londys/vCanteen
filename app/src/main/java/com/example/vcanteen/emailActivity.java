@@ -120,6 +120,7 @@ public class emailActivity extends AppCompatActivity {
         error2 = (TextView) findViewById(R.id.error2);
 
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
+
         System.out.println(sharedPref.getString("token", "empty token"));
         System.out.println(sharedPref.getString("email", "empty email"));
 

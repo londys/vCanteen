@@ -232,7 +232,7 @@ public class normalOrderActivity extends AppCompatActivity {
             if(adapter.isChecked(i)==true)
             {
                 foodList.add(shownFoodList.get(i));
-                extraName = extraName + "\n" + adapter.foodList.get(i).getFoodName();
+                extraName = extraName + " " + adapter.foodList.get(i).getFoodName();
             }
         }
 
@@ -247,6 +247,7 @@ public class normalOrderActivity extends AppCompatActivity {
         for(int j = 0; j<orderStack.orderList.size();j++){
             System.out.println(orderStack.orderList.get(j).getOrderName());
             System.out.println(orderStack.orderList.get(j).getOrderNameExtra());
+            System.out.println("EXTRA : "+orderStack.orderList.get(j).getOrderNameExtra());
             System.out.println("order price = "+orderStack.orderList.get(j).getOrderPrice());
             System.out.println("Food List");
             for(int k = 0; k<orderStack.orderList.get(j).foodList.size();k++){

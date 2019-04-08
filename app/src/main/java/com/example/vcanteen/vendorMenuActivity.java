@@ -1,6 +1,7 @@
 package com.example.vcanteen;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -33,19 +34,30 @@ public class vendorMenuActivity extends AppCompatActivity {
     TextView minCombinationPrice;
     ArrayList<order> orderList;
     String restaurantNameString; //just add for minor fix in order confirmation
+    int restaurantNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
         System.out.println("Entered Menu.....");
+
+        orderStack = com.example.vcanteen.orderStack.getInstance();
+
+        //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
+        restaurantNameString = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity  //just add for minor fix in order confirmation
+        restaurantNumber = getIntent().getIntExtra("vendor id",0);
+
+        orderStack.setVendorId(restaurantNumber);
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://vcanteen.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         System.out.println("Entered Menu.....");
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<vendorAlacarteMenu> call = jsonPlaceHolderApi.getVendorAlacarte(1);
+        Call<vendorAlacarteMenu> call = jsonPlaceHolderApi.getVendorAlacarte(restaurantNumber);
         System.out.println("Entered Menu2.....");
         call.enqueue(new Callback<vendorAlacarteMenu>() {
             @Override
@@ -72,10 +84,13 @@ public class vendorMenuActivity extends AppCompatActivity {
         });
         System.out.println("Entered Menu3.....");
 
+
+
+
 ///TRY SINGLETON////
-        orderStack = com.example.vcanteen.orderStack.getInstance();
-        orderStack.setCustomerId(5);
-        orderStack.setVendorId(45);
+//        orderStack.setCustomerId(sharedPref.getInt("customerId",0));
+
+        orderStack.setVendorId(restaurantNumber);
         orderStack.setOrderList(new ArrayList<order>());
         orderStack.setTotalPrice(0);
         orderStack.setCreatedAt(new Date());
@@ -84,8 +99,6 @@ public class vendorMenuActivity extends AppCompatActivity {
         DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Create at "+dateformat.format(orderStack.getCreatedAt()));
 
-        //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
-        restaurantNameString = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity  //just add for minor fix in order confirmation
 
         TextView restaurantName = (TextView)findViewById(R.id.restaurantName);// delete if don't want from home activity
         restaurantName.setText(""+restaurantNameString);// delete if don't want from home activity   //just add for minor fix in order confirmation

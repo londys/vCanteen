@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="6dp"
-        android:text="Your Order Summary"
+        android:fontFamily="@font/sfprotext_semibold"
+        android:text="Your Order is Now Cooking! "
         android:textColor="#333333"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -44,6 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="395dp"
         android:layout_height="483dp"
         android:layout_marginStart="8dp"
@@ -65,15 +67,21 @@
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
-        <TextView
-            android:id="@+id/showServiceProvider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="17dp"
-            android:layout_marginTop="20dp"
-            android:text="Paid through ..."
-            android:textColor="#333333" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/showServiceProvider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/sfprotext_medium"
+        android:text="Paid through ..."
+        android:textColor="#333333"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <Button
         android:id="@+id/orderMoreButton"
@@ -83,9 +91,10 @@
         android:layout_marginEnd="116dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/button_background"
+        android:fontFamily="@font/sfprotext_semibold"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="BACK TO HOME PAGE"
+        android:text="ORDER MORE"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
