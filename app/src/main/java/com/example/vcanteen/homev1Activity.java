@@ -88,10 +88,6 @@ public class homev1Activity extends AppCompatActivity {
             }
         });
 
-       /* String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
-        ListAdapter testAdapter = new vendorListAdapter(this, test);
-        ListView vendorList = findViewById(R.id.vendorlist);
-        vendorList.setAdapter(testAdapter);*/
         getVendorList();
 
 
@@ -117,20 +113,12 @@ public class homev1Activity extends AppCompatActivity {
 
                 if (!response.isSuccessful()) {
                     Toast.makeText(getApplicationContext(),"cannot connect error code: "+response.code(),Toast.LENGTH_LONG).show();
-                    //System.out.println("\n\n\n\n********************"+ "Code: " + response.code() +"********************\n\n\n\n");
                     return;
                 }
 
                 List<vendorList> vendorLists = response.body();
                 Log.d("TEST", String.valueOf(vendorLists.size()));
                 ArrayList<vendorList> temp = new ArrayList<vendorList>();
-                //for(vendorList v: vendorLists){
-                    // Log.d("vendor name: ",v.getRestaurantName());
-                    /*int vendorId = v.getVendorId();
-                    String vendorName = v.getRestaurantName();
-                    int vendorNumber = v.getRestaurantNumber();
-                    String vendorImageURL = v.getVendorImage();
-                    String vendorStatus = v.getVendorStatus();*/
                 for(int i =0; i<vendorLists.size();i++){
 
                     int vendorId = vendorLists.get(i).getVendorId();
@@ -141,11 +129,6 @@ public class homev1Activity extends AppCompatActivity {
 
                     vendorList newVendorList = new vendorList(vendorId,vendorName,vendorNumber,vendorImageURL,vendorStatus);
                     temp.add(newVendorList);
-                   /* if(vendorStatus=="CLOSED") {
-                        temp.add(vendorLists.size(),newVendorList);
-                    }else{
-                        temp.add(newVendorList);
-                    }*/
                 }
                 vendorListAdapter adapter = new vendorListAdapter(homev1Activity.this,temp);
 
