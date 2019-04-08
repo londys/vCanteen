@@ -11,6 +11,7 @@
     <string name="title_orders">ORDERS</string>
     <string name="title_settings">SETTINGS</string>
     <string name="facebook_app_id">1176355219192143</string>
+    <string name="removeClick"><u>REMOVE</u></string>
     <string name="fb_login_protocol_scheme">fb1176355219192143</string>
     <string name="in_progress_button">IN PROGRESS</string>
     <string name="history_button">HISTORY</string>
@@ -37,5 +38,5 @@
     <string name="go_to_order">GO TO ORDER</string>
     <string name="popup_confirm_pickup_title">Your order is ready at slot.</string>
     <string name="popup_confirm_pickup_subtitle_text">Only press confirm after picking up your meal.</string>
-    <string name="pickup_tab">PICK UP ▶</string>
+    <string name="pickup_tab">  PICK UP ▶  </string>
 </resources>

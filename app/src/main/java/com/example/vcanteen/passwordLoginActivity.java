@@ -48,7 +48,6 @@ public class passwordLoginActivity extends AppCompatActivity {
                     //else if to be implemented, send email and hashed pw to backend to check
                 } else
                     Toast.makeText(getBaseContext(), var, Toast.LENGTH_LONG).show();
-
             }
         });
 

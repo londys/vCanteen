@@ -1,6 +1,5 @@
 package com.example.vcanteen;
 
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,7 @@ public class NotificationHelper {
     public static void displayNotification(Context context, String title, String body) {
 
         Intent intent = new Intent(context, OrderListActivity.class);
-        System.out.println("received noti222:"+ body);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context,
                 100,
@@ -21,7 +20,7 @@ public class NotificationHelper {
         );
 
         NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(context,"test")
+                new NotificationCompat.Builder(context, "Random")
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(title)
                         .setContentText(body)
