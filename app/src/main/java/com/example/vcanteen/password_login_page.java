@@ -211,7 +211,7 @@ public class password_login_page extends AppCompatActivity {
                                         }
                                     });
 
-                                    System.out.println("abt to call token response");
+                                    System.out.println("Calling HTTP request");
                                     call.enqueue(new Callback<TokenResponse>() {
                                         @Override
                                         public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
@@ -247,6 +247,9 @@ public class password_login_page extends AppCompatActivity {
 
                                         @Override
                                         public void onFailure(Call<TokenResponse> call, Throwable t) {
+                                            System.out.println("ERROR");
+                                            progressDialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), "HTTP request Error", Toast.LENGTH_SHORT).show();
                                             t.printStackTrace();
                                         }
                                     });
