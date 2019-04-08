@@ -190,7 +190,7 @@ public class emailActivity extends AppCompatActivity {
 
                                                         }
                                                     });
-                                                    Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "alsfkjsadf", firebaseToken);
+                                                    Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "firebaseOnlyNaja", firebaseToken);
                                                     System.out.println(postCustomer.toString());
                                                     postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, null, firebaseToken);
                                                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
@@ -258,6 +258,8 @@ public class emailActivity extends AppCompatActivity {
     public void openpassword_login_page() {
         if (TextUtils.isEmpty(emailbox2.getText().toString())) {
             error2.setVisibility(View.INVISIBLE);
+            error1.setText("Please enter your email.");
+            error1.setTextSize(18);
             error1.setVisibility(View.VISIBLE);
             return;
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailbox2.getText().toString()).matches()) {
@@ -283,9 +285,14 @@ public class emailActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 System.out.println(response.code());
                 System.out.println(new RecoverPass(email).toString());
-                if(response.code()!= 200) {
+                if(response.code()!= 200 && response.code() != 409) {
                     error1.setVisibility(View.INVISIBLE);
                     error2.setVisibility(View.VISIBLE);
+                    progressDialog.dismiss();
+                } else if (response.code() == 409) {
+                    error1.setText("This account can only be logged into with Facebook");
+                    error1.setTextSize(10);
+                    error1.setVisibility(View.VISIBLE);
                     progressDialog.dismiss();
                 } else {
                     emailbox2.setInputType(InputType.TYPE_CLASS_TEXT);
