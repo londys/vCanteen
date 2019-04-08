@@ -248,7 +248,7 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
 
 
 //                                int i = Integer.parseInt(holder.orderId.getText().toString().substring(10));
-
+        loadRecyclerViewData(context);
         System.out.println("entered putOrderSlot");
         System.out.println("Received Order ID : "+orderId);
         Call<orderStatus> call3 =  jsonPlaceHolderApi.putOrderStatus(orderId);
@@ -263,7 +263,8 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
 //                                            System.out.println("Current - orderStatus : "+String.valueOf(.orderStatus.getText()));
                     return;
                 }
-                loadRecyclerViewData(context);
+
+
 
 //                                                    refresh();
 //                                        System.out.println("Current + orderStatus : "+String.valueOf(holder.orderStatus));

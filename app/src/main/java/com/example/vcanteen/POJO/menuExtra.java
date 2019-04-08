@@ -5,7 +5,9 @@ import com.example.vcanteen.food;
 import java.util.ArrayList;
 
 public class menuExtra {
-    public com.example.vcanteen.food food;
+
+
+
 
     public com.example.vcanteen.food getFood() {
         return food;
@@ -15,13 +17,14 @@ public class menuExtra {
         this.food = food;
     }
 
-    public ArrayList<com.example.vcanteen.POJO.extraItemList> getExtraItemList() {
+    public ArrayList<extraList> getExtraItemList() {
         return extraItemList;
     }
 
-    public void setExtraItemList(ArrayList<com.example.vcanteen.POJO.extraItemList> extraItemList) {
+    public void setExtraItemList(ArrayList<extraList> extraItemList) {
         this.extraItemList = extraItemList;
     }
 
-    public ArrayList<extraItemList> extraItemList;
+    public com.example.vcanteen.food food;
+    public ArrayList<extraList> extraItemList;
 }

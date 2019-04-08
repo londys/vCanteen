@@ -12,6 +12,7 @@ import java.lang.Integer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Consumer;
 
@@ -21,6 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.vcanteen.POJO.extraItemList;
 import com.example.vcanteen.POJO.extraList;
 import com.example.vcanteen.POJO.menuExtra;
 import com.example.vcanteen.POJO.paymentMethod;
@@ -136,7 +138,14 @@ public class normalOrderActivity extends AppCompatActivity {
 //                System.out.println("list size : "+list.size());
 //                addMenuExtraToList(menuExtra.food, list);
 
-
+                ArrayList<extraList> lists = response.body().getExtraItemList();
+                System.out.println("extra 2");
+//                for (extraList list : lists) {
+//                extraList listb = new extraList();
+//                listb.foodName = lists.get(1).getFoodName();
+//                System.out.println("check: "+Arrays.toString(lists.toArray()));
+//                    System.out.println("extra name: "+listb.foodName);
+//                }
                 ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
                 ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
 
@@ -153,8 +162,8 @@ public class normalOrderActivity extends AppCompatActivity {
 //        }
 
                 // for testing
-                availableExtraList.add(new food(10,"Extra 1",10, "EXTRA"));
-                availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
+                availableExtraList.add(new food(8,"Extra Rice",10, "EXTRA"));
+                availableExtraList.add(new food(9,"No Vegetable",5, "EXTRA"));
 //        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
 //        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
 

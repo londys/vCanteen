@@ -76,7 +76,7 @@ public class combinationBaseListAdapter extends ArrayAdapter  {
         });
         //assign data
         holder.baseComName.setText(foodList.get(position).foodName);
-        holder.baseComPrice.setText("+ "+foodList.get(position).foodPrice+" Baht");
+        holder.baseComPrice.setText("+ "+foodList.get(position).foodPrice+" ฿");
 
         return convertView;
     }
