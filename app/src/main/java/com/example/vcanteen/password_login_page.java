@@ -37,8 +37,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -176,33 +174,12 @@ public class password_login_page extends AppCompatActivity {
                                     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     dbUsers = FirebaseDatabase.getInstance().getReference("users").child(uid);
 
-                                    mAuth = FirebaseAuth.getInstance();
-
-                                    FirebaseInstanceId.getInstance().getInstanceId()
-                                            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                                    if (task.isSuccessful()) {
-                                                        String token = task.getResult().getToken();
-                                                        System.out.println(token);
-                                                        saveToken(token);
-                                                    } else {
-
-                                                    }
-                                                }
-                                            });
-
-                                    System.out.println("check1");
                                     dbUsers.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             for (DataSnapshot dsUser : dataSnapshot.getChildren())
-
-
-
                                                 firebaseToken = dsUser.getValue(String.class);
-                                            System.out.println("token: "+firebaseToken);
-
+                                            System.out.println(firebaseToken);
                                         }
 
                                         @Override
@@ -211,7 +188,6 @@ public class password_login_page extends AppCompatActivity {
                                         }
                                     });
 
-                                    System.out.println("abt to call token response");
                                     call.enqueue(new Callback<TokenResponse>() {
                                         @Override
                                         public void onResponse(Call<TokenResponse> call, final Response<TokenResponse> response) {
@@ -221,7 +197,6 @@ public class password_login_page extends AppCompatActivity {
                                                 errorMessage.setVisibility(View.VISIBLE);
                                                 progressDialog.dismiss();
                                             }
-                                            System.out.println("bbbbb");
 //                            TokenResponse tokenResponse = response.body();
 //                            System.out.println(tokenResponse.isStatusCode());
 //                            System.out.println(response.body().toString());
@@ -266,28 +241,6 @@ public class password_login_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openRecoverPopup();
-            }
-        });
-    }
-
-    private void saveToken(String token) {
-
-        System.out.println("entered savetoken");
-        String email = mAuth.getCurrentUser().getEmail();
-        System.out.println("firebase: "+token);
-        Customers customer = new Customers(email, null, null, "CUSTOMER", null, null, token);
-        sharedPref.edit().putString("token", token).commit();
-        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("users");
-
-        dbUsers.child(mAuth.getCurrentUser().getUid())
-                .setValue(customer).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-//                    Toast.makeText(homev1Activity.this, "Token Saved", Toast.LENGTH_LONG).show();
-                    System.out.println("TOKEN SAVED - AUTO LOGIN");
-
-                }
             }
         });
     }

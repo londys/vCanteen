@@ -190,7 +190,7 @@ public class emailActivity extends AppCompatActivity {
 
                                                         }
                                                     });
-                                                    Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "alsfkjsadf", firebaseToken);
+                                                    Customers postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, "firebaseOnlyNaja", firebaseToken);
                                                     System.out.println(postCustomer.toString());
                                                     postCustomer = new Customers(email, first_name, last_name, account_type, profile_url, null, firebaseToken);
                                                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
