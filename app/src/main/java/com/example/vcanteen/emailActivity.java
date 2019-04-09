@@ -32,6 +32,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -152,7 +153,7 @@ public class emailActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-
+                                System.out.println("ON COMPLETED GRAPHREQUEST");
                                 final Intent intent = new Intent(emailActivity.this, homev1Activity.class);
                                 email = object.optString("email");
                                 first_name = object.optString("first_name");
@@ -227,6 +228,8 @@ public class emailActivity extends AppCompatActivity {
                                                     });
                                                 } else {
                                                     System.out.println("Firebase login FAIL");
+                                                    Toast.makeText(getApplicationContext(), "This account does not appeared on Firebase Databse", Toast.LENGTH_SHORT).show();
+                                                    LoginManager.getInstance().logOut();
                                                     progressDialog.dismiss();
                                                 }
                                             }
