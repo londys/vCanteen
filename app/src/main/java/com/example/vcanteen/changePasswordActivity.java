@@ -218,31 +218,33 @@ public class changePasswordActivity extends AppCompatActivity {
         final boolean[] check1 = {true};
         boolean check2 = false;
 
-        if (x.equals(y)) {
-            checkNewPasswordText.setText("Your new password can't be the same as your current password.");
-            currentPassword.setText("");
+        if (x.equals("") || y.equals("") || z.equals("")) {
+            checkNewPasswordText.setText("Please fill all empty fields.");
+            checkCurrentPasswordText.setText("Please fill all empty fields.");
+        } else if () {
+            checkNewPasswordText.setText("Invalid Password. Please try again.");
+            checkCurrentPasswordText.setText("");
+            //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
-
-        } else if (!(y.equals(z))) {
+        } else if (!y.equals(z)) {
+            checkNewPasswordText.setText("Password doesn't match. Please try again.");
+            //currentPassword.setText("");
+            checkCurrentPasswordText.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+        } else if (y.length() < 8 || y.length() > 20 || !PASSWORD_PATTERN.matcher(y).matches() || !PASSWORD_PATTERN.matcher(z).matches()) {
+            checkNewPasswordText.setText("Invalid Password. Please try again.");
+            //currentPassword.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+            checkCurrentPasswordText.setText("");
+        } else if (!(x.equals(y) && y.equals(z))) {
             checkNewPasswordText.setText("Password doesn't match. Please try again.");
             //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-
-        } else if (y.length() < 8 || y.length() > 20) {
-            checkNewPasswordText.setText("Invalid Password. Please try again.");
-            //currentPassword.setText("");
-            newPassword.setText("");
-            confirmNewPassword.setText("");
-
-        } else if (!PASSWORD_PATTERN.matcher(y).matches()) {
-            checkNewPasswordText.setText("Invalid Password. Please try again.");
-            //currentPassword.setText("");
-            newPassword.setText("");
-            confirmNewPassword.setText("");
-
+            checkCurrentPasswordText.setText("");
         } else {
             confirmChangePassDialog = new Dialog(changePasswordActivity.this);
             confirmChangePassDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
