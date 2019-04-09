@@ -97,14 +97,14 @@
             android:visibility="visible" />
 
         <!--<Button-->
-            <!--android:id="@+id/reportBugButton"-->
-            <!--android:layout_width="180dp"-->
-            <!--android:layout_height="35dp"-->
-            <!--android:layout_marginLeft="108dp"-->
-            <!--android:layout_marginTop="170dp"-->
-            <!--android:background="@color/colorAccent"-->
-            <!--android:text="REPORT BUG"-->
-            <!--android:textColor="#FFFFFF" />-->
+        <!--android:id="@+id/reportBugButton"-->
+        <!--android:layout_width="180dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:layout_marginLeft="108dp"-->
+        <!--android:layout_marginTop="170dp"-->
+        <!--android:background="@color/colorAccent"-->
+        <!--android:text="REPORT BUG"-->
+        <!--android:textColor="#FFFFFF" />-->
 
         <Button
             android:id="@+id/logOutButton"

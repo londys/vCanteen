@@ -86,4 +86,16 @@ public class order implements Parcelable {
         dest.writeInt(orderPrice);
         dest.writeList(foodList);
     }
+
+    @Override
+    public String toString() {
+        return  "{"+
+                "\"orderName\": "+"\""+orderName+"\""+
+                ", \"orderNameExtra\": "+"\""+orderNameExtra+"\""+
+                ", \"orderPrice\": "+orderPrice+
+                ", \"foodList\": "+foodList.toString()+
+                "}"
+
+                ;
+    }
 }

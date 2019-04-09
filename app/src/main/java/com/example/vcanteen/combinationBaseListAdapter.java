@@ -37,7 +37,7 @@ public class combinationBaseListAdapter extends ArrayAdapter  {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(final int position, View convertView, ViewGroup parent){
         if(convertView==null){
             inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.combination_base_listview,parent,false);

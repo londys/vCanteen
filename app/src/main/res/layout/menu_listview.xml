@@ -19,9 +19,9 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text="Papaya Salad"
+        android:fontFamily="@font/sfprotext_semibold"
         android:textColor="#333333"
         android:textSize="14sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,12 +34,12 @@
         android:text="30.-"
         android:textColor="#333333"
         android:textSize="14sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/sfprotext_bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-<!--</RelativeLayout>-->
+    <!--</RelativeLayout>-->
 
     <!--<?xml version="1.0" encoding="utf-8"?>-->
     <!--<android.support.constraint.ConstraintLayout-->
@@ -55,4 +55,4 @@
     <!--tools:layout_editor_absoluteY="8dp">-->
 
     <!--</RelativeLayout>-->
-    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

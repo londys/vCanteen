@@ -1,6 +1,7 @@
 package com.example.vcanteen;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,8 +14,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.widget.Toast;
+
+import com.example.vcanteen.POJO.orderProgress;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,19 +34,30 @@ public class vendorMenuActivity extends AppCompatActivity {
     TextView minCombinationPrice;
     ArrayList<order> orderList;
     String restaurantNameString; //just add for minor fix in order confirmation
+    int restaurantNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
         System.out.println("Entered Menu.....");
+
+        orderStack = com.example.vcanteen.orderStack.getInstance();
+
+        //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
+        restaurantNameString = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity  //just add for minor fix in order confirmation
+        restaurantNumber = getIntent().getIntExtra("vendor id",0);
+
+        orderStack.setVendorId(restaurantNumber);
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://vcanteen.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         System.out.println("Entered Menu.....");
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<vendorAlacarteMenu> call = jsonPlaceHolderApi.getVendorMenu();
+        Call<vendorAlacarteMenu> call = jsonPlaceHolderApi.getVendorAlacarte(restaurantNumber);
         System.out.println("Entered Menu2.....");
         call.enqueue(new Callback<vendorAlacarteMenu>() {
             @Override
@@ -54,7 +69,11 @@ public class vendorMenuActivity extends AppCompatActivity {
                 }
                 //get result here
                 vendorAlacarteMenu menu = response.body();
-                System.out.println("Received Menu: "+menu.getVendorInfo().restaurantNumber);
+                System.out.println("Received Restaurant Name: "+menu.getVendorInfo().restaurantName);
+
+                minCombinationPrice = findViewById(R.id.minCombinationPrice);
+                minCombinationPrice.setText("Starting from "+ menu.getMinCombinationPrice() +" Baht");
+                addAlacarteToList(menu.availableList, menu.soldOutList);
             }
 
             @Override
@@ -65,11 +84,14 @@ public class vendorMenuActivity extends AppCompatActivity {
         });
         System.out.println("Entered Menu3.....");
 
+
+
+
 ///TRY SINGLETON////
-        orderStack = com.example.vcanteen.orderStack.getInstance();
-        orderStack.setCustomerId(22);
-        orderStack.setVendorId(45);
-        orderStack.setOrderList(new ArrayList<>());
+//        orderStack.setCustomerId(sharedPref.getInt("customerId",0));
+
+        orderStack.setVendorId(restaurantNumber);
+        orderStack.setOrderList(new ArrayList<order>());
         orderStack.setTotalPrice(0);
         orderStack.setCreatedAt(new Date());
 
@@ -77,8 +99,6 @@ public class vendorMenuActivity extends AppCompatActivity {
         DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Create at "+dateformat.format(orderStack.getCreatedAt()));
 
-        //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
-        restaurantNameString = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity  //just add for minor fix in order confirmation
 
         TextView restaurantName = (TextView)findViewById(R.id.restaurantName);// delete if don't want from home activity
         restaurantName.setText(""+restaurantNameString);// delete if don't want from home activity   //just add for minor fix in order confirmation
@@ -96,18 +116,22 @@ public class vendorMenuActivity extends AppCompatActivity {
 //        if(hasCombination==false){
 //            tappable_customize.setVisibility(View.GONE);
 //        }
-        minCombinationPrice = (TextView) findViewById(R.id.minCombinationPrice);
-        //minCombinationPrice.setText("Starting from "+ value get from BE +" Baht");
+
+    }
+
+    private void addAlacarteToList(ArrayList<availableList> inputAvaliableList, ArrayList<soldOutList> inputSoldOutList) {
 
 ////////  DEAL WITH A LA CARTE ////////////
 
         final ArrayList<food> availableList = new ArrayList<>(); //need to get from BE
         ArrayList<food> soldOutList = new ArrayList<>();   //need to get from BE
 
-        //test
-        availableList.add(new food(15,"Meal",40, "A LA CARTE"));
-        availableList.add(new food(16,"Food 2",25, "A LA CARTE"));
-        soldOutList.add(new food(9,"Sold Out Food",30, "A LA CARTE"));
+        for(availableList list : inputAvaliableList) {
+            availableList.add(new food(list.getFoodId(), list.getFoodName(), list.getFoodPrice(), "A LA CARTE"));
+        }
+        for(soldOutList list : inputSoldOutList) {
+            soldOutList.add(new food(list.getFoodId(), list.getFoodName(), list.getFoodPrice(), "A LA CARTE"));
+        }
 
         final ArrayList<food> shownFoodList = new ArrayList<>(availableList);
         shownFoodList.addAll(soldOutList);
@@ -136,6 +160,7 @@ public class vendorMenuActivity extends AppCompatActivity {
         });
 
     }
+
 
     private void openCustomizeActivity() {
         Intent intent = new Intent(this, customizeOrderActivity.class);

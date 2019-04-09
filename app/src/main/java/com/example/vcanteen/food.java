@@ -3,17 +3,28 @@ package com.example.vcanteen;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import io.reactivex.annotations.Nullable;
+
 public class food implements Parcelable {
     int foodId;
     String foodName;
     int foodPrice;
     String foodType;
 
-    public food(int foodId, String foodName, int foodPrice, String foodType) {
+    public food(int foodId, String foodName, int foodPrice, @Nullable String foodType) {
         this.foodId = foodId;
         this.foodName = foodName;
         this.foodPrice = foodPrice;
         this.foodType = foodType;
+    }
+
+    @Override
+    public String toString() {
+        return "{ \"foodId\": "+"\""+foodId+"\""+
+                ", \"foodName\": "+"\""+foodName+"\""+
+                ", \"foodPrice\": "+"\""+foodPrice+"\""+
+                ", \"foodType\": "+"\""+foodType+"\""+
+                "}";
     }
 
     public int getFoodId() {
@@ -99,6 +110,8 @@ public class food implements Parcelable {
         dest.writeInt(foodPrice);
         dest.writeString(foodType);
     }
+
+
 }
 //old one without parcel
 

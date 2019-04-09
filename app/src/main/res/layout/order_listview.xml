@@ -10,7 +10,7 @@
         android:id="@+id/orderName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:text="Sticky Rice With Fied Chicken"
         android:textColor="#333333"

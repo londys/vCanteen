@@ -20,8 +20,8 @@
         android:layout_marginRight="30dp"
         android:layout_marginBottom="20dp"
         android:autoText="false"
-        android:fontFamily="sans-serif-black"
-        android:text="Hi! Thanks for checking us out!"
+        android:fontFamily="@font/sfprotext_bold"
+        android:text="Welcome!"
         android:textColor="#333333"
         android:textSize="36dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,11 +35,11 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="0dp"
         android:layout_marginRight="30dp"
-        android:text="What's your E-mail?"
+        android:text="Please enter your E-mail?"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="#FF4141"
         android:textSize="25dp"
-        android:textStyle="bold"
+        android:fontFamily="@font/sfprotext_semibold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Main_Title_Text" />
 
@@ -58,6 +58,7 @@
             android:textColor="#333333"
             android:textSize="16dp"
             android:textStyle="bold"
+            android:fontFamily="@font/sfprotext_semibold"
             app:layout_constraintEnd_toStartOf="@+id/error1"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints" />
@@ -67,11 +68,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/sfprotext_semibold"
             android:text="Please enter your email."
             android:textAllCaps="true"
             android:textColor="#FF4141"
-            android:textStyle="bold"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/EMAIL"
             app:layout_constraintTop_toTopOf="parent"
@@ -82,12 +83,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="1dp"
-            android:fontFamily="sans-serif"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/sfprotext_semibold"
             android:text="Invalid email address."
             android:textAllCaps="true"
             android:textColor="#FF4141"
-            android:textStyle="bold"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/EMAIL"
             app:layout_constraintTop_toTopOf="parent"
@@ -112,6 +112,7 @@
             android:backgroundTint="@android:color/darker_gray"
             android:ems="10"
             android:inputType="textEmailAddress"
+            android:fontFamily="@font/sfprotext_medium"
             android:textColor="#333333" />
 
         <Button
@@ -134,10 +135,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="4dp"
             android:layout_marginRight="6dp"
             android:textColor="#979797"
-            android:text="or" />
+            android:text="or"
+            android:fontFamily="@font/sfprotext_medium"/>
 
         <!--<ImageButton-->
             <!--android:id="@+id/facebookButton"-->
@@ -162,6 +164,7 @@
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
             android:text="Facebook"
+            android:fontFamily="@font/sfprotext_semibold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
