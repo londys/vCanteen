@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
@@ -140,7 +141,7 @@ public class emailActivity extends AppCompatActivity {
         });
 
 
-
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -156,6 +157,7 @@ public class emailActivity extends AppCompatActivity {
                                 System.out.println("ON COMPLETED GRAPHREQUEST");
                                 final Intent intent = new Intent(emailActivity.this, homev1Activity.class);
                                 email = object.optString("email");
+                                System.out.println("DEBUG EMAIL:"+email);
                                 first_name = object.optString("first_name");
                                 last_name = object.optString("last_name");
 
@@ -165,10 +167,11 @@ public class emailActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
+                                System.out.println(email+", "+ first_name+", "+ last_name+", "+ profile_url);
                                 final String account_type = "FACEBOOK";
 
                                 // get firebase token
+                                System.out.println("FB: "+email);
                                 mAuth.signInWithEmailAndPassword(email, "firebaseOnlyNaja")
                                         .addOnCompleteListener(emailActivity.this, new OnCompleteListener<AuthResult>() {
                                             @Override
@@ -237,7 +240,7 @@ public class emailActivity extends AppCompatActivity {
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,first_name, last_name, email,link, picture.type(large)");
+                parameters.putString("fields", "email,id,name,first_name,last_name,link,picture.type(large)");
                 request.setParameters(parameters);
                 request.executeAsync();
 

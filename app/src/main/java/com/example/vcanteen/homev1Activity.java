@@ -142,6 +142,8 @@ public class homev1Activity extends AppCompatActivity {
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
         System.out.println(sharedPref.getString("token", "empty token"));
         System.out.println(sharedPref.getString("email", "empty email"));
+        System.out.println(sharedPref.getInt("customerId", 0));
+        System.out.println("sharedPref Set.");
 
 //        final String[] test = {"ESAN food","Fried Chicken with Sticky Rice","Food3","Food4","Fried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky RiceFried Chicken with Sticky Rice","Food6", "Food 77"};
 //        ListAdapter testAdapter = new vendorListAdapter(this, test);
@@ -202,6 +204,8 @@ public class homev1Activity extends AppCompatActivity {
                         String chosenVendor = vendorLists.get(position).getRestaurantName();
                         Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
                         i.putExtra("vendor id", vendornumber);
+                        orderStack.setVendorId(vendornumber);
+                        System.out.println("added vendor id in intent/singleton: "+vendornumber);
                         i.putExtra("chosenVendor",chosenVendor);
                         startActivity(i);
                         /*On the second activity:
@@ -228,7 +232,7 @@ public class homev1Activity extends AppCompatActivity {
         System.out.println("entered savetoken");
         String email = mAuth.getCurrentUser().getEmail();
         orderStack = com.example.vcanteen.orderStack.getInstance();
-        orderStack.setCustomerId(1);
+        orderStack.setCustomerId(sharedPref.getInt("customerId",0));
         System.out.println("firebase: "+email);
         Customers customer = new Customers(email, null, null, "CUSTOMER", null, null, token);
 

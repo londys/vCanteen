@@ -209,7 +209,7 @@ public class cartActivity extends AppCompatActivity {
 
         newOrder checkout = new newOrder();
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
-        int i = sharedPref.getInt("customerId", 1);
+        int i = sharedPref.getInt("customerId", 0);
         System.out.println("id: "+i);
         checkout.customerId = orderStack.getCustomerId();
         checkout.vendorId = orderStack.getVendorId();
@@ -337,7 +337,18 @@ public class cartActivity extends AppCompatActivity {
         orderStack.setTotalPrice(total);
         orderTotalItems.setText("Total "+ orderStack.orderList.size()+" item(s)");
         orderTotalPrice.setText("" + total +"");
-        orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
+        orderTotalPriceTop.setText("" + orderStack.totalPrice +" ฿");
+
+        if(total == 0){
+            scbEasy.setEnabled(false);
+            scbEasy.setTextColor(Color.parseColor("#E0E0E0"));
+            kplus.setEnabled(false);
+            kplus.setTextColor(Color.parseColor("#E0E0E0"));
+            trueMoney.setEnabled(false);
+            trueMoney.setTextColor(Color.parseColor("#E0E0E0"));
+            cunex.setEnabled(false);
+            cunex.setTextColor(Color.parseColor("#E0E0E0"));
+        }
 
     }
 }

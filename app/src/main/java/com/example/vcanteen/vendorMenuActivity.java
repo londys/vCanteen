@@ -40,7 +40,6 @@ public class vendorMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
-        System.out.println("Entered Menu.....");
 
         orderStack = com.example.vcanteen.orderStack.getInstance();
 
@@ -55,11 +54,9 @@ public class vendorMenuActivity extends AppCompatActivity {
                 .baseUrl("https://vcanteen.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        System.out.println("Entered Menu.....");
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
         Call<vendorAlacarteMenu> call = jsonPlaceHolderApi.getVendorAlacarte(restaurantNumber);
-        System.out.println("Entered Menu2.....");
-        call.enqueue(new Callback<vendorAlacarteMenu>() {
+                call.enqueue(new Callback<vendorAlacarteMenu>() {
             @Override
             public void onResponse(Call<vendorAlacarteMenu> call, Response<vendorAlacarteMenu> response) {
                 if (!response.isSuccessful()) {
@@ -82,7 +79,6 @@ public class vendorMenuActivity extends AppCompatActivity {
 
             }
         });
-        System.out.println("Entered Menu3.....");
 
 
 

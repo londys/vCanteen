@@ -219,7 +219,7 @@ public class changePasswordActivity extends AppCompatActivity {
         boolean check2 = false;
 
         if (x.equals(y)) {
-            checkNewPasswordText.setText("Your new password can't be the same as your current passaword.");
+            checkNewPasswordText.setText("Your new password can't be the same as your current password.");
             currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
@@ -230,20 +230,19 @@ public class changePasswordActivity extends AppCompatActivity {
             //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
 
         } else if (y.length() < 8 || y.length() > 20) {
             checkNewPasswordText.setText("Invalid Password. Please try again.");
             //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
+
         } else if (!PASSWORD_PATTERN.matcher(y).matches()) {
             checkNewPasswordText.setText("Invalid Password. Please try again.");
             //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
+
         } else {
             confirmChangePassDialog = new Dialog(changePasswordActivity.this);
             confirmChangePassDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -271,8 +270,8 @@ public class changePasswordActivity extends AppCompatActivity {
 
                     Customers postCustomer = new Customers(email, null, null, account_type, null, new String(Hex.encodeHex(DigestUtils.sha256(x))), firebaseToken);
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
-                    System.out.println("Curr pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
-                    System.out.println("New pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(y));
+                    System.out.println("Curr pass: "+new String(Hex.encodeHex(DigestUtils.sha256(x))));
+                    System.out.println("New pass: "+new String(Hex.encodeHex(DigestUtils.sha256(y))));
                     call.enqueue(new Callback<TokenResponse>() {
                         @Override
                         public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
@@ -285,7 +284,7 @@ public class changePasswordActivity extends AppCompatActivity {
                                 check1[0] = false;
                             } else {
 
-                                Call<Void> resetCall = jsonPlaceHolderApi.resetPass(new ResetPass(email, org.apache.commons.codec.digest.DigestUtils.sha256Hex(y)));
+                                Call<Void> resetCall = jsonPlaceHolderApi.resetPass(new ResetPass(email, new String(Hex.encodeHex(DigestUtils.sha256(y)))));
 
                                 resetCall.enqueue(new Callback<Void>() {
                                     @Override
