@@ -81,13 +81,6 @@ public class normalOrderActivity extends AppCompatActivity {
         //orderStack = getIntent().getExtras().getParcelable("orderStack");
         orderStack = com.example.vcanteen.orderStack.getInstance();
 
-
-        //can delete this 4 rows - it's for testing
-//        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        System.out.println("Create at 2 time: "+dateformat.format(orderStack.getCreatedAt()));
-//        orderStack.setCreatedAt(new Date());
-//        System.out.println("Create at 3 time: "+dateformat.format(orderStack.getCreatedAt()));
-
         foodName.setText(chosenALaCarte.foodName);
         foodPrice.setText(""+chosenALaCarte.foodPrice);
         orderPrice.setText(""+chosenALaCarte.foodPrice);
@@ -133,40 +126,15 @@ public class normalOrderActivity extends AppCompatActivity {
                 System.out.println("menu Extra success");
 
                 menuExtra menuExtra = response.body();
-//                ArrayList<extraList> list = response.body().extraList;
-//                list.get
-//                System.out.println("list size : "+list.size());
-//                addMenuExtraToList(menuExtra.food, list);
 
                 ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
                 ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
 
-               ArrayList<extraList> lists = menuExtra.extraList;
+                ArrayList<extraList> lists = menuExtra.extraList;
 
                 for (extraList list : lists) {
-             //   extraList listb = new extraList();
                     availableExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
-//                listb.foodName = lists.get(1).getFoodName();
-//                System.out.println("check: "+Arrays.toString(lists.toArray()));
-//                    System.out.println("extra name: "+listb.foodName);
                 }
-
-//        System.out.println(inputFood.foodName);
-//        for(extraList list : inputExtraList){
-//            if(list.foodStatus.equals("AVAILABLE")) {
-//                availableExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
-//            } else {
-//                soldOutExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
-//            }
-//            availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
-//                System.out.println("extraaa:"+inputExtraList.size());
-//        }
-
-                // for testing
-//                availableExtraList.add(new food(8,"Extra Rice",10, "EXTRA"));
-//                availableExtraList.add(new food(9,"No Vegetable",5, "EXTRA"));
-//        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
-//        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
 
                 shownFoodList = new ArrayList<>(availableExtraList);
                 shownFoodList.addAll(soldOutExtraList);

@@ -14,8 +14,11 @@ import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -72,7 +75,6 @@ public class password_login_page extends AppCompatActivity {
     private Button showBtn;
     private ImageButton next;
     private TextView errorMessage;
-    private boolean isHidden = true;
 
     private Button pwrecoverbtn;
     private Dialog confirmDialog;
@@ -95,6 +97,7 @@ public class password_login_page extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_login_page);
+
 
         FirebaseApp.initializeApp(password_login_page.this);
         mAuth = FirebaseAuth.getInstance();
@@ -130,12 +133,13 @@ public class password_login_page extends AppCompatActivity {
         showBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isHidden) {
+
+                if (showBtn.getText() == "SHOW") {
+                    showBtn.setText("HIDE");
                     passwdField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    isHidden = false;
                 } else {
+                    showBtn.setText("SHOW");
                     passwdField.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    isHidden = true;
                 }
             }
         });
@@ -269,6 +273,15 @@ public class password_login_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openRecoverPopup();
+            }
+        });
+
+        findViewById(R.id.relativeLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
             }
         });
     }

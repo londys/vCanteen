@@ -45,7 +45,7 @@ public class menuListAdapter extends ArrayAdapter {
 
         //assign data
         holder.menuName.setText(foodList.get(position).foodName);
-        holder.menuPrice.setText(""+foodList.get(position).foodPrice+".-");
+        holder.menuPrice.setText(""+foodList.get(position).foodPrice+" ฿");
 
         if(position>=s) {
             holder.menuName.setTextColor(Color.parseColor("#C4C4C4"));

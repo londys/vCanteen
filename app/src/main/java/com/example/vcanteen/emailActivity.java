@@ -14,11 +14,14 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,6 +100,16 @@ public class emailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_enter_page);
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.email);
+        layout.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent ev) {
+                hideKeyboard(view);
+                return false;
+            }
+        });
 
         FirebaseApp.initializeApp(emailActivity.this);
         mAuth = FirebaseAuth.getInstance();
@@ -299,6 +312,7 @@ public class emailActivity extends AppCompatActivity {
                     error1.setText("This account can only be logged into with Facebook");
                     error1.setTextSize(10);
                     error1.setVisibility(View.VISIBLE);
+                    error2.setVisibility(View.INVISIBLE);
                     progressDialog.dismiss();
                 } else {
                     emailbox2.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -336,6 +350,10 @@ public class emailActivity extends AppCompatActivity {
 
         Log.e("LOOK", imageEncoded);
         return imageEncoded;
+    }
+    protected void hideKeyboard(View view)    {
+        InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 

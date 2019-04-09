@@ -202,10 +202,12 @@ public class homev1Activity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         int vendornumber = vendorLists.get(position).getVendorId();
                         String chosenVendor = vendorLists.get(position).getRestaurantName();
+                        String vendorUrl = vendorLists.get(position).getVendorImage();
                         Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
                         i.putExtra("vendor id", vendornumber);
                         orderStack.setVendorId(vendornumber);
                         System.out.println("added vendor id in intent/singleton: "+vendornumber);
+                        i.putExtra("vendor url", vendorUrl);
                         i.putExtra("chosenVendor",chosenVendor);
                         startActivity(i);
                         /*On the second activity:

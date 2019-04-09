@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -209,6 +211,15 @@ public class changePasswordActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.constraintLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
+
     }
 
     private void changePassword() {
@@ -223,7 +234,7 @@ public class changePasswordActivity extends AppCompatActivity {
             currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-        } else if(!PASSWORD_PATTERN.matcher(y).matches()||!PASSWORD_PATTERN.matcher(z).matches()){
+        } else if(!(PASSWORD_PATTERN.matcher(y).matches())||!(PASSWORD_PATTERN.matcher(z).matches())||!(PASSWORD_PATTERN.matcher(x).matches())){
             checkNewPasswordText.setText("Must be letter, number or these characters _ - * ' \" # & () @");
             //currentPassword.setText("");
             newPassword.setText("");

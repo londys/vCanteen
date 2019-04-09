@@ -2,14 +2,22 @@ package com.example.vcanteen;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,19 +43,32 @@ public class vendorMenuActivity extends AppCompatActivity {
     ArrayList<order> orderList;
     String restaurantNameString; //just add for minor fix in order confirmation
     int restaurantNumber;
-
+    String restaurantUrl;
+    Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_menu);
+
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         orderStack = com.example.vcanteen.orderStack.getInstance();
 
         //orderStack = getIntent().getExtras().getParcelable("orderStack"); // delete if don't want from home activity
         restaurantNameString = getIntent().getStringExtra("chosenVendor"); // delete if don't want from home activity  //just add for minor fix in order confirmation
         restaurantNumber = getIntent().getIntExtra("vendor id",0);
+        restaurantUrl = getIntent().getStringExtra("vendor url");
+        System.out.println("check in coming url: "+restaurantUrl);
 
         orderStack.setVendorId(restaurantNumber);
+
+        ImageView vendorPic = findViewById(R.id.vendorPic);
+        bitmap = getBitmapFromURL(restaurantUrl);
+        vendorPic.setImageBitmap(bitmap);
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -181,4 +202,20 @@ public class vendorMenuActivity extends AppCompatActivity {
 
         orderStack o = intent.getExtras().getParcelable("orderStackFromCart");
     }
+
+    public Bitmap getBitmapFromURL(String src){
+        try{
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
