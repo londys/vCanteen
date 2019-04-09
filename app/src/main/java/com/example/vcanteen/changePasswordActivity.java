@@ -35,7 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class changePasswordActivity extends AppCompatActivity {
 
     private static final Pattern PASSWORD_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9@!#$%^&+-=](?=\\S+$).{7,}$"); // Password Constraint
+            Pattern.compile("^[a-zA-Z0-9@!#$%^&+-=](?=\\S+$).*$");  // Password Constraint
     // (?=\S+$) = no space is allowed.
     // special characters that are allowed @ ! # $ % ^ & + = -
 
@@ -268,15 +268,19 @@ public class changePasswordActivity extends AppCompatActivity {
                             .build();
                     final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
+
                     Customers postCustomer = new Customers(email, null, null, account_type, null, new String(Hex.encodeHex(DigestUtils.sha256(x))), firebaseToken);
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
                     System.out.println("Curr pass: "+new String(Hex.encodeHex(DigestUtils.sha256(x))));
                     System.out.println("New pass: "+new String(Hex.encodeHex(DigestUtils.sha256(y))));
+                    System.out.println(postCustomer.toString());
                     call.enqueue(new Callback<TokenResponse>() {
                         @Override
                         public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                            System.out.println(response.code());
                             if (response.code() != 200) {
                                 checkCurrentPasswordText.setText("Current password is incorrect. Please try again.");
+                                checkNewPasswordText.setText("");
                                 currentPassword.setText("");
                                 newPassword.setText("");
                                 confirmNewPassword.setText("");
