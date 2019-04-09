@@ -65,7 +65,6 @@
             android:layout_below="@+id/vendorName"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="19dp"
             android:fontFamily="@font/sfprotext_regular"
             android:paddingTop="4dp"
             android:text="@string/order_id"
@@ -76,7 +75,7 @@
         <TextView
             android:id="@+id/pickup_tab"
             android:layout_width="100dp"
-            android:layout_height="125dp"
+            android:layout_height="128dp"
             android:layout_alignParentEnd="true"
             android:background="@drawable/gradient_pickup_tab"
             android:fontFamily="@font/sfprotext_bold"
@@ -127,9 +126,9 @@
         <TextView
             android:id="@+id/orderStatus"
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/orderDate"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:layout_toStartOf="@+id/pickup_tab"
             android:fontFamily="@font/sfprotext_bold"
