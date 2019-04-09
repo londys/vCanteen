@@ -138,17 +138,18 @@ public class normalOrderActivity extends AppCompatActivity {
 //                System.out.println("list size : "+list.size());
 //                addMenuExtraToList(menuExtra.food, list);
 
-                ArrayList<extraList> lists = response.body().getExtraItemList();
-                System.out.println("extra 2");
-//                for (extraList list : lists) {
-//                extraList listb = new extraList();
-//                listb.foodName = lists.get(1).getFoodName();
-//                System.out.println("check: "+Arrays.toString(lists.toArray()));
-//                    System.out.println("extra name: "+listb.foodName);
-//                }
                 ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
                 ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
 
+               ArrayList<extraList> lists = menuExtra.extraList;
+
+                for (extraList list : lists) {
+             //   extraList listb = new extraList();
+                    availableExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
+//                listb.foodName = lists.get(1).getFoodName();
+//                System.out.println("check: "+Arrays.toString(lists.toArray()));
+//                    System.out.println("extra name: "+listb.foodName);
+                }
 
 //        System.out.println(inputFood.foodName);
 //        for(extraList list : inputExtraList){
@@ -162,15 +163,15 @@ public class normalOrderActivity extends AppCompatActivity {
 //        }
 
                 // for testing
-                availableExtraList.add(new food(8,"Extra Rice",10, "EXTRA"));
-                availableExtraList.add(new food(9,"No Vegetable",5, "EXTRA"));
+//                availableExtraList.add(new food(8,"Extra Rice",10, "EXTRA"));
+//                availableExtraList.add(new food(9,"No Vegetable",5, "EXTRA"));
 //        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
 //        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
 
                 shownFoodList = new ArrayList<>(availableExtraList);
                 shownFoodList.addAll(soldOutExtraList);
 
-                adapter = new foodListAdapter(getApplicationContext(),shownFoodList,availableExtraList.size());
+                adapter = new foodListAdapter(normalOrderActivity.this,shownFoodList,availableExtraList.size());
                 final ListView extraListShow = findViewById(R.id.extraList);
                 extraListShow.setAdapter(adapter);
 
@@ -241,8 +242,14 @@ public class normalOrderActivity extends AppCompatActivity {
             if(adapter.isChecked(i)==true)
             {
                 foodList.add(shownFoodList.get(i));
-                extraName = extraName + " " + adapter.foodList.get(i).getFoodName();
+                extraName = extraName + adapter.foodList.get(i).getFoodName()+ ", " ;
             }
+        }
+        if(!extraName.equals("")) {
+            System.out.println("BEFORE: "+extraName);
+            extraName = extraName.substring(0, extraName.length() - 2);
+            System.out.println("AFTER: "+extraName);
+
         }
 
         order = new order(chosenALaCarte.foodName,extraName, (op + eop) ,foodList);

@@ -1,30 +1,17 @@
 package com.example.vcanteen.POJO;
 
-import com.example.vcanteen.food;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import  com.example.vcanteen.food;
 
 public class menuExtra {
 
+    @SerializedName("food")
+    public food food;
 
 
-
-    public com.example.vcanteen.food getFood() {
-        return food;
-    }
-
-    public void setFood(com.example.vcanteen.food food) {
-        this.food = food;
-    }
-
-    public ArrayList<extraList> getExtraItemList() {
-        return extraItemList;
-    }
-
-    public void setExtraItemList(ArrayList<extraList> extraItemList) {
-        this.extraItemList = extraItemList;
-    }
-
-    public com.example.vcanteen.food food;
-    public ArrayList<extraList> extraItemList;
+    @SerializedName("extraList")
+    public ArrayList<extraList> extraList;
 }
