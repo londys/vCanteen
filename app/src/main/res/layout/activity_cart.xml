@@ -154,31 +154,17 @@
             app:layout_constraintTop_toTopOf="@+id/confirmImgButton" />
 
         <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
-            android:layout_marginEnd="20dp"
-            android:fontFamily="@font/sfprotext_bold"
-            android:text="฿"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/confirmImgButton"
-            app:layout_constraintTop_toTopOf="@+id/confirmImgButton" />
-
-        <TextView
             android:id="@+id/orderTotalPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp"
-            android:layout_marginEnd="3dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/sfprotext_bold"
-            android:text="230"
+            android:text="230 ฿"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/textView16"
+            app:layout_constraintEnd_toEndOf="@+id/confirmImgButton"
             app:layout_constraintTop_toTopOf="@+id/confirmImgButton" />
 
 

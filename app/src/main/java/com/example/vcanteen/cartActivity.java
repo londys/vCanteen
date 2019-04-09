@@ -135,7 +135,11 @@ public class cartActivity extends AppCompatActivity {
         confirmImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopUp();
+                if(total!=0) {
+
+                    showPopUp();
+                }
+
             }
         });
 
@@ -159,8 +163,8 @@ public class cartActivity extends AppCompatActivity {
 
         orderStack.setTotalPrice(total);
         orderTotalItems.setText("Total "+ orderStack.orderList.size()+" item(s)");
-        orderTotalPrice.setText("" + orderStack.totalPrice +"");
-        orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
+        orderTotalPrice.setText("" + orderStack.totalPrice +" ฿");
+        orderTotalPriceTop.setText("" + orderStack.totalPrice +" ฿");
 
 
 

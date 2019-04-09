@@ -67,7 +67,7 @@ public class vendorMenuActivity extends AppCompatActivity {
                 //get result here
                 vendorAlacarteMenu menu = response.body();
                 System.out.println("Received Restaurant Name: "+menu.getVendorInfo().restaurantName);
-
+                System.out.println("Received Restaurant URL: "+menu.getVendorInfo().vendorImage);
                 minCombinationPrice = findViewById(R.id.minCombinationPrice);
                 minCombinationPrice.setText("Starting from "+ menu.getMinCombinationPrice() +" ฿");
                 addAlacarteToList(menu.availableList, menu.soldOutList);

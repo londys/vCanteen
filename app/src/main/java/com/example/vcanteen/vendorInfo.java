@@ -20,5 +20,6 @@ public class vendorInfo {
     }
 
     String restaurantName;
+    String vendorImage;
 }
 
