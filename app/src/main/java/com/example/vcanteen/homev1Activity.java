@@ -199,21 +199,32 @@ public class homev1Activity extends AppCompatActivity {
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                        Object clickItemObj = adapter.getAdapter().getItem(position);
                         int vendornumber = vendorLists.get(position).getVendorId();
                         String chosenVendor = vendorLists.get(position).getRestaurantName();
                         String vendorUrl = vendorLists.get(position).getVendorImage();
-                        Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
-                        i.putExtra("vendor id", vendornumber);
-                        orderStack.setVendorId(vendornumber);
-                        System.out.println("added vendor id in intent/singleton: "+vendornumber);
-                        i.putExtra("vendor url", vendorUrl);
-                        i.putExtra("chosenVendor",chosenVendor);
-                        startActivity(i);
-                        /*On the second activity:
-                        Bundle bundle = getIntent().getExtras();
-                         int value = bundle.getInt("vendor id");
-                         */
+                        String vendorStatus;
+                        vendorList item = vendorLists.get(position);
+                        vendorStatus = item.getVendorStatus();
+                        if(vendorStatus.equals("CLOSED")){
+                            view.setClickable(false);
+                            //Toast.makeText(homev1Activity.this, "This restaurant is closed.", Toast.LENGTH_SHORT).show();
+                        } else{
+                            Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
+                            i.putExtra("vendor id", vendornumber);
+                            orderStack.setVendorId(vendornumber);
+                            System.out.println("added vendor id in intent/singleton: "+vendornumber);
+                            i.putExtra("vendor url", vendorUrl);
+                            i.putExtra("chosenVendor",chosenVendor);
+                            startActivity(i);
+                            /*On the second activity:
+                            Bundle bundle = getIntent().getExtras();
+                            int value = bundle.getInt("vendor id");
+                            */
+
+                        }
+
                     }
 
 
