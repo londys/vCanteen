@@ -51,7 +51,7 @@ public class confirmedOrderListAdapter extends ArrayAdapter {
 
         //assign data
         holder.orderName.setText(orderStack.orderList.get(position).orderName);
-        holder.orderPrice.setText(""+orderStack.orderList.get(position).orderPrice+ " Baht");
+        holder.orderPrice.setText(""+orderStack.orderList.get(position).orderPrice+ " ฿");
         holder.restaurantName.setText(""+restaurantName);
 
         //date

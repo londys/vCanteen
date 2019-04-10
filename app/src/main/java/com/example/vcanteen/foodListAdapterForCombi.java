@@ -77,7 +77,7 @@ public class foodListAdapterForCombi extends ArrayAdapter implements CompoundBut
 
         //assign data
         holder.addFoodName.setText(foodList.get(position).foodName);
-        holder.addFoodPrice.setText("+ " + foodList.get(position).foodPrice + " Baht");
+        holder.addFoodPrice.setText("+ " + foodList.get(position).foodPrice + " ฿");
         holder.chkSelect.setChecked(mCheckStates.get(position, false));
         if (position < s) {
             holder.chkSelect.setOnCheckedChangeListener(this);

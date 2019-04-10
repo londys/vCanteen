@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -32,6 +33,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class progressTabFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "ProgressTabFragment";
     static List<orderListData> data = new ArrayList<>();
@@ -42,6 +45,7 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
     static String slotString = "";
     static TextView slotNumber;
 
+    static SharedPreferences sharedPref;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
         slotNumber = view.findViewById(R.id.pickup_slot_number);
         cv = view.findViewById(R.id.cardView_done);
 
+        sharedPref = this.getActivity().getSharedPreferences("myPref", MODE_PRIVATE);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -106,7 +111,8 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<List<orderProgress>> call =  jsonPlaceHolderApi.getProgress(1);
+
+        Call<List<orderProgress>> call =  jsonPlaceHolderApi.getProgress(sharedPref.getInt("customerId",0));
 
         call.enqueue(new Callback<List<orderProgress>>() {
             @Override
@@ -248,7 +254,7 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
 
 
 //                                int i = Integer.parseInt(holder.orderId.getText().toString().substring(10));
-
+        loadRecyclerViewData(context);
         System.out.println("entered putOrderSlot");
         System.out.println("Received Order ID : "+orderId);
         Call<orderStatus> call3 =  jsonPlaceHolderApi.putOrderStatus(orderId);
@@ -263,7 +269,8 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
 //                                            System.out.println("Current - orderStatus : "+String.valueOf(.orderStatus.getText()));
                     return;
                 }
-                loadRecyclerViewData(context);
+
+
 
 //                                                    refresh();
 //                                        System.out.println("Current + orderStatus : "+String.valueOf(holder.orderStatus));

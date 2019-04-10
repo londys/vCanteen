@@ -36,10 +36,9 @@ public class vendorListAdapter extends ArrayAdapter<vendorList> {
         vendorStatus = item.getVendorStatus();
         if(vendorStatus.equals("CLOSED")){
             convertView = LayoutInflater.from(context).inflate(R.layout.vendor_listview_disabled, parent, false);
-            convertView.setClickable(false);
+            convertView.setEnabled(false);
         } else
             convertView = LayoutInflater.from(context).inflate(R.layout.vendor_listview, parent, false);
-
 
         TextView vendorName = (TextView) convertView.findViewById(R.id.vendorName);
         ImageView vendorImage = convertView.findViewById(R.id.vendorImage);

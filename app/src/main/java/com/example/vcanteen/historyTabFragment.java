@@ -1,5 +1,7 @@
 package com.example.vcanteen;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,24 +24,28 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class historyTabFragment extends Fragment {
     private static final String TAG = "HistoryTabFragment";
-    List<orderListData> data = new ArrayList<>();
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    RecyclerView recyclerView ;
+    static List<orderListData> data = new ArrayList<>();
+    static SwipeRefreshLayout mSwipeRefreshLayout;
+    static RecyclerView recyclerView ;
+
+    static SharedPreferences sharedPref;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.history_tab_fragment,container,false);
         recyclerView = view.findViewById(R.id.history_recycler);
-
+        sharedPref = this.getActivity().getSharedPreferences("myPref", MODE_PRIVATE);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Fetching data from server
-                loadRecyclerViewData();
+                loadRecyclerViewData(getContext());
             }
         });
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -53,13 +59,13 @@ public class historyTabFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(true);
 
                 // Fetching data from server
-                loadRecyclerViewData();
+                loadRecyclerViewData(getContext());
             }
         });
         return view;
     }
 
-    private void loadRecyclerViewData() {
+    private static void loadRecyclerViewData(final Context context) {
         Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl("http://www.json-generator.com/api/json/get/")
                 .baseUrl("https://vcanteen.herokuapp.com/")
@@ -67,18 +73,18 @@ public class historyTabFragment extends Fragment {
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<List<orderHistory>> call =  jsonPlaceHolderApi.getHistory(1);
+        Call<List<orderHistory>> call =  jsonPlaceHolderApi.getHistory(sharedPref.getInt("customerId",0));
 
         call.enqueue(new Callback<List<orderHistory>>() {
             @Override
             public void onResponse(Call<List<orderHistory>> call, Response<List<orderHistory>> response) {
                 if(!response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "CODE: "+response.code(),
+                    Toast.makeText(context, "CODE: "+response.code(),
                             Toast.LENGTH_LONG).show();
                     mSwipeRefreshLayout.setRefreshing(false);
                     return;
                 }
-
+                data = new ArrayList<>();
                 List<orderHistory> posts = response.body();
 //                showData(response.body());
 
@@ -88,13 +94,13 @@ public class historyTabFragment extends Fragment {
                 }
                 DifferentRowAdapter adapter = new DifferentRowAdapter(data);
                 recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
                 mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<List<orderHistory>> call, Throwable t) {
-                Toast.makeText(getActivity(), "ERROR: "+t.getMessage(),
+                Toast.makeText(context, "ERROR: "+t.getMessage(),
                         Toast.LENGTH_LONG).show();
                 System.out.println("some error");
                 mSwipeRefreshLayout.setRefreshing(false);

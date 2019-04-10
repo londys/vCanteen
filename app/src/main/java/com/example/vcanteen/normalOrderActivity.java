@@ -12,6 +12,7 @@ import java.lang.Integer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.function.Consumer;
 
@@ -21,6 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.vcanteen.POJO.extraItemList;
 import com.example.vcanteen.POJO.extraList;
 import com.example.vcanteen.POJO.menuExtra;
 import com.example.vcanteen.POJO.paymentMethod;
@@ -61,13 +63,7 @@ public class normalOrderActivity extends AppCompatActivity {
 
         restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
-        addToCartImg = (ImageView)findViewById(R.id.addToCartImg);
-        addToCartImg.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                openCart();
-            }
-        });
+
 
 
         orderPrice = (TextView) findViewById(R.id.orderPrice);
@@ -78,13 +74,6 @@ public class normalOrderActivity extends AppCompatActivity {
         chosenALaCarte = getIntent().getExtras().getParcelable("chosenFood");
         //orderStack = getIntent().getExtras().getParcelable("orderStack");
         orderStack = com.example.vcanteen.orderStack.getInstance();
-
-
-        //can delete this 4 rows - it's for testing
-//        DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        System.out.println("Create at 2 time: "+dateformat.format(orderStack.getCreatedAt()));
-//        orderStack.setCreatedAt(new Date());
-//        System.out.println("Create at 3 time: "+dateformat.format(orderStack.getCreatedAt()));
 
         foodName.setText(chosenALaCarte.foodName);
         foodPrice.setText(""+chosenALaCarte.foodPrice);
@@ -131,41 +120,32 @@ public class normalOrderActivity extends AppCompatActivity {
                 System.out.println("menu Extra success");
 
                 menuExtra menuExtra = response.body();
-//                ArrayList<extraList> list = response.body().extraList;
-//                list.get
-//                System.out.println("list size : "+list.size());
-//                addMenuExtraToList(menuExtra.food, list);
-
 
                 ArrayList<food> availableExtraList = new ArrayList<>(); //need to get from BE
                 ArrayList<food> soldOutExtraList = new ArrayList<>();   //need to get from BE
 
+                ArrayList<extraList> lists = menuExtra.extraList;
 
-//        System.out.println(inputFood.foodName);
-//        for(extraList list : inputExtraList){
-//            if(list.foodStatus.equals("AVAILABLE")) {
-//                availableExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
-//            } else {
-//                soldOutExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
-//            }
-//            availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
-//                System.out.println("extraaa:"+inputExtraList.size());
-//        }
-
-                // for testing
-                availableExtraList.add(new food(10,"Extra 1",10, "EXTRA"));
-                availableExtraList.add(new food(7,"Extra 2",5, "EXTRA"));
-//        soldOutExtraList.add(new food(5,"Sold Out Extra 1",5, "EXTRA"));
-//        soldOutExtraList.add(new food(23,"Sold Out Extra 2",5, "EXTRA"));
+                for (extraList list : lists) {
+                    availableExtraList.add(new food(list.foodId,list.foodName,list.foodPrice,"EXTRA"));
+                }
 
                 shownFoodList = new ArrayList<>(availableExtraList);
                 shownFoodList.addAll(soldOutExtraList);
 
-                adapter = new foodListAdapter(getApplicationContext(),shownFoodList,availableExtraList.size());
+                adapter = new foodListAdapter(normalOrderActivity.this,shownFoodList,availableExtraList.size());
                 final ListView extraListShow = findViewById(R.id.extraList);
                 extraListShow.setAdapter(adapter);
 
                 foodList = new ArrayList<>();
+
+                addToCartImg = (ImageView)findViewById(R.id.addToCartImg);
+                addToCartImg.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        openCart();
+                    }
+                });
             }
 
             @Override
@@ -232,8 +212,14 @@ public class normalOrderActivity extends AppCompatActivity {
             if(adapter.isChecked(i)==true)
             {
                 foodList.add(shownFoodList.get(i));
-                extraName = extraName + " " + adapter.foodList.get(i).getFoodName();
+                extraName = extraName + adapter.foodList.get(i).getFoodName()+ ", " ;
             }
+        }
+        if(!extraName.equals("")) {
+            System.out.println("BEFORE: "+extraName);
+            extraName = extraName.substring(0, extraName.length() - 2);
+            System.out.println("AFTER: "+extraName);
+
         }
 
         order = new order(chosenALaCarte.foodName,extraName, (op + eop) ,foodList);

@@ -39,7 +39,7 @@ public class DifferentRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((CookingViewHolder) holder).orderNameExtra.setText(list.getOrderNameExtra());
                     ((CookingViewHolder) holder).vendorName.setText(list.getVendorName());
                     ((CookingViewHolder) holder).orderId.setText("Order ID: "+list.getOrderId());
-                    ((CookingViewHolder) holder).orderPrice.setText(list.getOrderPrice()+".-");
+                    ((CookingViewHolder) holder).orderPrice.setText(list.getOrderPrice()+" ฿");
                     ((CookingViewHolder) holder).orderDate.setText(list.getOrderDate());
                     ((CookingViewHolder) holder).orderStatus.setText(list.getOrderStatus());
 
@@ -69,7 +69,7 @@ public class DifferentRowAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((DoneViewHolder) holder).orderName.setText(list.getOrderName());
                     ((DoneViewHolder) holder).orderNameExtra.setText(list.getOrderNameExtra());
                     ((DoneViewHolder) holder).orderId.setText("Order ID: "+list.getOrderId());
-                    ((DoneViewHolder) holder).orderPrice.setText(list.getOrderPrice()+".-");
+                    ((DoneViewHolder) holder).orderPrice.setText(list.getOrderPrice()+" ฿");
                     ((DoneViewHolder) holder).vendorName.setText(list.getVendorName());
                     ((DoneViewHolder) holder).orderDate.setText(list.getOrderDate());
                     if (list.getOrderStatus().equals("DONE")) {

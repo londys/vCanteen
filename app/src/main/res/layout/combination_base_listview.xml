@@ -29,7 +29,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginEnd="1dp"
         android:layout_marginBottom="5dp"
-        android:text="+ 5 THB"
+        android:text="+ 5 ฿"
         android:textAlignment="textEnd"
         android:textColor="#C4C4C4"
         android:textSize="12sp"

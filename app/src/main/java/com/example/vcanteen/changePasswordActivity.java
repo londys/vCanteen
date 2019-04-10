@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class changePasswordActivity extends AppCompatActivity {
 
     private static final Pattern PASSWORD_PATTERN =
-            Pattern.compile("^[a-zA-Z0-9@!#$%^&+-=](?=\\S+$).{7,}$"); // Password Constraint
+            Pattern.compile("^[a-zA-Z0-9@!#$%^&+-=](?=\\S+$).*$");  // Password Constraint
     // (?=\S+$) = no space is allowed.
     // special characters that are allowed @ ! # $ % ^ & + = -
 
@@ -209,6 +211,15 @@ public class changePasswordActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.constraintLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
+
     }
 
     private void changePassword() {
@@ -218,32 +229,31 @@ public class changePasswordActivity extends AppCompatActivity {
         final boolean[] check1 = {true};
         boolean check2 = false;
 
-        if (x.equals(y)) {
-            checkNewPasswordText.setText("Your new password can't be the same as your current passaword.");
+        if(x.matches("")||y.matches("")||z.matches("")){ //pin just add
+            checkNewPasswordText.setText("You must fill out all the fields.");
             currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
-
-        } else if (!(y.equals(z))) {
+        } else if(!(PASSWORD_PATTERN.matcher(y).matches())||!(PASSWORD_PATTERN.matcher(z).matches())||!(PASSWORD_PATTERN.matcher(x).matches())){
+            checkNewPasswordText.setText("Must be letter, number or these characters _ - * ' \" # & () @");
+            //currentPassword.setText("");
+            newPassword.setText("");
+            confirmNewPassword.setText("");
+        } else if(!(y.equals(z))){
             checkNewPasswordText.setText("Password doesn't match. Please try again.");
             //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
-
         } else if (y.length() < 8 || y.length() > 20) {
             checkNewPasswordText.setText("Invalid Password. Please try again.");
             //currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
-        } else if (!PASSWORD_PATTERN.matcher(y).matches()) {
-            checkNewPasswordText.setText("Invalid Password. Please try again.");
-            //currentPassword.setText("");
+        } else if(x.equals(y)){
+            checkNewPasswordText.setText("Your new password can't be the same as your current passaword.");
+            currentPassword.setText("");
             newPassword.setText("");
             confirmNewPassword.setText("");
-            progressDialog.dismiss();
         } else {
             confirmChangePassDialog = new Dialog(changePasswordActivity.this);
             confirmChangePassDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -269,15 +279,19 @@ public class changePasswordActivity extends AppCompatActivity {
                             .build();
                     final JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
+
                     Customers postCustomer = new Customers(email, null, null, account_type, null, new String(Hex.encodeHex(DigestUtils.sha256(x))), firebaseToken);
                     Call<TokenResponse> call = jsonPlaceHolderApi.createCustomer(postCustomer);
-                    System.out.println("Curr pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(x));
-                    System.out.println("New pass: "+org.apache.commons.codec.digest.DigestUtils.sha256Hex(y));
+                    System.out.println("Curr pass: "+new String(Hex.encodeHex(DigestUtils.sha256(x))));
+                    System.out.println("New pass: "+new String(Hex.encodeHex(DigestUtils.sha256(y))));
+                    System.out.println(postCustomer.toString());
                     call.enqueue(new Callback<TokenResponse>() {
                         @Override
                         public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                            System.out.println(response.code());
                             if (response.code() != 200) {
                                 checkCurrentPasswordText.setText("Current password is incorrect. Please try again.");
+                                checkNewPasswordText.setText("");
                                 currentPassword.setText("");
                                 newPassword.setText("");
                                 confirmNewPassword.setText("");
@@ -285,7 +299,7 @@ public class changePasswordActivity extends AppCompatActivity {
                                 check1[0] = false;
                             } else {
 
-                                Call<Void> resetCall = jsonPlaceHolderApi.resetPass(new ResetPass(email, org.apache.commons.codec.digest.DigestUtils.sha256Hex(y)));
+                                Call<Void> resetCall = jsonPlaceHolderApi.resetPass(new ResetPass(email, new String(Hex.encodeHex(DigestUtils.sha256(y)))));
 
                                 resetCall.enqueue(new Callback<Void>() {
                                     @Override
@@ -299,7 +313,6 @@ public class changePasswordActivity extends AppCompatActivity {
                                             newPassword.setText("");
                                             confirmNewPassword.setText("");
                                             checkNewPasswordText.setText("");
-                                            progressDialog.dismiss();
                                             Toast.makeText(changePasswordActivity.this, "Password successfully changed.", Toast.LENGTH_LONG).show();
                                         }
                                         progressDialog.dismiss();

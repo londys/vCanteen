@@ -14,11 +14,14 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,6 +60,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import retrofit2.Call;
@@ -95,6 +100,16 @@ public class emailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email_enter_page);
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.email);
+        layout.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent ev) {
+                hideKeyboard(view);
+                return false;
+            }
+        });
 
         FirebaseApp.initializeApp(emailActivity.this);
         mAuth = FirebaseAuth.getInstance();
@@ -139,7 +154,7 @@ public class emailActivity extends AppCompatActivity {
         });
 
 
-
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -152,9 +167,10 @@ public class emailActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-
+                                System.out.println("ON COMPLETED GRAPHREQUEST");
                                 final Intent intent = new Intent(emailActivity.this, homev1Activity.class);
                                 email = object.optString("email");
+                                System.out.println("DEBUG EMAIL:"+email);
                                 first_name = object.optString("first_name");
                                 last_name = object.optString("last_name");
 
@@ -164,10 +180,11 @@ public class emailActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
+                                System.out.println(email+", "+ first_name+", "+ last_name+", "+ profile_url);
                                 final String account_type = "FACEBOOK";
 
                                 // get firebase token
+                                System.out.println("FB: "+email);
                                 mAuth.signInWithEmailAndPassword(email, "firebaseOnlyNaja")
                                         .addOnCompleteListener(emailActivity.this, new OnCompleteListener<AuthResult>() {
                                             @Override
@@ -227,6 +244,8 @@ public class emailActivity extends AppCompatActivity {
                                                     });
                                                 } else {
                                                     System.out.println("Firebase login FAIL");
+                                                    Toast.makeText(getApplicationContext(), "This account does not appeared on Firebase Databse", Toast.LENGTH_SHORT).show();
+                                                    LoginManager.getInstance().logOut();
                                                     progressDialog.dismiss();
                                                 }
                                             }
@@ -234,7 +253,7 @@ public class emailActivity extends AppCompatActivity {
                             }
                         });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,first_name, last_name, email,link, picture.type(large)");
+                parameters.putString("fields", "email,id,name,first_name,last_name,link,picture.type(large)");
                 request.setParameters(parameters);
                 request.executeAsync();
 
@@ -293,6 +312,7 @@ public class emailActivity extends AppCompatActivity {
                     error1.setText("This account can only be logged into with Facebook");
                     error1.setTextSize(10);
                     error1.setVisibility(View.VISIBLE);
+                    error2.setVisibility(View.INVISIBLE);
                     progressDialog.dismiss();
                 } else {
                     emailbox2.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -330,6 +350,10 @@ public class emailActivity extends AppCompatActivity {
 
         Log.e("LOOK", imageEncoded);
         return imageEncoded;
+    }
+    protected void hideKeyboard(View view)    {
+        InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 

@@ -35,11 +35,11 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="0dp"
         android:layout_marginRight="30dp"
+        android:fontFamily="@font/sfprotext_semibold"
         android:text="Please enter your E-mail?"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="#FF4141"
         android:textSize="25dp"
-        android:fontFamily="@font/sfprotext_semibold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Main_Title_Text" />
 
@@ -70,8 +70,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
             android:fontFamily="@font/sfprotext_semibold"
-            android:text="Please enter your email."
-            android:textAllCaps="true"
+            android:text="Please enter your email"
             android:textColor="#FF4141"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/EMAIL"
@@ -80,15 +79,15 @@
 
         <TextView
             android:id="@+id/error2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="264dp"
+            android:layout_height="20dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
             android:fontFamily="@font/sfprotext_semibold"
-            android:text="Invalid email address."
-            android:textAllCaps="true"
-            android:textColor="#FF4141"
+            android:gravity="start"
+            android:text="Invalid email address"
             android:visibility="invisible"
+            android:textColor="#FF4141"
             app:layout_constraintStart_toEndOf="@+id/EMAIL"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
@@ -141,25 +140,6 @@
             android:text="or"
             android:fontFamily="@font/sfprotext_medium"/>
 
-        <!--<ImageButton-->
-            <!--android:id="@+id/facebookButton"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:background="#00000000"-->
-            <!--app:srcCompat="@drawable/ic_facebook" />-->
-
-        <!--<com.facebook.login.widget.LoginButton-->
-            <!--android:id="@+id/facebook_btn"-->
-            <!--style="@style/Widget.AppCompat.Button.Borderless"-->
-            <!--android:layout_width="76dp"-->
-            <!--android:layout_height="35dp"-->
-            <!--android:layout_marginStart="-5dp"-->
-            <!--android:paddingLeft="0dp"-->
-            <!--android:paddingRight="0dp"-->
-            <!--android:text="Facebook"-->
-            <!--android:textAllCaps="false"-->
-            <!--android:textColor="#4267B2" />-->
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"

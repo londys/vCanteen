@@ -59,7 +59,7 @@ public interface JsonPlaceHolderApi {
     Call<vendorCombinationMenu> getVendorCombination(@Path("vendorId") int vendorId);
 
     @GET("v1/orders/{customerId}/payment-method")
-    Call<paymentMethod> getPaymentMethod(@Path("customerId") int vendorId);
+    Call<paymentMethod> getPaymentMethod(@Path("customerId") int customerId);
 
     @POST("v1/orders/new")
     Call<newOrder> postOrder(@Body newOrder newOrder);

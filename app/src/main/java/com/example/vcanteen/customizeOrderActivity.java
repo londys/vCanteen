@@ -75,9 +75,8 @@ public class customizeOrderActivity extends AppCompatActivity {
                 .baseUrl("https://vcanteen.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        System.out.println("Entered Menu.....");
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<vendorCombinationMenu> call = jsonPlaceHolderApi.getVendorCombination(1);
+        Call<vendorCombinationMenu> call = jsonPlaceHolderApi.getVendorCombination(orderStack.getVendorId());
 
         call.enqueue(new Callback<vendorCombinationMenu>() {
             @Override

@@ -61,7 +61,7 @@ public class cartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
+        orderStack = com.example.vcanteen.orderStack.getInstance();
         restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
         paymentList = new ArrayList<>(); // need to get from BE
 
@@ -71,7 +71,8 @@ public class cartActivity extends AppCompatActivity {
                 .build();
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<paymentMethod> call = jsonPlaceHolderApi.getPaymentMethod(1);
+        System.out.println("Customer ID: "+orderStack.getCustomerId());
+        Call<paymentMethod> call = jsonPlaceHolderApi.getPaymentMethod(orderStack.getCustomerId());
 
 
         call.enqueue(new Callback<paymentMethod>() {
@@ -135,13 +136,17 @@ public class cartActivity extends AppCompatActivity {
         confirmImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopUp();
+                if(total!=0) {
+
+                    showPopUp();
+                }
+
             }
         });
 
 //// FOR DEALING WITH ORDER LIST ////
         //orderStack = getIntent().getExtras().getParcelable("sendOrderStack");
-        orderStack = com.example.vcanteen.orderStack.getInstance();
+
 
         orderAdapter = new orderListAdapter(this,orderStack);
         final ListView orderList = findViewById(R.id.orderList);
@@ -159,8 +164,8 @@ public class cartActivity extends AppCompatActivity {
 
         orderStack.setTotalPrice(total);
         orderTotalItems.setText("Total "+ orderStack.orderList.size()+" item(s)");
-        orderTotalPrice.setText("" + orderStack.totalPrice +"");
-        orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
+        orderTotalPrice.setText("" + orderStack.totalPrice +" ฿");
+        orderTotalPriceTop.setText("" + orderStack.totalPrice +" ฿");
 
 
 
@@ -209,7 +214,7 @@ public class cartActivity extends AppCompatActivity {
 
         newOrder checkout = new newOrder();
         sharedPref = getSharedPreferences("myPref", MODE_PRIVATE);
-        int i = sharedPref.getInt("customerId", 1);
+        int i = sharedPref.getInt("customerId", 0);
         System.out.println("id: "+i);
         checkout.customerId = orderStack.getCustomerId();
         checkout.vendorId = orderStack.getVendorId();
@@ -337,7 +342,18 @@ public class cartActivity extends AppCompatActivity {
         orderStack.setTotalPrice(total);
         orderTotalItems.setText("Total "+ orderStack.orderList.size()+" item(s)");
         orderTotalPrice.setText("" + total +"");
-        orderTotalPriceTop.setText("" + orderStack.totalPrice +"");
+        orderTotalPriceTop.setText("" + orderStack.totalPrice +" ฿");
+
+        if(total == 0){
+            scbEasy.setEnabled(false);
+            scbEasy.setTextColor(Color.parseColor("#E0E0E0"));
+            kplus.setEnabled(false);
+            kplus.setTextColor(Color.parseColor("#E0E0E0"));
+            trueMoney.setEnabled(false);
+            trueMoney.setTextColor(Color.parseColor("#E0E0E0"));
+            cunex.setEnabled(false);
+            cunex.setTextColor(Color.parseColor("#E0E0E0"));
+        }
 
     }
 }

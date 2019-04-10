@@ -54,7 +54,7 @@ public class orderListAdapter extends ArrayAdapter {
 
         //assign data
         holder.orderName.setText(orderStack.orderList.get(position).orderName);
-        holder.orderPrice.setText(""+orderStack.orderList.get(position).orderPrice+ " Baht");
+        holder.orderPrice.setText(""+orderStack.orderList.get(position).orderPrice+ " ฿");
 
         if(orderStack.orderList.get(position).orderNameExtra==null){
             holder.orderNameExtra.setText("");

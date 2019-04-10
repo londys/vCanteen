@@ -16,7 +16,7 @@
     <string name="in_progress_button">IN PROGRESS</string>
     <string name="history_button">HISTORY</string>
     <string name="order_name">Order Name</string>
-    <string name="order_price">30.-</string>
+    <string name="order_price">30 ฿</string>
     <string name="order_name_extra">Extra</string>
     <string name="vendor_name">Vendor Name</string>
     <string name="order_date">01/01/2018</string>
