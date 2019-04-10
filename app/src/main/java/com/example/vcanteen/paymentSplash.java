@@ -28,7 +28,7 @@ public class paymentSplash extends AppCompatActivity {
             img.setImageResource(R.drawable.truemoney);
         }else if(selectedServiceProvider.equalsIgnoreCase("CUNEX")){
             img.setImageResource(R.drawable.cunex);
-        }else if(selectedServiceProvider.equalsIgnoreCase("KBANK")) {
+        }else if(selectedServiceProvider.equalsIgnoreCase("K PLUS")) {
             img.setImageResource(R.drawable.kbank);
         }else if(selectedServiceProvider.equalsIgnoreCase("SCB EASY")) {
             img.setImageResource(R.drawable.scb);

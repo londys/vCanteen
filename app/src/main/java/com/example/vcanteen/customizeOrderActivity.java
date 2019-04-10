@@ -76,7 +76,7 @@ public class customizeOrderActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<vendorCombinationMenu> call = jsonPlaceHolderApi.getVendorCombination(1);
+        Call<vendorCombinationMenu> call = jsonPlaceHolderApi.getVendorCombination(orderStack.getVendorId());
 
         call.enqueue(new Callback<vendorCombinationMenu>() {
             @Override

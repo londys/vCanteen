@@ -214,7 +214,9 @@ public class homev1Activity extends AppCompatActivity {
                             Intent i = new Intent(homev1Activity.this, vendorMenuActivity.class);
                             i.putExtra("vendor id", vendornumber);
                             orderStack.setVendorId(vendornumber);
+                            orderStack.setCustomerId(sharedPref.getInt("customerId",0));
                             System.out.println("added vendor id in intent/singleton: "+vendornumber);
+                            System.out.println("customer id in orderstack: "+orderStack.getCustomerId());
                             i.putExtra("vendor url", vendorUrl);
                             i.putExtra("chosenVendor",chosenVendor);
                             startActivity(i);

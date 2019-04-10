@@ -112,7 +112,7 @@ public class progressTabFragment extends Fragment implements SwipeRefreshLayout.
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
 
-        Call<List<orderProgress>> call =  jsonPlaceHolderApi.getProgress(sharedPref.getInt("customerId",0)); //TODO set dynamic
+        Call<List<orderProgress>> call =  jsonPlaceHolderApi.getProgress(sharedPref.getInt("customerId",0));
 
         call.enqueue(new Callback<List<orderProgress>>() {
             @Override

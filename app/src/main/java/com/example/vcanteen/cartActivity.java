@@ -61,7 +61,7 @@ public class cartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
+        orderStack = com.example.vcanteen.orderStack.getInstance();
         restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
         paymentList = new ArrayList<>(); // need to get from BE
 
@@ -71,7 +71,8 @@ public class cartActivity extends AppCompatActivity {
                 .build();
 
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-        Call<paymentMethod> call = jsonPlaceHolderApi.getPaymentMethod(1);
+        System.out.println("Customer ID: "+orderStack.getCustomerId());
+        Call<paymentMethod> call = jsonPlaceHolderApi.getPaymentMethod(orderStack.getCustomerId());
 
 
         call.enqueue(new Callback<paymentMethod>() {
@@ -145,7 +146,7 @@ public class cartActivity extends AppCompatActivity {
 
 //// FOR DEALING WITH ORDER LIST ////
         //orderStack = getIntent().getExtras().getParcelable("sendOrderStack");
-        orderStack = com.example.vcanteen.orderStack.getInstance();
+
 
         orderAdapter = new orderListAdapter(this,orderStack);
         final ListView orderList = findViewById(R.id.orderList);

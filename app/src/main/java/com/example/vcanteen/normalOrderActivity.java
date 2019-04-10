@@ -63,13 +63,7 @@ public class normalOrderActivity extends AppCompatActivity {
 
         restaurantNameString = getIntent().getStringExtra("sendRestaurantName"); //just add for minor fix in order confirmation
 
-        addToCartImg = (ImageView)findViewById(R.id.addToCartImg);
-        addToCartImg.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                openCart();
-            }
-        });
+
 
 
         orderPrice = (TextView) findViewById(R.id.orderPrice);
@@ -144,6 +138,14 @@ public class normalOrderActivity extends AppCompatActivity {
                 extraListShow.setAdapter(adapter);
 
                 foodList = new ArrayList<>();
+
+                addToCartImg = (ImageView)findViewById(R.id.addToCartImg);
+                addToCartImg.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        openCart();
+                    }
+                });
             }
 
             @Override

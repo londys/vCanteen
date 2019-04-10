@@ -73,7 +73,7 @@ public class historyTabFragment extends Fragment {
                 .build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
-        Call<List<orderHistory>> call =  jsonPlaceHolderApi.getHistory(sharedPref.getInt("customerId",0)); //TODO set dynamic
+        Call<List<orderHistory>> call =  jsonPlaceHolderApi.getHistory(sharedPref.getInt("customerId",0));
 
         call.enqueue(new Callback<List<orderHistory>>() {
             @Override
